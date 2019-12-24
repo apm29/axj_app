@@ -14,7 +14,7 @@ description: axj app refactor
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -27,6 +27,11 @@ dependencies:
   # flutter_redux 参考 https://juejin.im/post/5b79767ff265da435450a873
   # pub仓库 https://pub.flutter-io.cn/packages/flutter_redux
   flutter_redux: ^0.6.0
+
+  # dio
+  dio: ^3.0.7
+
+  shared_preferences: ^0.5.6
 
 dev_dependencies:
   flutter_test:

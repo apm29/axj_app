@@ -1,13 +1,21 @@
-import 'package:axj_app/splash/AppRedux.dart';
+import 'package:axj_app/store/app_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-void main() => runApp(FlutterReduxApp());
+import 'model/cache.dart';
+
+Future<void> main() async {
+  await Cache().init();
+  runApp(FlutterReduxApp());
+}
 
 class FlutterReduxApp extends StatelessWidget {
-
-  final Store<AppState> store = Store<AppState>(appReduce, initialState:AppState(0));
+  final Store<AppState> store = Store<AppState>(
+    appReduce,
+    initialState: AppState(),
+    middleware: createAppMiddleware()
+  );
 
   FlutterReduxApp({Key key}) : super(key: key);
 
@@ -27,61 +35,38 @@ class FlutterReduxApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page',store:this.store),
+      home: MyHomePage(title: 'Flutter Demo Home Page', store: this.store),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-
   MyHomePage({Key key, this.title, this.store}) : super(key: key);
   final String title;
-  final  Store<AppState> store;
+  final Store<AppState> store;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return StoreProvider<AppState>(
       store: store,
       child: Scaffold(
         appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
           title: Text(title),
         ),
         body: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Invoke "debug painting" (press "p" in the console, choose the
-            // "Toggle Debug Paint" action from the Flutter Inspector in Android
-            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-            // to see the wireframe for each widget.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
             children: <Widget>[
               Text(
                 'You have pushed the button this many times:',
               ),
-              StoreConnector<AppState, int>(
-                converter: (store) => store.state.count,
-                builder: (context, count) {
+              StoreConnector<AppState, String>(
+                converter: (store){
+                  debugPrint(store.state.toString());
+                  return store.state.userState.userInfo;
+                },
+                builder: (context, info) {
                   return Text(
-                    count.toString(),
+                    info,
                     style: Theme.of(context).textTheme.display1,
                   );
                 },
@@ -98,7 +83,7 @@ class MyHomePage extends StatelessWidget {
           converter: (store) {
             // Return a `VoidCallback`, which is a fancy name for a function
             // with no parameters. It only dispatches an Increment action.
-            return () => store.dispatch(AppActions.ENTER);
+            return () => store.dispatch(LoginAction('yjw','123456'));
           },
           builder: (context, callback) {
             return FloatingActionButton(
