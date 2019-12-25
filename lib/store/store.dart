@@ -7,15 +7,24 @@ import 'package:axj_app/action/actions.dart';
 class AppState {
   AppState({userState, loading})
       : this.userState = userState ?? UserState(),
-        this.loading = loading ?? false;
+        this.loading = loading ?? false,
+        this.homePageState = HomePageState();
 
   UserState userState;
-  bool loading;
 
-  @override
-  String toString() {
-    return 'AppState{userState: $userState}';
-  }
+  HomePageState homePageState;
+
+  bool loading;
+}
+
+enum ActiveTab { Home, Mine }
+
+class HomePageState {
+
+  final ActiveTab currentTab;
+
+  HomePageState({ActiveTab currentTab}) : this.currentTab = currentTab ?? ActiveTab.Home;
+  HomePageState.fromIndex(int index) : this.currentTab = ActiveTab.values[index];
 }
 
 class UserState {
@@ -34,12 +43,24 @@ class UserState {
   }
 }
 
-
 AppState appReduce(AppState state, action) {
-  return state
+  return appStateReducer(state, action)
     ..userState = userStateReducer(state.userState, action)
-    ..loading = loadingReducer(state.loading, action);
+    ..loading = loadingReducer(state.loading, action)
+    ..homePageState = homePageReducer(state.homePageState, action);
 }
+
+final appStateReducer = combineReducers<AppState>(
+  [],
+);
+
+final homePageReducer = combineReducers<HomePageState>(
+  [
+    TypedReducer<HomePageState, TabSwitchAction>(
+      (state, action) => HomePageState.fromIndex(action.index),
+    ),
+  ],
+);
 
 final userStateReducer = combineReducers<UserState>(
   [
@@ -61,6 +82,10 @@ bool appLoadingReducer(bool init, action) {
   return (action is StartAction);
 }
 
+AppState appInitReducer(AppState state, AppInitAction action) {
+  return state;
+}
+
 UserState userLoginReducer(UserState state, LoginAction action) {
   return state;
 }
@@ -76,8 +101,6 @@ UserState userLoginFailReducer(UserState state, LoginFailAction action) {
     ..login = false
     ..errorMsg = action.errorMsg;
 }
-
-
 
 String getErrorMessage(Object error) {
   if (error is DioError) {

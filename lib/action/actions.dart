@@ -1,14 +1,16 @@
 ///
 /// author : ciih
 /// date : 2019-12-25 10:40
-/// description : 
+/// description :
 ///
 import 'package:axj_app/model/bean/user_info.dart';
+import 'package:flutter/material.dart';
 
 abstract class AppAction {}
+
 abstract class StartAction {}
 
-class LoginAction implements AppAction,StartAction {
+class LoginAction implements AppAction, StartAction {
   final String username;
   final String password;
 
@@ -25,4 +27,16 @@ class LoginFailAction implements AppAction {
   final String errorMsg;
 
   LoginFailAction(this.errorMsg);
+}
+
+class AppInitAction implements AppAction {
+  final BuildContext context;
+
+  AppInitAction(this.context);
+}
+
+class TabSwitchAction implements AppAction{
+  final int index;
+
+  TabSwitchAction(this.index);
 }

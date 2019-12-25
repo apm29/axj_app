@@ -1,8 +1,9 @@
+import 'package:axj_app/route/route.dart';
 import 'package:redux/redux.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter/material.dart';
 
-import 'package:axj_app/store/app_store.dart';
+import 'package:axj_app/store/store.dart';
 import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/model/repository.dart';
 
@@ -13,22 +14,21 @@ import 'package:axj_app/model/repository.dart';
 ///
 List<Middleware<AppState>> createAppMiddleware() {
   return [
-    TypedMiddleware<AppState, LoginAction>(loginFromRepo()),
+    TypedMiddleware<AppState, LoginAction>(loginWithUserName),
+    TypedMiddleware<AppState, AppInitAction>(initApp),
     TypedMiddleware<AppState, AppAction>(startLoading),
   ];
 }
 
-Middleware<AppState> loginFromRepo() {
-  return (Store<AppState> store, action, NextDispatcher next) {
-    Repository.login(action.username, action.password).then(
-      (resp) {
-        store.dispatch(LoginSuccessAction(resp.data.userInfo));
-      },
-    ).catchError((err) {
-      return store.dispatch(LoginFailAction(getErrorMessage(err)));
-    });
-    next(action);
-  };
+loginWithUserName(Store<AppState> store, action, NextDispatcher next) {
+  Repository.login(action.username, action.password).then(
+    (resp) {
+      store.dispatch(LoginSuccessAction(resp.data.userInfo));
+    },
+  ).catchError((err) {
+    return store.dispatch(LoginFailAction(getErrorMessage(err)));
+  });
+  next(action);
 }
 
 startLoading(Store<AppState> store, action, NextDispatcher next) {
@@ -41,4 +41,14 @@ startLoading(Store<AppState> store, action, NextDispatcher next) {
     );
   }
   next(action);
+}
+
+initApp(Store<AppState> store, action, NextDispatcher next) {
+  init(action);
+  next(action);
+}
+
+void init(action) async {
+  await Future.delayed(Duration(seconds: 2));
+  Application.router.navigateTo(action.context, Routes.home, replace: true);
 }

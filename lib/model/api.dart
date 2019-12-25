@@ -7,9 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'cache.dart';
 
 typedef JsonProcessor<T> = T Function(dynamic json);
+
 const BaseUrl = "http://axj.ciih.net/";
 const AuthorizationHeader = "Authorization";
-
 
 class BaseResp<T> {
   String status;
@@ -67,7 +67,6 @@ class Api {
     return getInstance();
   }
 
-
   Dio _dio;
 
   void init() {
@@ -79,8 +78,8 @@ class Api {
     ));
     //设置代理
     if (proxyHttp)
-      (_dio.httpClientAdapter as DefaultHttpClientAdapter)
-          .onHttpClientCreate = (client) {
+      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (client) {
         // config the http client
         client.findProxy = (uri) {
           //proxy all request to localhost:8888
@@ -137,29 +136,25 @@ class Api {
   }
 
   Future<BaseResp<T>> post<T>(
-      String path, {
-        @required JsonProcessor<T> processor,
-        Map<String, dynamic> formData,
-        CancelToken cancelToken,
-        ProgressCallback onReceiveProgress,
-        ProgressCallback onSendProgress,
-        bool showProgress = false,
-        String loadingText,
-      }) async {
-    assert(!showProgress || loadingText != null);
+    String path, {
+    @required JsonProcessor<T> processor,
+    Map<String, dynamic> formData,
+    CancelToken cancelToken,
+    ProgressCallback onReceiveProgress,
+    ProgressCallback onSendProgress,
+  }) async {
     assert(processor != null);
     processor = processor ?? (dynamic raw) => null;
     formData = formData ?? {};
     cancelToken = cancelToken ?? CancelToken();
     onReceiveProgress = onReceiveProgress ??
-            (count, total) {
+        (count, total) {
           ///默认接收进度
         };
     onSendProgress = onSendProgress ??
-            (count, total) {
+        (count, total) {
           ///默认发送进度
         };
-    print('$path');
     return _dio
         .post(
       path,
@@ -184,28 +179,22 @@ class Api {
     });
   }
 
-
   Future<BaseResp<T>> get<T>(
-      String path, {
-        @required JsonProcessor<T> processor,
-        Map<String, dynamic> queryMap,
-        CancelToken cancelToken,
-        ProgressCallback onReceiveProgress,
-        bool showProgress = false,
-        String loadingText,
-      }) async {
-    assert(!showProgress || loadingText != null);
+    String path, {
+    @required JsonProcessor<T> processor,
+    Map<String, dynamic> queryMap,
+    CancelToken cancelToken,
+    ProgressCallback onReceiveProgress,
+  }) async {
     assert(processor != null);
     processor = processor ?? (dynamic raw) => null;
     queryMap = queryMap ?? {};
     cancelToken = cancelToken ?? CancelToken();
     onReceiveProgress = onReceiveProgress ??
-            (count, total) {
+        (count, total) {
           ///默认接收进度
         };
-    print('$path');
-    return _dio
-        .get(
+    Response response = await _dio.get(
       path,
       queryParameters: queryMap,
       options: RequestOptions(
@@ -214,17 +203,13 @@ class Api {
       ),
       cancelToken: cancelToken,
       onReceiveProgress: onReceiveProgress,
-    )
-        .then((resp) {
-      return resp.data;
-    }).then((map) {
-      String status = map["status"];
-      String text = map["text"];
-      String token = map["token"];
-      dynamic _rawData = map["data"];
-      T data = processor(_rawData);
-      return BaseResp<T>(status, data, token, text);
-    });
+    );
+    Map<String, dynamic> map = response.data;
+    String status = map["status"];
+    String text = map["text"];
+    String token = map["token"];
+    dynamic _rawData = map["data"];
+    T data = processor(_rawData);
+    return BaseResp<T>(status, data, token, text);
   }
-
 }

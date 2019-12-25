@@ -1,12 +1,12 @@
 import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/middleware/middlewares.dart';
 import 'package:axj_app/model/cache.dart';
-import 'package:axj_app/store/app_store.dart';
+import 'package:axj_app/page/splash_page.dart';
+import 'package:axj_app/store/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:redux/redux.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,9 +14,14 @@ Future<void> main() async {
   runApp(FlutterReduxApp());
 }
 
+final Store<AppState> store = Store<AppState>(
+  appReduce,
+  initialState: AppState(),
+  middleware: createAppMiddleware(),
+);
+
 class FlutterReduxApp extends StatelessWidget {
-  final Store<AppState> store = Store<AppState>(appReduce,
-      initialState: AppState(), middleware: createAppMiddleware());
+
 
   FlutterReduxApp({Key key}) : super(key: key);
 
@@ -39,7 +44,7 @@ class FlutterReduxApp extends StatelessWidget {
             // is not restarted.
             primarySwatch: Colors.blue,
           ),
-          home: MyHomePage(title: 'Flutter Demo Home Page'),
+          home: SplashPage(),
         ),
       ),
     );
@@ -101,5 +106,4 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
-
 }
