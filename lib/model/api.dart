@@ -185,4 +185,46 @@ class Api {
   }
 
 
+  Future<BaseResp<T>> get<T>(
+      String path, {
+        @required JsonProcessor<T> processor,
+        Map<String, dynamic> queryMap,
+        CancelToken cancelToken,
+        ProgressCallback onReceiveProgress,
+        bool showProgress = false,
+        String loadingText,
+      }) async {
+    assert(!showProgress || loadingText != null);
+    assert(processor != null);
+    processor = processor ?? (dynamic raw) => null;
+    queryMap = queryMap ?? {};
+    cancelToken = cancelToken ?? CancelToken();
+    onReceiveProgress = onReceiveProgress ??
+            (count, total) {
+          ///默认接收进度
+        };
+    print('$path');
+    return _dio
+        .get(
+      path,
+      queryParameters: queryMap,
+      options: RequestOptions(
+        responseType: ResponseType.json,
+        headers: {AuthorizationHeader: Cache().token},
+      ),
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+    )
+        .then((resp) {
+      return resp.data;
+    }).then((map) {
+      String status = map["status"];
+      String text = map["text"];
+      String token = map["token"];
+      dynamic _rawData = map["data"];
+      T data = processor(_rawData);
+      return BaseResp<T>(status, data, token, text);
+    });
+  }
+
 }

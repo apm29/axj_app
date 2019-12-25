@@ -1,15 +1,16 @@
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
-
-import '../model/repository.dart';
+import 'package:axj_app/model/bean/user_info.dart';
+import 'package:axj_app/action/actions.dart';
 
 //数据类
 class AppState {
-  AppState({
-    userState,
-  }) : this.userState = userState ?? UserState();
+  AppState({userState, loading})
+      : this.userState = userState ?? UserState(),
+        this.loading = loading ?? false;
 
   UserState userState;
+  bool loading;
 
   @override
   String toString() {
@@ -18,42 +19,26 @@ class AppState {
 }
 
 class UserState {
-  String userInfo;
+  UserInfo userInfo;
   bool login;
+  String errorMsg;
 
-  UserState({userInfo, login})
+  UserState({userInfo, login, errorMsg})
       : this.login = login ?? false,
-        this.userInfo = userInfo ?? "";
+        this.userInfo = userInfo ?? null,
+        this.errorMsg = errorMsg ?? "";
 
   @override
   String toString() {
-    return 'UserState{userInfo: $userInfo}';
+    return 'UserState{userInfo: $userInfo, login: $login, errorMsg: $errorMsg}';
   }
 }
 
-abstract class AppAction {}
-
-class LoginAction implements AppAction {
-  final String username;
-  final String password;
-
-  LoginAction(this.username, this.password);
-}
-
-class LoginSuccessAction implements AppAction {
-  final String userInfo;
-
-  LoginSuccessAction(this.userInfo);
-}
-
-class LoginFailAction implements AppAction {
-  final String errorMsg;
-
-  LoginFailAction(this.errorMsg);
-}
 
 AppState appReduce(AppState state, action) {
-  return state..userState = userStateReducer(state.userState, action);
+  return state
+    ..userState = userStateReducer(state.userState, action)
+    ..loading = loadingReducer(state.loading, action);
 }
 
 final userStateReducer = combineReducers<UserState>(
@@ -64,34 +49,35 @@ final userStateReducer = combineReducers<UserState>(
   ],
 );
 
+final loadingReducer = combineReducers<bool>(
+  [
+    TypedReducer<bool, LoginAction>(appLoadingReducer),
+    TypedReducer<bool, LoginSuccessAction>(appLoadingReducer),
+    TypedReducer<bool, LoginFailAction>(appLoadingReducer),
+  ],
+);
+
+bool appLoadingReducer(bool init, action) {
+  return (action is StartAction);
+}
+
 UserState userLoginReducer(UserState state, LoginAction action) {
   return state;
 }
 
 UserState userLoginSuccessReducer(UserState state, LoginSuccessAction action) {
-  return state..userInfo = action.userInfo;
+  return state
+    ..userInfo = action.userInfo
+    ..login = true;
 }
 
 UserState userLoginFailReducer(UserState state, LoginFailAction action) {
-  return state..userInfo = action.errorMsg;
+  return state
+    ..login = false
+    ..errorMsg = action.errorMsg;
 }
 
-List<Middleware<AppState>> createAppMiddleware() {
-  return [TypedMiddleware<AppState, LoginAction>(loginFromRepo())];
-}
 
-Middleware<AppState> loginFromRepo() {
-  return (Store<AppState> store, action, NextDispatcher next) {
-    Repository.login(action.username, action.password).then(
-      (resp) {
-        store.dispatch(LoginSuccessAction(resp.data));
-      },
-    ).catchError((err) {
-      return store.dispatch(LoginFailAction(getErrorMessage(err)));
-    });
-    next(action);
-  };
-}
 
 String getErrorMessage(Object error) {
   if (error is DioError) {

@@ -30,8 +30,10 @@ dependencies:
 
   # dio
   dio: ^3.0.7
-
+  #sp
   shared_preferences: ^0.5.6
+  #toast
+  oktoast: ^2.3.0
 
 dev_dependencies:
   flutter_test:
