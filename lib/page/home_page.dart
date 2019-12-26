@@ -1,12 +1,17 @@
 import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/main_dev.dart';
+import 'package:axj_app/page/main_page.dart';
+import 'package:axj_app/page/mine_page.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_redux_dev_tools/flutter_redux_dev_tools.dart';
 
 ///
 /// author : ciih
 /// date : 2019-12-25 16:09
-/// description :
+/// description : 参考 https://juejin.im/post/5d051a5b6fb9a07ec07fbdc5
 ///
 class HomePage extends StatelessWidget {
   @override
@@ -18,15 +23,24 @@ class HomePage extends StatelessWidget {
         builder: (ctx, currentTab) {
           switch (currentTab) {
             case ActiveTab.Home:
-              return buildHome();
+              return MainPage();
             case ActiveTab.Mine:
-              return buildMine();
+              return MinePage();
             default:
               throw Exception('Unknow index enum: $currentTab');
           }
         },
       ),
       bottomNavigationBar: buildBottomNavigationBar(context),
+      endDrawer: Drawer(
+        child: ReduxDevTools(store),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.settings),
+        onPressed: () {
+          AppRouter.toPersonal(context);
+        },
+      ),
     );
   }
 
@@ -37,7 +51,8 @@ class HomePage extends StatelessWidget {
       builder: (ctx, index) => BottomNavigationBar(
         currentIndex: index,
         onTap: (index) {
-          StoreProvider.of<AppState>(context).dispatch(TabSwitchAction(index));
+          StoreProvider.of<AppState>(context)
+              .dispatch(TabSwitchAction(index, context));
         },
         items: [
           BottomNavigationBarItem(
@@ -50,18 +65,6 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildHome() {
-    return Center(
-      child: Text('Home'),
-    );
-  }
-
-  Widget buildMine() {
-    return Center(
-      child: Text('Mine'),
     );
   }
 }

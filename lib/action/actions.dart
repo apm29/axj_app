@@ -37,6 +37,7 @@ class AppInitAction implements AppAction {
 
 class TabSwitchAction implements AppAction{
   final int index;
+  final BuildContext context;
 
-  TabSwitchAction(this.index);
+  TabSwitchAction(this.index, this.context);
 }

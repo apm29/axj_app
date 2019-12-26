@@ -1,5 +1,10 @@
+import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/main_dev.dart';
 import 'package:axj_app/page/home_page.dart';
+import 'package:axj_app/page/login_page.dart';
+import 'package:axj_app/page/personal_settings_page.dart';
 import 'package:axj_app/page/splash_page.dart';
+import 'package:axj_app/store/store.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 
@@ -10,11 +15,19 @@ import 'package:flutter/material.dart';
 ///
 class Application {
   static Router router;
+
+  static void init() {
+    Router router = Router();
+    Routes.configureRoutes(router);
+    Application.router = router;
+  }
 }
 
 class Routes {
   static String root = "/";
   static String home = "/home";
+  static String login = "/login";
+  static String personalSettings = "/personal_settings";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(handlerFunc: (
@@ -29,6 +42,8 @@ class Routes {
     /// 我这边先不设置默认的转场动画，转场动画在下面会讲，可以在另外一个地方设置（可以看NavigatorUtil类）
     router.define(root, handler: splashHandler);
     router.define(home, handler: homeHandler);
+    router.define(login, handler: loginHandler);
+    router.define(personalSettings, handler: personalSettingsHandler);
   }
 }
 
@@ -44,16 +59,54 @@ class NotFoundPage extends StatelessWidget {
 }
 
 /// 跳转到首页Splash
-var splashHandler = new Handler(handlerFunc: (
-  BuildContext context,
-  Map<String, List<String>> params,
-) {
-  return SplashPage();
-});
+final splashHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return SplashPage();
+  },
+);
 
-var homeHandler = new Handler(handlerFunc: (
-    BuildContext context,
-    Map<String, List<String>> params,
-    ) {
-  return HomePage();
-});
+final homeHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return HomePage();
+  },
+);
+
+final personalSettingsHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return PersonalSettingsPage();
+  },
+);
+
+final loginHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return LoginPage();
+  },
+);
+
+class AppRouter {
+  static Future toHomeAndReplaceSelf(BuildContext context) {
+    return Application.router.navigateTo(context, Routes.home, replace: true);
+  }
+
+  static Future toPersonal(BuildContext context) {
+    return Application.router.navigateTo(
+      context,
+      Routes.personalSettings,
+      transition: TransitionType.inFromBottom,
+    );
+  }
+
+  static Future toHome(BuildContext context, ActiveTab activeTab) {
+    store.dispatch(TabSwitchAction(activeTab.index, context));
+    return Application.router
+        .navigateTo(context, Routes.home, replace: true, clearStack: true);
+  }
+
+  static Future toLogin(BuildContext context) {
+    return Application.router.navigateTo(
+      context,
+      Routes.login,
+      transition: TransitionType.inFromBottom,
+    );
+  }
+}

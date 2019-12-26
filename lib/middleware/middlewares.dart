@@ -17,6 +17,7 @@ List<Middleware<AppState>> createAppMiddleware() {
     TypedMiddleware<AppState, LoginAction>(loginWithUserName),
     TypedMiddleware<AppState, AppInitAction>(initApp),
     TypedMiddleware<AppState, AppAction>(startLoading),
+    TypedMiddleware<AppState, TabSwitchAction>(checkLogin),
   ];
 }
 
@@ -48,7 +49,15 @@ initApp(Store<AppState> store, action, NextDispatcher next) {
   next(action);
 }
 
-void init(action) async {
+void init(AppInitAction action) async {
   await Future.delayed(Duration(seconds: 2));
-  Application.router.navigateTo(action.context, Routes.home, replace: true);
+  AppRouter.toHomeAndReplaceSelf(action.context);
+}
+
+checkLogin(Store<AppState> store, TabSwitchAction action, NextDispatcher next) {
+  if (action.index == (ActiveTab.Mine.index) && !store.state.userState.login) {
+    AppRouter.toLogin(action.context);
+  }else{
+    next(store);
+  }
 }
