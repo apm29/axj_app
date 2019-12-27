@@ -1,28 +1,29 @@
-import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/middleware/middlewares.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/page/splash_page.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:redux/redux.dart';
+import 'package:redux_dev_tools/redux_dev_tools.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 初始化缓存
   await Cache().init();
+  // 注册 fluro routes
+  Application.init();
   runApp(FlutterReduxApp());
 }
 
-final Store<AppState> store = Store<AppState>(
+final DevToolsStore<AppState> store = DevToolsStore<AppState>(
   appReduce,
   initialState: AppState(),
   middleware: createAppMiddleware(),
 );
 
 class FlutterReduxApp extends StatelessWidget {
-
-
   FlutterReduxApp({Key key}) : super(key: key);
 
   @override
@@ -44,6 +45,7 @@ class FlutterReduxApp extends StatelessWidget {
             // is not restarted.
             primarySwatch: Colors.blue,
           ),
+          onGenerateRoute: Application.router.generator,
           home: SplashPage(),
         ),
       ),
@@ -51,59 +53,3 @@ class FlutterReduxApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: buildLoginSuccess(),
-      // Connect the Store to a FloatingActionButton. In this case, we'll
-      // use the Store to build a callback that with dispatch an Increment
-      // Action.
-      //
-      // Then, we'll pass this callback to the button's `onPressed` handler.
-      floatingActionButton: StoreConnector<AppState, VoidCallback>(
-        converter: (store) {
-          // Return a `VoidCallback`, which is a fancy name for a function
-          // with no parameters. It only dispatches an Increment action.
-          return () => store.dispatch(LoginAction('zhangby', '123456'));
-        },
-        builder: (context, callback) {
-          return FloatingActionButton(
-            // Attach the `callback` to the `onPressed` attribute
-            onPressed: callback,
-            child: Icon(Icons.add),
-          );
-        },
-      ),
-    );
-  }
-
-  Center buildLoginSuccess() {
-    return Center(
-      child: ListView(
-        children: <Widget>[
-          Text(
-            'You have pushed the button this many times:',
-          ),
-          StoreConnector<AppState, String>(
-            converter: (store) {
-              return store.state.userState.userInfo.toString();
-            },
-            builder: (context, info) {
-              return Text(
-                info,
-                style: Theme.of(context).textTheme.display1,
-              );
-            },
-          )
-        ],
-      ),
-    );
-  }
-}

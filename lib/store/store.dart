@@ -44,7 +44,7 @@ class UserState {
 }
 
 AppState appReduce(AppState state, action) {
-  return appStateReducer(state, action)
+  return state
     ..userState = userStateReducer(state.userState, action)
     ..loading = loadingReducer(state.loading, action)
     ..homePageState = homePageReducer(state.homePageState, action);
@@ -57,7 +57,10 @@ final appStateReducer = combineReducers<AppState>(
 final homePageReducer = combineReducers<HomePageState>(
   [
     TypedReducer<HomePageState, TabSwitchAction>(
-      (state, action) => HomePageState.fromIndex(action.index),
+      (state, action) {
+        print(action);
+        return HomePageState.fromIndex(action.index);
+      },
     ),
   ],
 );

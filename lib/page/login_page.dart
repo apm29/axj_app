@@ -295,7 +295,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             maxLength: phoneCount,
             keyboardType: TextInputType.phone,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 15,
             ),
             buildCounter: counter,
           ),
