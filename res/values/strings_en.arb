@@ -1,0 +1,22 @@
+{
+  "appName": "Monster",
+  "motto": "Understated,Forbearance,massacre",
+  "homeTab": "Home",
+  "mineTab": "Mine",
+  "smsLoginLabel":"SMS",
+
+  "phoneLabel": "Mobile",
+  "phoneHint": "11-digit mobile phone number",
+  "smsCodeLabel": "Code",
+  "smsCodeHint": "6-digit Verify Code",
+  "sendSmsCodeHint": "Send Code",
+
+  "passwordLoginLabel": "Account",
+  "userNameHint": "username",
+  "passwordHint": "password",
+
+  "loginLabel":"Login",
+  "serviceProtocolName": "$appName Service Protocol",
+  "serviceProtocolText": "I agree with <<$serviceProtocolName>>",
+  "registerLabel": "No account,Click to Sign in"
+}

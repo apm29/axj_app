@@ -1,0 +1,22 @@
+{
+  "appName": "卡牌助手",
+  "motto": "智慧生活,安心陪伴",
+  "homeTab": "主页",
+  "mineTab": "我的",
+  "smsLoginLabel":"短信登录",
+
+  "phoneLabel": "手机",
+  "phoneHint": "11位手机",
+  "smsCodeLabel": "验证码",
+  "smsCodeHint": "6位验证码",
+  "sendSmsCodeHint": "发送验证码",
+
+  "passwordLoginLabel": "密码登录",
+  "userNameHint": "用户名",
+  "passwordHint": "密码",
+
+  "loginLabel":"登录",
+  "$serviceProtocolName": "<<${appName}用户服务协议>>",
+  "serviceProtocolText": "登录即视为同意<<$serviceProtocolName>>",
+  "registerLabel": "没有账户? 点击注册"
+}

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,14 +52,14 @@ class LoginPage extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        '安心居',
+                        S.of(context).appName,
                         style: TextStyle(
                           fontSize: 32,
                           color: Colors.white,
                         ),
                       ),
                       Text(
-                        '智慧生活,安心陪伴',
+                        S.of(context).motto,
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
@@ -93,7 +94,7 @@ class LoginPage extends StatelessWidget {
                 child: FlatButton(
                   onPressed: () {},
                   child: Text(
-                    "还没有账号?,点击注册",
+                    S.of(context).registerLabel,
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
@@ -187,8 +188,8 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             indicatorColor: Theme.of(context).primaryColor,
             labelStyle: TextStyle(fontSize: 18),
             tabs: [
-              Tab(text: '短信登录'),
-              Tab(text: '密码登录'),
+              Tab(text: S.of(context).smsLoginLabel),
+              Tab(text: S.of(context).passwordLoginLabel),
             ],
           ),
           ConstrainedBox(
@@ -208,7 +209,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
                 width: MediaQuery.of(context).size.width),
             child: LoadingWidget(
               Text(
-                '登录',
+                S.of(context).loginLabel,
                 style: TextStyle(fontSize: 16, letterSpacing: 22),
               ),
               onPressed: enabled
@@ -251,7 +252,8 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             width: 12,
           ),
           Text(
-            '登录表示您已同意<<用户协议>>相关条款',
+            S.of(context).serviceProtocolText(
+                S.of(context).serviceProtocolName(S.of(context).appName)),
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],
@@ -275,12 +277,12 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
           child: TextField(
             controller: _phoneController,
             decoration: InputDecoration(
-              icon: Text('手机号'),
-              hintText: '11位手机号',
+              icon: Text(S.of(context).phoneLabel),
+              hintText: S.of(context).phoneHint,
               isDense: true,
               suffix: LoadingWidget(
                 Text(
-                  '发送验证码',
+                  S.of(context).sendSmsCodeHint,
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
                 onPressed: () async {
@@ -314,10 +316,10 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
-              icon: Text('验证码'),
+              icon: Text(S.of(context).smsCodeLabel),
               enabledBorder: border,
               focusedBorder: border,
-              helperText: "输入6位验证码",
+              helperText: S.of(context).smsCodeHint,
             ),
           ),
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -336,7 +338,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             controller: _nameController,
             decoration: InputDecoration(
               icon: Icon(Icons.person),
-              hintText: '账号名',
+              hintText: S.of(context).userNameHint,
             ),
             style: TextStyle(
               fontSize: 20,
@@ -349,9 +351,9 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             controller: _wordController,
             decoration: InputDecoration(
               icon: Icon(Icons.verified_user),
-              hintText: '密码',
+              hintText: S.of(context).passwordHint,
             ),
-            style: TextStyle(fontSize: 20, letterSpacing: 12),
+            style: TextStyle(fontSize: 20, ),
             obscureText: true,
           ),
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -426,9 +428,10 @@ class CustomRectInputBorder extends AbsInputBorder {
       }
     } else {
       curStartX = 3;
-      double width = rect.width/6;
+      double width = rect.width / 6;
       for (int i = 0; i < textLength; i++) {
-        Rect r = Rect.fromLTWH(curStartX, rect.top+4, width-6, rect.height-8);
+        Rect r =
+            Rect.fromLTWH(curStartX, rect.top + 4, width - 6, rect.height - 8);
         canvas.drawRRect(RRect.fromRectAndRadius(r, Radius.circular(6)),
             borderSide.toPaint());
         curStartX += (width);
