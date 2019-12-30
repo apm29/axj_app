@@ -11,7 +11,7 @@ class UserInfo {
   String avatar;
   String idCard;
 
-	UserInfo.fromJsonMap(Map<String, dynamic> map): 
+	UserInfo.fromJsonMap(Map<String, dynamic> map):
 		userId = map["userId"],
 		userName = map["userName"],
 		mobile = map["mobile"],

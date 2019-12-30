@@ -1,3 +1,4 @@
+import 'package:axj_app/model/LogInterceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/adapter.dart';
@@ -53,7 +54,7 @@ class Api {
   }
 
   static bool proxyHttp = false;
-  static bool printLog = false;
+  static bool printLog = true;
   static Api _instance;
 
   static Api getInstance() {
@@ -89,51 +90,10 @@ class Api {
         // return new HttpClient();
       };
     if (printLog)
-      _dio.interceptors.add(
-        InterceptorsWrapper(
-          onRequest: (req) {
-            debugPrint("REQUEST:");
-            debugPrint("===========================================");
-            debugPrint("  Method:${req.method},Url:${req.baseUrl + req.path}");
-            debugPrint("  Headers:${req.headers}");
-            debugPrint("  QueryParams:${req.queryParameters}");
-            print('=======>${req.data.runtimeType}');
-            if (req.data.runtimeType != FormData) {
-              debugPrint("    Data:${req.data}");
-            }
-
-            debugPrint("===========================================");
-          },
-          onResponse: (resp) {
-            debugPrint("REQUEST:");
-            debugPrint("===========================================");
-            debugPrint(
-                "  Method:${resp.request.method},Url:${resp.request.baseUrl + resp.request.path}");
-            debugPrint("  Headers:${resp.request.headers}");
-            debugPrint("  QueryParams:${resp.request.queryParameters}");
-            if (resp.request.data.runtimeType != FormData) {
-              debugPrint("  Data:${resp.request.data}");
-            }
-            debugPrint("  -------------------------");
-            debugPrint("  RESULT:");
-            debugPrint("    Headers:${resp.headers}");
-            debugPrint("  Data:${resp.data}");
-            debugPrint("    Redirect:${resp.redirects}");
-            debugPrint("    StatusCode:${resp.statusCode}");
-            debugPrint("    Extras:${resp.extra}");
-            debugPrint(" ===========================================");
-          },
-          onError: (err) {
-            debugPrint("ERROR:");
-            debugPrint("===========================================");
-            debugPrint("Message:${err.message}");
-            debugPrint("Error:${err.error}");
-            debugPrint("Type:${err.type}");
-            debugPrint("===========================================");
-          },
-        ),
-      );
+      _dio.interceptors.add(DioLogInterceptor());
   }
+
+
 
   Future<BaseResp<T>> post<T>(
     String path, {
@@ -158,7 +118,8 @@ class Api {
     return _dio
         .post(
       path,
-      data: FormData.fromMap(formData),
+      data: formData,
+      //FormData.fromMap(formData),
       options: RequestOptions(
         responseType: ResponseType.json,
         headers: {AuthorizationHeader: Cache().token},
@@ -170,12 +131,18 @@ class Api {
         .then((resp) {
       return resp.data;
     }).then((map) {
-      String status = map["status"];
-      String text = map["text"];
-      String token = map["token"];
+      dynamic status = map["status"];
+      dynamic text = map["text"];
+      dynamic token = map["token"];
       dynamic _rawData = map["data"];
-      T data = processor(_rawData);
-      return BaseResp<T>(status, data, token, text);
+      T data;
+      try {
+        data = processor(_rawData);
+      } catch (e) {
+        print(e);
+      }
+      return BaseResp<T>(
+          status.toString(), data, token.toString(), text.toString());
     });
   }
 
@@ -205,11 +172,17 @@ class Api {
       onReceiveProgress: onReceiveProgress,
     );
     Map<String, dynamic> map = response.data;
-    String status = map["status"];
-    String text = map["text"];
-    String token = map["token"];
+    dynamic status = map["status"];
+    dynamic text = map["text"];
+    dynamic token = map["token"];
     dynamic _rawData = map["data"];
-    T data = processor(_rawData);
-    return BaseResp<T>(status, data, token, text);
+    T data;
+    try {
+      data = processor(_rawData);
+    } catch (e) {
+      print(e);
+    }
+    return BaseResp<T>(
+        status.toString(), data, token.toString(), text.toString());
   }
 }

@@ -1,3 +1,5 @@
+import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/main.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,13 @@ class PersonalSettingsPage extends StatelessWidget {
                 AppRouter.toHome(context, ActiveTab.Home);
               },
               child: Text('Home'),
+            ),
+            RaisedButton(
+              onPressed: () {
+                store.dispatch(LogoutAction());
+                AppRouter.toHome(context, ActiveTab.Home);
+              },
+              child: Text('Logout'),
             ),
           ],
         ),

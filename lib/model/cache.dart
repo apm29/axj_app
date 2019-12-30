@@ -1,3 +1,4 @@
+import 'package:axj_app/store/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Cache {
@@ -14,9 +15,19 @@ class Cache {
     return _cacheInstance;
   }
 
+  final tokenKey = 'token';
+
   init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  String get token => _sharedPreferences.get('token');
+  String get token => _sharedPreferences.get(tokenKey);
+
+  void setToken(String token) {
+    try {
+      _sharedPreferences.setString(tokenKey, token);
+    } catch (e) {
+      print(getErrorMessage(e));
+    }
+  }
 }
