@@ -6,17 +6,27 @@
   "smsLoginLabel":"SMS",
 
   "phoneLabel": "Mobile",
-  "phoneHint": "11-digit mobile phone number",
+  "phoneHint": "phone number",
   "smsCodeLabel": "Code",
-  "smsCodeHint": "6-digit Verify Code",
+  "smsCodeHint": "SMS Code",
   "sendSmsCodeHint": "Send Code",
 
   "passwordLoginLabel": "Account",
   "userNameHint": "username",
   "passwordHint": "password",
+  "passwordRepeatHint": "repeat password",
 
   "loginLabel":"Login",
+  "logoutLabel":"Logout",
+  "localeMenuLabel":"Localization",
+
   "serviceProtocolName": "$appName Service Protocol",
   "serviceProtocolText": "I agree with <<$serviceProtocolName>>",
-  "registerLabel": "No account,Click to Sign in"
+  "registerHint": "No account,Click to Sign in",
+  "registerLabel": "Sign in",
+
+  "settingsPageTitle": "Personal Settings",
+
+
+
 }

@@ -107,9 +107,8 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                         child: Container(
                           child: widget.child,
                           constraints:
-                              BoxConstraints(minHeight: 32.0, minWidth: 72.0),
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              BoxConstraints(minHeight: 36.0, minWidth: 72.0),
+                          alignment: Alignment.center,
                         ),
                       ),
                       opacity: _loading ? 0 : 1,

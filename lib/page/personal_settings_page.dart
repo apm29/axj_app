@@ -1,4 +1,5 @@
 import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
@@ -14,7 +15,7 @@ class PersonalSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('个人中心'),
+        title: Text(S.of(context).settingsPageTitle),
       ),
       body: Center(
         child: Column(
@@ -23,20 +24,20 @@ class PersonalSettingsPage extends StatelessWidget {
               onPressed: () {
                 AppRouter.toHome(context, ActiveTab.Mine);
               },
-              child: Text('Mine'),
+              child: Text(S.of(context).mineTab),
             ),
             RaisedButton(
               onPressed: () {
                 AppRouter.toHome(context, ActiveTab.Home);
               },
-              child: Text('Home'),
+              child: Text(S.of(context).homeTab),
             ),
             RaisedButton(
               onPressed: () {
                 store.dispatch(LogoutAction());
                 AppRouter.toHome(context, ActiveTab.Home);
               },
-              child: Text('Logout'),
+              child: Text(S.of(context).logoutLabel),
             ),
             PopupMenuButton<Locale>(
               itemBuilder: (ctx) {
@@ -55,7 +56,7 @@ class PersonalSettingsPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Localization',
+                    S.of(context).localeMenuLabel,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 16

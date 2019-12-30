@@ -1,10 +1,11 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/page/component/SmsBorder.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,95 +20,102 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Stack(
-          children: <Widget>[
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-            ),
-            Positioned(
-              top: 0,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    end: Alignment(0.0, 0.5),
-                    begin: Alignment(0.0, 0.0),
-                    colors: <Color>[
-                      Color(0x60000000),
-                      Color(0x00000000),
-                    ],
-                  ),
-                ),
-                position: DecorationPosition.foreground,
-                child: Image.asset(
-                  'assets/images/pineapple.jpg',
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width * 0.62,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: SafeArea(
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      S.of(context).appName,
-                      style: TextStyle(
-                        fontSize: 32,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      S.of(context).motto,
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: Colors.white,
-                        fontFamily: 'handwrite_font',
-                      ),
-                    ),
+      body: Stack(
+        children: <Widget>[
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          ),
+          Positioned(
+            top: 0,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  end: Alignment(0.0, 0.5),
+                  begin: Alignment(0.0, 0.0),
+                  colors: <Color>[
+                    Color(0x60000000),
+                    Color(0x00000000),
                   ],
                 ),
               ),
-            ),
-            Positioned(
-              right: 16,
-              top: 16,
-              child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  size: 36,
-                  color: Colors.white,
-                ),
-                onPressed: () => Navigator.of(context).pop(),
+              position: DecorationPosition.foreground,
+              child: Image.asset(
+                'assets/images/pineapple.jpg',
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width * 0.62,
+                fit: BoxFit.fill,
               ),
             ),
-            Positioned(
-              top: MediaQuery.of(context).size.width * 0.36,
-              left: 32,
-              right: 32,
-              child: LoginCard(
-                parent: context,
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    S.of(context).appName,
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    S.of(context).motto,
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontFamily: 'handwrite_font',
+                    ),
+                  ),
+                ],
               ),
             ),
-            Positioned(
-              left: 20,
-              bottom: 20,
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  S.of(context).registerLabel,
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
+          ),
+          Positioned(
+            right: 16,
+            top: 16,
+            child: IconButton(
+              icon: Icon(
+                Icons.close,
+                size: 36,
+                color: Colors.white,
               ),
-            )
-          ],
-        ),
+              onPressed: () => _close(context),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 20).add(
+              EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.18,
+              ),
+            ),
+            child: LoginCard(
+              parent: context,
+            ),
+          ),
+          Positioned(
+            left: 20,
+            bottom: 20,
+            child: FlatButton(
+              onPressed: () => _register(context),
+              child: Text(
+                S.of(context).registerHint,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
+
+  bool _close(BuildContext context) => Navigator.of(context).pop();
+
+  void _register(BuildContext context) => AppRouter.toRegister(context);
 }
 
 class LoginCard extends StatefulWidget {
@@ -183,7 +191,8 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
       type: MaterialType.card,
       elevation: 3,
       color: Colors.white,
-      child: Column(
+      child: ListView(
+        shrinkWrap: true,
         children: <Widget>[
           TabBar(
             controller: tabController,
@@ -215,19 +224,11 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             child: LoadingWidget(
               Text(
                 S.of(context).loginLabel,
-                style: TextStyle(fontSize: 16, letterSpacing: 22),
+                style: TextStyle(fontSize: 16),
               ),
               onPressed: enabled
                   ? () async {
-                      if (tabController.index == 0) {
-                        store.dispatch(FastLoginAction(
-                            _phoneController.text, _smsController.text));
-                      } else {
-                        store.dispatch(
-                          LoginAction(_nameController.text,
-                              _wordController.text, context),
-                        );
-                      }
+                      _login(context);
                     }
                   : null,
               gradient: LinearGradient(colors: [
@@ -294,15 +295,15 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               hintText: S.of(context).phoneHint,
               isDense: true,
               suffix: LoadingWidget(
-                Text(
-                  S.of(context).sendSmsCodeHint,
-                  style: TextStyle(color: Theme.of(context).primaryColor),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    S.of(context).sendSmsCodeHint,
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ),
                 onPressed: () async {
-                  BaseResp resp =
-                      await Repository.sendVerifyCode(_phoneController.text);
-                  showToast(resp.text);
-                  _smsFocusNode.requestFocus();
+                  await _sendSmsCode();
                 },
               ),
               focusedBorder: UnderlineInputBorder(
@@ -368,7 +369,9 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               icon: Icon(Icons.verified_user),
               hintText: S.of(context).passwordHint,
             ),
-            style: TextStyle(fontSize: 20, ),
+            style: TextStyle(
+              fontSize: 20,
+            ),
             obscureText: true,
           ),
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -378,79 +381,21 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.center,
     );
   }
-}
 
-abstract class AbsInputBorder extends UnderlineInputBorder {
-  final double textSize;
-  final double letterSpace;
-  final int textLength;
-
-  final double startOffset;
-
-  double calcTrueTextSize() {
-    // 测量单个数字实际长度
-    var paragraph = ParagraphBuilder(ParagraphStyle(fontSize: textSize))
-      ..addText("8");
-    var p = paragraph.build()
-      ..layout(ParagraphConstraints(width: double.infinity));
-    return p.minIntrinsicWidth;
+  Future _sendSmsCode() async {
+    BaseResp resp = await Repository.sendVerifyCode(_phoneController.text);
+    showToast(resp.text);
+    _smsFocusNode.requestFocus();
   }
 
-  AbsInputBorder({
-    this.textSize = 0.0,
-    this.letterSpace = 0.0,
-    this.textLength,
-    BorderSide borderSide = const BorderSide(),
-  })  : startOffset = letterSpace * 0.5,
-        super(borderSide: borderSide) {
-    calcTrueTextSize();
-  }
-}
-
-class CustomRectInputBorder extends AbsInputBorder {
-  CustomRectInputBorder({
-    double textSize = 0.0,
-    @required double letterSpace,
-    @required int textLength,
-    BorderSide borderSide = const BorderSide(),
-  }) : super(
-            textSize: textSize,
-            letterSpace: letterSpace,
-            textLength: textLength,
-            borderSide: borderSide);
-
-  @override
-  void paint(
-    Canvas canvas,
-    Rect rect, {
-    double gapStart,
-    double gapExtent = 0.0,
-    double gapPercentage = 0.0,
-    TextDirection textDirection,
-  }) {
-    double textTrueWidth = calcTrueTextSize();
-    double offsetX = textTrueWidth * 0.5;
-
-    double offsetY = textTrueWidth * 0.5;
-    double curStartX = rect.left + startOffset - offsetX;
-    if (!Platform.isIOS) {
-      for (int i = 0; i < textLength; i++) {
-        Rect r = Rect.fromLTWH(curStartX, rect.top + offsetY,
-            textTrueWidth + offsetX * 2, rect.height - offsetY * 2);
-        canvas.drawRRect(RRect.fromRectAndRadius(r, Radius.circular(6)),
-            borderSide.toPaint());
-        curStartX += (textTrueWidth + letterSpace);
-      }
+  void _login(BuildContext context) {
+    if (tabController.index == 0) {
+      store.dispatch(
+          FastLoginAction(_phoneController.text, _smsController.text));
     } else {
-      curStartX = 3;
-      double width = rect.width / 6;
-      for (int i = 0; i < textLength; i++) {
-        Rect r =
-            Rect.fromLTWH(curStartX, rect.top + 4, width - 6, rect.height - 8);
-        canvas.drawRRect(RRect.fromRectAndRadius(r, Radius.circular(6)),
-            borderSide.toPaint());
-        curStartX += (width);
-      }
+      store.dispatch(
+        LoginAction(_nameController.text, _wordController.text, context),
+      );
     }
   }
 }

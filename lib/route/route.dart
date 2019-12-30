@@ -3,6 +3,7 @@ import 'package:axj_app/main.dart';
 import 'package:axj_app/page/home_page.dart';
 import 'package:axj_app/page/login_page.dart';
 import 'package:axj_app/page/personal_settings_page.dart';
+import 'package:axj_app/page/register_page.dart';
 import 'package:axj_app/page/splash_page.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:fluro/fluro.dart';
@@ -28,6 +29,7 @@ class Routes {
   static String home = "/home";
   static String login = "/login";
   static String personalSettings = "/personal_settings";
+  static String register = "/register";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(handlerFunc: (
@@ -44,6 +46,7 @@ class Routes {
     router.define(home, handler: homeHandler);
     router.define(login, handler: loginHandler);
     router.define(personalSettings, handler: personalSettingsHandler);
+    router.define(register, handler: registerHandler);
   }
 }
 
@@ -83,6 +86,12 @@ final loginHandler = new Handler(
   },
 );
 
+final registerHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return RegisterPage();
+  },
+);
+
 class AppRouter {
   static Future toHomeAndReplaceSelf(BuildContext context) {
     return Application.router.navigateTo(context, Routes.home, replace: true);
@@ -108,6 +117,15 @@ class AppRouter {
       Routes.login,
       transition
           : TransitionType.inFromBottom,
+    );
+  }
+
+  static Future toRegister(BuildContext context) {
+    return Application.router.navigateTo(
+      context,
+      Routes.register,
+      transition
+          : TransitionType.cupertino,
     );
   }
 }

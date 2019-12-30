@@ -23,16 +23,21 @@ class S implements WidgetsLocalizations {
 
   String get appName => "Monster";
   String get homeTab => "Home";
+  String get localeMenuLabel => "Localization";
   String get loginLabel => "Login";
+  String get logoutLabel => "Logout";
   String get mineTab => "Mine";
   String get motto => "Understated,Forbearance,massacre";
   String get passwordHint => "password";
   String get passwordLoginLabel => "Account";
-  String get phoneHint => "11-digit mobile phone number";
+  String get passwordRepeatHint => "repeat password";
+  String get phoneHint => "phone number";
   String get phoneLabel => "Mobile";
-  String get registerLabel => "No account,Click to Sign in";
+  String get registerHint => "No account,Click to Sign in";
+  String get registerLabel => "Sign in";
   String get sendSmsCodeHint => "Send Code";
-  String get smsCodeHint => "6-digit Verify Code";
+  String get settingsPageTitle => "Personal Settings";
+  String get smsCodeHint => "SMS Code";
   String get smsCodeLabel => "Code";
   String get smsLoginLabel => "SMS";
   String get userNameHint => "username";
@@ -53,7 +58,7 @@ class $zh_CN extends S {
   @override
   String get sendSmsCodeHint => "发送验证码";
   @override
-  String get registerLabel => "没有账户? 点击注册";
+  String get registerLabel => "注册";
   @override
   String get passwordHint => "密码";
   @override
@@ -63,6 +68,8 @@ class $zh_CN extends S {
   @override
   String get loginLabel => "登录";
   @override
+  String get logoutLabel => "登出";
+  @override
   String get phoneHint => "11位手机";
   @override
   String get phoneLabel => "手机";
@@ -71,15 +78,23 @@ class $zh_CN extends S {
   @override
   String get mineTab => "我的";
   @override
+  String get localeMenuLabel => "国际化";
+  @override
   String get userNameHint => "用户名";
   @override
   String get smsCodeLabel => "验证码";
+  @override
+  String get passwordRepeatHint => "重复密码";
   @override
   String get homeTab => "主页";
   @override
   String get motto => "智慧生活,安心陪伴";
   @override
   String get smsCodeHint => "6位验证码";
+  @override
+  String get registerHint => "没有账户? 点击注册";
+  @override
+  String get settingsPageTitle => "个人设置";
   @override
   String serviceProtocolText(String serviceProtocolName) => "登录即视为同意<<$serviceProtocolName>>";
 }
