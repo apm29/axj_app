@@ -18,7 +18,10 @@ class LoginAction implements AppAction, StartAction {
   LoginAction(this.username, this.password, this.context);
 
 }
-
+class ChangeLocaleAction implements AppAction{
+  final Locale locale;
+  ChangeLocaleAction(this.locale);
+}
 class LogoutAction implements AppAction{}
 
 class FastLoginAction implements AppAction, StartAction {

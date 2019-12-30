@@ -38,6 +38,39 @@ class PersonalSettingsPage extends StatelessWidget {
               },
               child: Text('Logout'),
             ),
+            PopupMenuButton<Locale>(
+              itemBuilder: (ctx) {
+                return [
+                  PopupMenuItem(
+                    child: Text('中文'),
+                    value: Locale('zh'),
+                  ),
+                  PopupMenuItem(
+                    child: Text('English'),
+                    value: Locale('en'),
+                  ),
+                ];
+              },
+              child: Material(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Localization',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16
+                    ),
+                  ),
+                ),
+                type: MaterialType.button,
+                color: Colors.grey[300],
+                elevation: 2,
+              ),
+              onSelected: (locale) {
+                store.dispatch(ChangeLocaleAction(locale));
+                AppRouter.toHome(context, ActiveTab.Home);
+              },
+            ),
           ],
         ),
       ),

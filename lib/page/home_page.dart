@@ -1,4 +1,5 @@
 import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/page/main_page.dart';
 import 'package:axj_app/page/mine_page.dart';
@@ -58,11 +59,11 @@ class HomePage extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('主页'),
+            title: Text(S.of(context).homeTab),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text('我的'),
+            title: Text(S.of(context).mineTab),
           ),
         ],
       ),

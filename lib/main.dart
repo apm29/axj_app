@@ -33,31 +33,33 @@ class FlutterReduxApp extends StatelessWidget {
     return StoreProvider(
       store: store,
       child: OKToast(
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          localizationsDelegates: [
-            // ... app-specific localization delegate[s] here
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
-          localeResolutionCallback:
-          S.delegate.resolution(fallback: const Locale('en', '')),
-          theme: ThemeData(
-            // This is the theme of your application.
-            //
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Theme.of(context).primaryColor and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or simply save your changes to "hot reload" in a Flutter IDE).
-            // Notice that the counter didn't reset back to zero; the application
-            // is not restarted.
-            primarySwatch: Colors.blue,
+        child: StoreConnector<AppState,Locale>(
+          converter: (store)=>store.state.locale,
+          distinct: true,
+          builder: (ctx,locale)=>MaterialApp(
+            localizationsDelegates: [
+              // ... app-specific localization delegate[s] here
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+            theme: ThemeData(
+              // This is the theme of your application.
+              //
+              // Try running your application with "flutter run". You'll see the
+              // application has a blue toolbar. Then, without quitting the app, try
+              // changing the primarySwatch below to Theme.of(context).primaryColor and then invoke
+              // "hot reload" (press "r" in the console where you ran "flutter run",
+              // or simply save your changes to "hot reload" in a Flutter IDE).
+              // Notice that the counter didn't reset back to zero; the application
+              // is not restarted.
+              primarySwatch: Colors.blue,
+            ),
+            onGenerateRoute: Application.router.generator,
+            locale: locale,
+            home: SplashPage(),
           ),
-          onGenerateRoute: Application.router.generator,
-          home: SplashPage(),
         ),
       ),
     );
