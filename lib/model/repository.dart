@@ -14,12 +14,12 @@ class Repository {
     );
   }
 
-  static Future<BaseResp> sendVerifyCode(String mobile)  {
-    return Api().get(
+  static Future<BaseResp> sendVerifyCode(String mobile,{isRegister:false})  {
+    return Api().post(
       "/permission/user/getVerifyCode",
-      queryMap: {"mobile": mobile, "type": 1},
+      formData: {"mobile": mobile, "type": isRegister?0:1},
       processor: (s) {
-        return s;
+        return null;
       },
     );
   }

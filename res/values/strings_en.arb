@@ -15,6 +15,7 @@
   "userNameHint": "username",
   "passwordHint": "password",
   "passwordRepeatHint": "repeat password",
+  "passwordRepeatError": "Inconsistent passwords",
 
   "loginLabel":"Login",
   "logoutLabel":"Logout",
@@ -23,9 +24,10 @@
   "serviceProtocolName": "$appName Service Protocol",
   "serviceProtocolText": "I agree with <<$serviceProtocolName>>",
   "registerHint": "No account,Click to Sign in",
-  "registerLabel": "Sign in",
+  "registerTitle": "Sign in",
+  "registerLabel": "Sign in now!",
 
-  "settingsPageTitle": "Personal Settings",
+  "settingsPageTitle": "Personal Settings"
 
 
 

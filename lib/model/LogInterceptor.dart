@@ -33,6 +33,8 @@ class DioLogInterceptor extends Interceptor{
     debugPrint("====================================================================================================");
     debugPrint("Message:${err.message}");
     debugPrint("Error:${err.error}");
+    debugPrint("Data:");
+    print(err.response);
     debugPrint("Type:${err.type}");
     debugPrint("====================================================================================================");
     return Future.value();

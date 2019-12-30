@@ -4,7 +4,6 @@ import 'package:axj_app/main.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/generated/i18n.dart';
-import 'package:axj_app/page/component/SmsBorder.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,7 +114,13 @@ class LoginPage extends StatelessWidget {
 
   bool _close(BuildContext context) => Navigator.of(context).pop();
 
-  void _register(BuildContext context) => AppRouter.toRegister(context);
+  void _register(BuildContext context) =>
+      AppRouter.toRegister(context).then((resMap) {
+        if (resMap != null) {
+          store.dispatch(
+              LoginAction(resMap['userName'], resMap['password'], context));
+        }
+      });
 }
 
 class LoginCard extends StatefulWidget {
@@ -276,15 +281,15 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
   }
 
   buildSmsForm() {
-    final border = CustomRectInputBorder(
-      letterSpace: letterSpace,
-      textSize: textSize,
-      textLength: smsCount,
-      borderSide: BorderSide(
-        color: Theme.of(context).primaryColor.withOpacity(0.6),
-        width: 1.0,
-      ),
-    );
+//    final border = CustomRectInputBorder(
+//      letterSpace: letterSpace,
+//      textSize: textSize,
+//      textLength: smsCount,
+//      borderSide: BorderSide(
+//        color: Theme.of(context).primaryColor.withOpacity(0.6),
+//        width: 1.0,
+//      ),
+//    );
     return Column(
       children: <Widget>[
         Container(
@@ -333,8 +338,11 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               icon: Text(S.of(context).smsCodeLabel),
-              enabledBorder: border,
-              focusedBorder: border,
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).primaryColor),
+              ),
+//              enabledBorder: border,
+//              focusedBorder: border,
               helperText: S.of(context).smsCodeHint,
             ),
           ),

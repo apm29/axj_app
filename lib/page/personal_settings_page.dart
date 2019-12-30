@@ -28,6 +28,12 @@ class PersonalSettingsPage extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () {
+                AppRouter.toRegister(context);
+              },
+              child: Text(S.of(context).registerTitle),
+            ),
+            RaisedButton(
+              onPressed: () {
                 AppRouter.toHome(context, ActiveTab.Home);
               },
               child: Text(S.of(context).homeTab),

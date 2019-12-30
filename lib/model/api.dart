@@ -89,11 +89,8 @@ class Api {
         // you can also create a new HttpClient to dio
         // return new HttpClient();
       };
-    if (printLog)
-      _dio.interceptors.add(DioLogInterceptor());
+    if (printLog) _dio.interceptors.add(DioLogInterceptor());
   }
-
-
 
   Future<BaseResp<T>> post<T>(
     String path, {
@@ -102,6 +99,7 @@ class Api {
     CancelToken cancelToken,
     ProgressCallback onReceiveProgress,
     ProgressCallback onSendProgress,
+    useFormData: false,
   }) async {
     assert(processor != null);
     processor = processor ?? (dynamic raw) => null;
@@ -118,7 +116,7 @@ class Api {
     return _dio
         .post(
       path,
-      data: formData,
+      data: useFormData ? FormData.fromMap(formData) : formData,
       //FormData.fromMap(formData),
       options: RequestOptions(
         responseType: ResponseType.json,

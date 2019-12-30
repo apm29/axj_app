@@ -15,15 +15,17 @@
   "userNameHint": "用户名",
   "passwordHint": "密码",
   "passwordRepeatHint": "重复密码",
+  "passwordRepeatError": "密码不一致",
 
   "loginLabel":"登录",
   "logoutLabel":"登出",
   "localeMenuLabel":"国际化",
 
-  "$serviceProtocolName": "<<${appName}用户服务协议>>",
+  "serviceProtocolName": "${appName}用户服务协议",
   "serviceProtocolText": "登录即视为同意<<$serviceProtocolName>>",
   "registerHint": "没有账户? 点击注册",
-  "registerLabel": "注册",
+  "registerTitle": "注册",
+  "registerLabel": "立即注册",
 
   "settingsPageTitle": "个人设置"
 
