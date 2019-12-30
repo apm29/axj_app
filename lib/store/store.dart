@@ -1,3 +1,4 @@
+import 'package:axj_app/model/cache.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
 import 'package:axj_app/model/bean/user_info.dart';
@@ -24,7 +25,13 @@ class HomePageState {
   final ActiveTab currentTab;
 
   HomePageState({ActiveTab currentTab}) : this.currentTab = currentTab ?? ActiveTab.Home;
-  HomePageState.fromIndex(int index) : this.currentTab = ActiveTab.values[index];
+
+  @override
+  String toString() {
+    return 'HomePageState{currentTab: $currentTab}';
+  }
+
+
 }
 
 class UserState {
@@ -44,22 +51,27 @@ class UserState {
 }
 
 AppState appReduce(AppState state, action) {
-  return state
+  print(action);
+  return appStateReducer(state,action)
     ..userState = userStateReducer(state.userState, action)
     ..loading = loadingReducer(state.loading, action)
     ..homePageState = homePageReducer(state.homePageState, action);
 }
 
 final appStateReducer = combineReducers<AppState>(
-  [],
+  [
+    TypedReducer<AppState,AppInitAction>((state,action){
+      return state;
+    })
+  ],
 );
 
 final homePageReducer = combineReducers<HomePageState>(
   [
     TypedReducer<HomePageState, TabSwitchAction>(
       (state, action) {
-        print(action);
-        return HomePageState.fromIndex(action.index);
+        var homePageState = HomePageState(currentTab:ActiveTab.values[action.index]);
+        return homePageState;
       },
     ),
   ],
@@ -70,6 +82,7 @@ final userStateReducer = combineReducers<UserState>(
     TypedReducer<UserState, LoginAction>(userLoginReducer),
     TypedReducer<UserState, LoginSuccessAction>(userLoginSuccessReducer),
     TypedReducer<UserState, LoginFailAction>(userLoginFailReducer),
+    TypedReducer<UserState, LogoutAction>(userLogout),
   ],
 );
 
@@ -85,24 +98,22 @@ bool appLoadingReducer(bool init, action) {
   return (action is StartAction);
 }
 
-AppState appInitReducer(AppState state, AppInitAction action) {
-  return state;
-}
 
 UserState userLoginReducer(UserState state, LoginAction action) {
   return state;
 }
+UserState userLogout(UserState state, LogoutAction action) {
+  Cache().setToken(null);
+  return UserState();
+}
 
 UserState userLoginSuccessReducer(UserState state, LoginSuccessAction action) {
-  return state
-    ..userInfo = action.userInfo
-    ..login = true;
+  print(action);
+  return UserState(userInfo: action.userInfo,login: true,errorMsg: null);
 }
 
 UserState userLoginFailReducer(UserState state, LoginFailAction action) {
-  return state
-    ..login = false
-    ..errorMsg = action.errorMsg;
+  return UserState(userInfo: null,login: false,errorMsg: action.errorMsg);
 }
 
 String getErrorMessage(Object error) {

@@ -1,5 +1,5 @@
 import 'package:axj_app/action/actions.dart';
-import 'package:axj_app/main_dev.dart';
+import 'package:axj_app/main.dart';
 import 'package:axj_app/page/main_page.dart';
 import 'package:axj_app/page/mine_page.dart';
 import 'package:axj_app/route/route.dart';
@@ -18,8 +18,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StoreConnector<AppState, ActiveTab>(
-        converter: (store) => store.state.homePageState.currentTab,
-        distinct: true,
+        converter: (store) {
+          return store.state.homePageState.currentTab;
+        },
         builder: (ctx, currentTab) {
           switch (currentTab) {
             case ActiveTab.Home:
@@ -51,7 +52,7 @@ class HomePage extends StatelessWidget {
       builder: (ctx, index) => BottomNavigationBar(
         currentIndex: index,
         onTap: (index) {
-          StoreProvider.of<AppState>(context)
+          store
               .dispatch(TabSwitchAction(index, context));
         },
         items: [

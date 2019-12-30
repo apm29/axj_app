@@ -1,5 +1,5 @@
 import 'package:axj_app/action/actions.dart';
-import 'package:axj_app/main_dev.dart';
+import 'package:axj_app/main.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -24,6 +24,12 @@ class SplashPage extends StatelessWidget {
         return Scaffold(
           endDrawer: Drawer(
             child: ReduxDevTools(store),
+          ),
+          body: SizedBox.expand(
+            child: Image.asset(
+              'assets/images/splash.png',
+              fit: BoxFit.cover,
+            ),
           ),
           floatingActionButton: Builder(builder: (ctx) {
             return FloatingActionButton(

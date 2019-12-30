@@ -1,5 +1,5 @@
 import 'package:axj_app/action/actions.dart';
-import 'package:axj_app/main_dev.dart';
+import 'package:axj_app/main.dart';
 import 'package:axj_app/page/home_page.dart';
 import 'package:axj_app/page/login_page.dart';
 import 'package:axj_app/page/personal_settings_page.dart';
@@ -106,7 +106,8 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.login,
-      transition: TransitionType.inFromBottom,
+      transition
+          : TransitionType.inFromBottom,
     );
   }
 }

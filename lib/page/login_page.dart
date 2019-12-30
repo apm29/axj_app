@@ -1,9 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/main.dart';
+import 'package:axj_app/model/api.dart';
+import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 
 ///
 /// author : ciih
@@ -15,92 +20,90 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-              ),
-              Positioned(
-                top: 0,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      end: Alignment(0.0, 0.5),
-                      begin: Alignment(0.0, 0.0),
-                      colors: <Color>[
-                        Color(0x60000000),
-                        Color(0x00000000),
-                      ],
-                    ),
-                  ),
-                  position: DecorationPosition.foreground,
-                  child: Image.asset(
-                    'assets/images/pineapple.jpg',
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.width * 0.62,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: SafeArea(
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        S.of(context).appName,
-                        style: TextStyle(
-                          fontSize: 32,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        S.of(context).motto,
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          fontFamily: 'handwrite_font',
-                        ),
-                      ),
+        child: Stack(
+          children: <Widget>[
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+            ),
+            Positioned(
+              top: 0,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    end: Alignment(0.0, 0.5),
+                    begin: Alignment(0.0, 0.0),
+                    colors: <Color>[
+                      Color(0x60000000),
+                      Color(0x00000000),
                     ],
                   ),
                 ),
-              ),
-              Positioned(
-                right: 16,
-                top: 16,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    size: 36,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
+                position: DecorationPosition.foreground,
+                child: Image.asset(
+                  'assets/images/pineapple.jpg',
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width * 0.62,
+                  fit: BoxFit.fill,
                 ),
               ),
-              Positioned(
-                top: MediaQuery.of(context).size.width * 0.36,
-                left: 32,
-                right: 32,
-                child: LoginCard(),
-              ),
-              Positioned(
-                left: 20,
-                bottom: 20,
-                child: FlatButton(
-                  onPressed: () {},
-                  child: Text(
-                    S.of(context).registerLabel,
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: SafeArea(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      S.of(context).appName,
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      S.of(context).motto,
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.white,
+                        fontFamily: 'handwrite_font',
+                      ),
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+            Positioned(
+              right: 16,
+              top: 16,
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  size: 36,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.width * 0.36,
+              left: 32,
+              right: 32,
+              child: LoginCard(
+                parent: context,
+              ),
+            ),
+            Positioned(
+              left: 20,
+              bottom: 20,
+              child: FlatButton(
+                onPressed: () {},
+                child: Text(
+                  S.of(context).registerLabel,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -108,9 +111,11 @@ class LoginPage extends StatelessWidget {
 }
 
 class LoginCard extends StatefulWidget {
-  const LoginCard({
-    Key key,
-  }) : super(key: key);
+  const LoginCard({Key key, BuildContext parent})
+      : this.parent = parent,
+        super(key: key);
+
+  final BuildContext parent;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -214,7 +219,15 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               ),
               onPressed: enabled
                   ? () async {
-                      await Future.delayed(Duration(seconds: 2));
+                      if (tabController.index == 0) {
+                        store.dispatch(FastLoginAction(
+                            _phoneController.text, _smsController.text));
+                      } else {
+                        store.dispatch(
+                          LoginAction(_nameController.text,
+                              _wordController.text, context),
+                        );
+                      }
                     }
                   : null,
               gradient: LinearGradient(colors: [
@@ -286,7 +299,9 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
                 onPressed: () async {
-                  await Future.delayed(Duration(seconds: 2));
+                  BaseResp resp =
+                      await Repository.sendVerifyCode(_phoneController.text);
+                  showToast(resp.text);
                   _smsFocusNode.requestFocus();
                 },
               ),

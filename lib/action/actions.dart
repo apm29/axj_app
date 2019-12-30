@@ -13,20 +13,43 @@ abstract class StartAction {}
 class LoginAction implements AppAction, StartAction {
   final String username;
   final String password;
+  final BuildContext context;
 
-  LoginAction(this.username, this.password);
+  LoginAction(this.username, this.password, this.context);
+
+}
+
+class LogoutAction implements AppAction{}
+
+class FastLoginAction implements AppAction, StartAction {
+  final String mobile;
+  final String verifyCode;
+
+  FastLoginAction(this.mobile, this.verifyCode);
 }
 
 class LoginSuccessAction implements AppAction {
   final UserInfo userInfo;
 
   LoginSuccessAction(this.userInfo);
+
+  @override
+  String toString() {
+    return 'LoginSuccessAction{userInfo: $userInfo}';
+  }
+
 }
 
 class LoginFailAction implements AppAction {
   final String errorMsg;
 
   LoginFailAction(this.errorMsg);
+
+  @override
+  String toString() {
+    return 'LoginFailAction{errorMsg: $errorMsg}';
+  }
+
 }
 
 class AppInitAction implements AppAction {
@@ -40,4 +63,10 @@ class TabSwitchAction implements AppAction{
   final BuildContext context;
 
   TabSwitchAction(this.index, this.context);
+
+  @override
+  String toString() {
+    return 'TabSwitchAction{index: $index, context: $context}';
+  }
+
 }

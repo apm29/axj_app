@@ -3,8 +3,10 @@ import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/page/splash_page.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
+import 'package:axj_app/generated/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:redux_dev_tools/redux_dev_tools.dart';
 
@@ -33,6 +35,15 @@ class FlutterReduxApp extends StatelessWidget {
       child: OKToast(
         child: MaterialApp(
           title: 'Flutter Demo',
+          localizationsDelegates: [
+            // ... app-specific localization delegate[s] here
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          localeResolutionCallback:
+          S.delegate.resolution(fallback: const Locale('en', '')),
           theme: ThemeData(
             // This is the theme of your application.
             //
