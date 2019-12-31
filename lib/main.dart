@@ -33,10 +33,10 @@ class FlutterReduxApp extends StatelessWidget {
     return StoreProvider(
       store: store,
       child: OKToast(
-        child: StoreConnector<AppState,Locale>(
-          converter: (store)=>store.state.locale,
+        child: StoreConnector<AppState, Locale>(
+          converter: (store) => store.state.locale,
           distinct: true,
-          builder: (ctx,locale)=>MaterialApp(
+          builder: (ctx, locale) => MaterialApp(
             localizationsDelegates: [
               // ... app-specific localization delegate[s] here
               S.delegate,
@@ -55,6 +55,7 @@ class FlutterReduxApp extends StatelessWidget {
               // Notice that the counter didn't reset back to zero; the application
               // is not restarted.
               primarySwatch: Colors.blue,
+              platform: TargetPlatform.iOS,
             ),
             onGenerateRoute: Application.router.generator,
             locale: locale,
@@ -65,4 +66,3 @@ class FlutterReduxApp extends StatelessWidget {
     );
   }
 }
-

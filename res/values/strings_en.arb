@@ -27,7 +27,14 @@
   "registerTitle": "Sign in",
   "registerLabel": "Sign in now!",
 
-  "settingsPageTitle": "Personal Settings"
+  "settingsPageTitle": "Personal Settings",
+  "editUserProfile": "edit your profile",
+
+  "messageLabel": "Message",
+  "settingLabel": "Settings",
+
+  "closeNotificationHint": "Close Notification Service",
+  "openNotificationHint": "Open Notification Service"
 
 
 

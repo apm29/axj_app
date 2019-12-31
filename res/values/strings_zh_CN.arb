@@ -27,6 +27,12 @@
   "registerTitle": "注册",
   "registerLabel": "立即注册",
 
-  "settingsPageTitle": "个人设置"
+  "settingsPageTitle": "个人设置",
+  "editUserProfile": "编辑个人资料",
 
+  "messageLabel": "消息",
+  "settingLabel": "设置",
+
+  "closeNotificationHint": "关闭推送通知",
+  "openNotificationHint": "打开推送通知"
 }

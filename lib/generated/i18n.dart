@@ -22,12 +22,16 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get appName => "Monster";
+  String get closeNotificationHint => "Close Notification Service";
+  String get editUserProfile => "edit your profile";
   String get homeTab => "Home";
   String get localeMenuLabel => "Localization";
   String get loginLabel => "Login";
   String get logoutLabel => "Logout";
+  String get messageLabel => "Message";
   String get mineTab => "Mine";
   String get motto => "Understated,Forbearance,massacre";
+  String get openNotificationHint => "Open Notification Service";
   String get passwordHint => "password";
   String get passwordLoginLabel => "Account";
   String get passwordRepeatError => "Inconsistent passwords";
@@ -38,6 +42,7 @@ class S implements WidgetsLocalizations {
   String get registerLabel => "Sign in now!";
   String get registerTitle => "Sign in";
   String get sendSmsCodeHint => "Send Code";
+  String get settingLabel => "Settings";
   String get settingsPageTitle => "Personal Settings";
   String get smsCodeHint => "SMS Code";
   String get smsCodeLabel => "Code";
@@ -58,13 +63,9 @@ class $zh_CN extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get sendSmsCodeHint => "发送验证码";
-  @override
   String get registerLabel => "立即注册";
   @override
   String get passwordHint => "密码";
-  @override
-  String get appName => "卡牌助手";
   @override
   String get smsLoginLabel => "短信登录";
   @override
@@ -72,11 +73,27 @@ class $zh_CN extends S {
   @override
   String get logoutLabel => "登出";
   @override
-  String get passwordRepeatError => "密码不一致";
-  @override
-  String get phoneHint => "11位手机";
+  String get closeNotificationHint => "关闭推送通知";
   @override
   String get phoneLabel => "手机";
+  @override
+  String get localeMenuLabel => "国际化";
+  @override
+  String get homeTab => "主页";
+  @override
+  String get smsCodeHint => "6位验证码";
+  @override
+  String get editUserProfile => "编辑个人资料";
+  @override
+  String get sendSmsCodeHint => "发送验证码";
+  @override
+  String get appName => "卡牌助手";
+  @override
+  String get passwordRepeatError => "密码不一致";
+  @override
+  String get messageLabel => "消息";
+  @override
+  String get phoneHint => "11位手机";
   @override
   String get passwordLoginLabel => "密码登录";
   @override
@@ -84,7 +101,7 @@ class $zh_CN extends S {
   @override
   String get mineTab => "我的";
   @override
-  String get localeMenuLabel => "国际化";
+  String get openNotificationHint => "打开推送通知";
   @override
   String get userNameHint => "用户名";
   @override
@@ -92,15 +109,13 @@ class $zh_CN extends S {
   @override
   String get passwordRepeatHint => "重复密码";
   @override
-  String get homeTab => "主页";
-  @override
   String get motto => "智慧生活,安心陪伴";
-  @override
-  String get smsCodeHint => "6位验证码";
   @override
   String get registerHint => "没有账户? 点击注册";
   @override
   String get settingsPageTitle => "个人设置";
+  @override
+  String get settingLabel => "设置";
   @override
   String serviceProtocolName(String appName) => "${appName}用户服务协议";
   @override

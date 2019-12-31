@@ -70,7 +70,6 @@ class UserState {
 }
 
 AppState appReduce(AppState state, action) {
-  print(action);
   return appStateReducer(state, action)
     ..userState = userStateReducer(state.userState, action)
     ..loading = loadingReducer(state.loading, action)
@@ -134,7 +133,6 @@ UserState userLogout(UserState state, LogoutAction action) {
 }
 
 UserState userLoginSuccessReducer(UserState state, LoginSuccessAction action) {
-  print(action);
   return UserState(userInfo: action.userInfo, login: true, errorMsg: null);
 }
 

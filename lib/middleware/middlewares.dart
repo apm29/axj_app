@@ -103,6 +103,7 @@ checkLogin(Store<AppState> store, TabSwitchAction action, NextDispatcher next) {
         store.dispatch(action);
       }
     });
+    next(action);
   } else {
     next(action);
   }
