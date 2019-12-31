@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:axj_app/model/LogInterceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,10 @@ typedef JsonProcessor<T> = T Function(dynamic json);
 
 const BaseUrl = "http://axj.ciih.net/";
 const AuthorizationHeader = "Authorization";
+const ContentTypeHeader = "content-type";
+const ContentTypeFormUrlEncodeValue = "application/x-www-form-urlencoded";
+const ContentTypeFormDataValue = "multipart/form-data";
+const ContentTypeTextPlainValue = "text/plain";
 
 class BaseResp<T> {
   String status;
@@ -113,35 +119,42 @@ class Api {
         (count, total) {
           ///默认发送进度
         };
-    return _dio
-        .post(
+    Response resp = await _dio.post(
       path,
-      data: useFormData ? FormData.fromMap(formData) : formData,
-      //FormData.fromMap(formData),
       options: RequestOptions(
         responseType: ResponseType.json,
-        headers: {AuthorizationHeader: Cache().token},
+        headers: {
+          AuthorizationHeader: Cache().token,
+        },
+        contentType: useFormData
+            ? ContentTypeFormDataValue
+            : ContentTypeFormUrlEncodeValue,
+        data: useFormData ? FormData.fromMap(formData) : formData,
       ),
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
-    )
-        .then((resp) {
-      return resp.data;
-    }).then((map) {
-      dynamic status = map["status"];
-      dynamic text = map["text"];
-      dynamic token = map["token"];
-      dynamic _rawData = map["data"];
-      T data;
-      try {
-        data = processor(_rawData);
-      } catch (e) {
-        print(e);
-      }
-      return BaseResp<T>(
-          status.toString(), data, token.toString(), text.toString());
-    });
+    );
+    dynamic map;
+    if (resp.headers
+        .value(ContentTypeHeader)
+        .contains(ContentTypeTextPlainValue)) {
+      map = json.decode(resp.data);
+    } else {
+      map = resp.data;
+    }
+    dynamic status = map["status"];
+    dynamic text = map["text"];
+    dynamic token = map["token"];
+    dynamic _rawData = map["data"];
+    T data;
+    try {
+      data = processor(_rawData);
+    } catch (e) {
+      print(e);
+    }
+    return BaseResp<T>(
+        status.toString(), data, token.toString(), text.toString());
   }
 
   Future<BaseResp<T>> get<T>(
@@ -159,17 +172,28 @@ class Api {
         (count, total) {
           ///默认接收进度
         };
-    Response response = await _dio.get(
+    Response resp = await _dio.get(
       path,
       queryParameters: queryMap,
       options: RequestOptions(
         responseType: ResponseType.json,
-        headers: {AuthorizationHeader: Cache().token},
+        headers: {
+          AuthorizationHeader: Cache().token,
+        },
+        queryParameters: queryMap,
+        contentType: ContentTypeFormUrlEncodeValue
       ),
       cancelToken: cancelToken,
       onReceiveProgress: onReceiveProgress,
     );
-    Map<String, dynamic> map = response.data;
+    dynamic map;
+    if (resp.headers
+        .value(ContentTypeHeader)
+        .contains(ContentTypeTextPlainValue)) {
+      map = json.decode(resp.data);
+    } else {
+      map = resp.data;
+    }
     dynamic status = map["status"];
     dynamic text = map["text"];
     dynamic token = map["token"];

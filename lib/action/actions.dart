@@ -14,8 +14,9 @@ class LoginAction implements AppAction, StartAction {
   final String username;
   final String password;
   final BuildContext context;
+  final bool silent;
 
-  LoginAction(this.username, this.password, this.context);
+  LoginAction(this.username, this.password, this.context,{this.silent = false});
 
 }
 class ChangeLocaleAction implements AppAction{
@@ -27,8 +28,10 @@ class LogoutAction implements AppAction{}
 class FastLoginAction implements AppAction, StartAction {
   final String mobile;
   final String verifyCode;
+  final BuildContext context;
+  final bool silent;
 
-  FastLoginAction(this.mobile, this.verifyCode);
+  FastLoginAction(this.mobile, this.verifyCode, this.context,{this.silent = false});
 }
 
 class LoginSuccessAction implements AppAction {

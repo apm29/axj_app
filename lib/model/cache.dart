@@ -16,6 +16,7 @@ class Cache {
   }
 
   final tokenKey = 'token';
+  final localeKey = 'locale';
 
   init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -23,9 +24,19 @@ class Cache {
 
   String get token => _sharedPreferences.get(tokenKey);
 
+  String get locale => _sharedPreferences.get(localeKey);
+
   void setToken(String token) {
     try {
       _sharedPreferences.setString(tokenKey, token);
+    } catch (e) {
+      print(getErrorMessage(e));
+    }
+  }
+
+  void setLocale(String locale) {
+    try {
+      _sharedPreferences.setString(localeKey, locale);
     } catch (e) {
       print(getErrorMessage(e));
     }

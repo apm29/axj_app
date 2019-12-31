@@ -27,7 +27,7 @@ class SplashPage extends StatelessWidget {
           ),
           body: SizedBox.expand(
             child: Image.asset(
-              'assets/images/splash.png',
+              'assets/images/godness.jpg',
               fit: BoxFit.cover,
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:axj_app/model/api.dart';
+import 'package:axj_app/model/bean/user_info.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:redux/redux.dart';
@@ -28,15 +29,20 @@ loginWithUserName(
   () async {
     try {
       BaseResp resp = await Repository.login(action.username, action.password);
+      Navigator.of(action.context).pop(true);
+      Cache().setToken(resp.token);
       if (resp.success) {
-        showToast("登录成功");
-        Navigator.of(action.context).pop(true);
-        Cache().setToken(resp.token);
-        store.dispatch(LoginSuccessAction(resp.data.userInfo));
-      } else {
-        showToast(resp.text);
-        store.dispatch(LoginFailAction(resp.text));
+        BaseResp<UserInfo> userInfoResp = await Repository.getUserInfo();
+        if (userInfoResp.success) {
+          showToast("登录成功");
+          store.dispatch(LoginSuccessAction(userInfoResp.data));
+          if(!action.silent) {
+            Navigator.of(action.context).pop(true);
+          }
+          return;
+        }
       }
+      store.dispatch(LoginFailAction(resp.text));
     } catch (e) {
       store.dispatch(LoginFailAction(getErrorMessage(e)));
     }
@@ -49,11 +55,19 @@ loginWithSms(
     try {
       BaseResp resp =
           await Repository.fastLogin(action.mobile, action.verifyCode);
+      Cache().setToken(resp.token);
       if (resp.success) {
-        store.dispatch(LoginSuccessAction(resp.data));
-      } else {
-        store.dispatch(LoginFailAction(resp.text));
+        BaseResp<UserInfo> userInfoResp = await Repository.getUserInfo();
+        if (userInfoResp.success) {
+          showToast("登录成功");
+          store.dispatch(LoginSuccessAction(userInfoResp.data));
+          if(!action.silent) {
+            Navigator.of(action.context).pop(true);
+          }
+          return;
+        }
       }
+      store.dispatch(LoginFailAction(resp.text));
     } catch (e) {
       store.dispatch(LoginFailAction(getErrorMessage(e)));
     }
@@ -84,8 +98,8 @@ initApp(Store<AppState> store, action, NextDispatcher next) {
 
 checkLogin(Store<AppState> store, TabSwitchAction action, NextDispatcher next) {
   if (action.index == (ActiveTab.Mine.index) && !store.state.userState.login) {
-    AppRouter.toLogin(action.context).then((loginSuccess){
-      if(loginSuccess) {
+    AppRouter.toLogin(action.context).then((loginSuccess) {
+      if (loginSuccess) {
         store.dispatch(action);
       }
     });

@@ -5,6 +5,7 @@ import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/route/route.dart';
+import 'package:axj_app/store/store.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -96,18 +97,14 @@ class LoginPage extends StatelessWidget {
               parent: context,
             ),
           ),
-          Positioned(
-            left: 20,
-            bottom: 20,
-            child: FlatButton(
-              onPressed: () => _register(context),
-              child: Text(
-                S.of(context).registerHint,
-                style: TextStyle(color: Theme.of(context).primaryColor),
-              ),
-            ),
-          )
         ],
+      ),
+      bottomNavigationBar: FlatButton(
+        onPressed: () => _register(context),
+        child: Text(
+          S.of(context).registerHint,
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
       ),
     );
   }
@@ -222,34 +219,38 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-            constraints: BoxConstraints.tightFor(
-                width: MediaQuery.of(context).size.width),
-            child: LoadingWidget(
-              Text(
-                S.of(context).loginLabel,
-                style: TextStyle(fontSize: 16),
-              ),
-              onPressed: enabled
-                  ? () async {
-                      _login(context);
-                    }
-                  : null,
-              gradient: LinearGradient(colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).primaryColor
-              ]),
-              unconstrained: false,
-            ),
-          ),
+          buildLoginButton(context),
           buildServiceProtocol()
         ],
       ),
     );
   }
 
-  Padding buildServiceProtocol() {
+  Widget buildLoginButton(BuildContext context) {
+    return Container(
+          margin: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+          constraints: BoxConstraints.tightFor(
+              width: MediaQuery.of(context).size.width),
+          child: LoadingWidget(
+            Text(
+              S.of(context).loginLabel,
+              style: TextStyle(fontSize: 16),
+            ),
+            onPressed: enabled
+                ? () async {
+                    _login(context);
+                  }
+                : null,
+            gradient: LinearGradient(colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor
+            ]),
+            unconstrained: false,
+          ),
+        );
+  }
+
+  Widget buildServiceProtocol() {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -391,15 +392,21 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
   }
 
   Future _sendSmsCode() async {
-    BaseResp resp = await Repository.sendVerifyCode(_phoneController.text);
-    showToast(resp.text);
-    _smsFocusNode.requestFocus();
+    try {
+      BaseResp resp = await Repository.sendVerifyCode(_phoneController.text);
+      showToast(resp.text);
+      _smsFocusNode.requestFocus();
+    } catch (e) {
+      print(e);
+      showToast(getErrorMessage(e));
+    }
+
   }
 
   void _login(BuildContext context) {
     if (tabController.index == 0) {
       store.dispatch(
-          FastLoginAction(_phoneController.text, _smsController.text));
+          FastLoginAction(_phoneController.text, _smsController.text,context));
     } else {
       store.dispatch(
         LoginAction(_nameController.text, _wordController.text, context),

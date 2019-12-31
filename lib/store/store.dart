@@ -11,7 +11,7 @@ class AppState {
       : this.userState = userState ?? UserState(),
         this.loading = loading ?? false,
         this.homePageState = HomePageState(),
-        this.locale = const Locale('en');
+        this.locale = Locale(Cache().locale ?? 'en');
 
   UserState userState;
 
@@ -24,12 +24,12 @@ class AppState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is AppState &&
-              runtimeType == other.runtimeType &&
-              userState == other.userState &&
-              homePageState == other.homePageState &&
-              loading == other.loading &&
-              locale == other.locale;
+      other is AppState &&
+          runtimeType == other.runtimeType &&
+          userState == other.userState &&
+          homePageState == other.homePageState &&
+          loading == other.loading &&
+          locale == other.locale;
 
   @override
   int get hashCode =>
@@ -37,10 +37,6 @@ class AppState {
       homePageState.hashCode ^
       loading.hashCode ^
       locale.hashCode;
-
-
-
-
 }
 
 enum ActiveTab { Home, Mine }
@@ -92,6 +88,7 @@ final appStateReducer = combineReducers<AppState>(
 
 final localeReducer = combineReducers<Locale>([
   TypedReducer<Locale, ChangeLocaleAction>((state, action) {
+    Cache().setLocale(action.locale.languageCode);
     return action.locale;
   }),
 ]);
@@ -100,9 +97,7 @@ final homePageReducer = combineReducers<HomePageState>(
   [
     TypedReducer<HomePageState, TabSwitchAction>(
       (state, action) {
-        var homePageState =
-            HomePageState(currentTab: ActiveTab.values[action.index]);
-        return homePageState;
+        return HomePageState(currentTab: ActiveTab.values[action.index]);
       },
     ),
   ],
