@@ -35,8 +35,10 @@
   "settingLabel": "Settings",
 
   "closeNotificationHint": "Close Notification Service",
-  "openNotificationHint": "Open Notification Service"
+  "openNotificationHint": "Open Notification Service",
 
-
+  "notAuthTitle": "You are not authenticated",
+  "toAuthHint": "Authenticate",
+  "notNowAuthLabel": "Not now"
 
 }

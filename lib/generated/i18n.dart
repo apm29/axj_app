@@ -31,6 +31,8 @@ class S implements WidgetsLocalizations {
   String get messageLabel => "Message";
   String get mineTab => "Mine";
   String get motto => "Understated,Forbearance,massacre";
+  String get notAuthTitle => "You are not authenticated";
+  String get notNowAuthLabel => "Not now";
   String get openNotificationHint => "Open Notification Service";
   String get passwordHint => "password";
   String get passwordLoginLabel => "Account";
@@ -48,6 +50,7 @@ class S implements WidgetsLocalizations {
   String get smsCodeHint => "SMS Code";
   String get smsCodeLabel => "Code";
   String get smsLoginLabel => "SMS";
+  String get toAuthHint => "Authenticate";
   String get userNameHint => "username";
   String serviceProtocolName(String appName) => "$appName Service Protocol";
   String serviceProtocolText(String serviceProtocolName) => "I agree with <<$serviceProtocolName>>";
@@ -68,17 +71,23 @@ class $zh_CN extends S {
   @override
   String get passwordHint => "密码";
   @override
+  String get notNowAuthLabel => "暂不认证";
+  @override
   String get smsLoginLabel => "短信登录";
   @override
   String get loginLabel => "登录";
   @override
   String get logoutLabel => "登出";
   @override
+  String get toAuthHint => "前往认证";
+  @override
   String get closeNotificationHint => "关闭推送通知";
   @override
   String get phoneLabel => "手机号";
   @override
   String get localeMenuLabel => "国际化";
+  @override
+  String get notAuthTitle => " 您还未实名认证";
   @override
   String get homeTab => "主页";
   @override

@@ -35,5 +35,9 @@
   "settingLabel": "设置",
 
   "closeNotificationHint": "关闭推送通知",
-  "openNotificationHint": "打开推送通知"
+  "openNotificationHint": "打开推送通知",
+
+  "notAuthTitle": " 您还未实名认证",
+  "toAuthHint": "前往认证",
+  "notNowAuthLabel": "暂不认证"
 }

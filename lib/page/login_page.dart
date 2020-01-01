@@ -158,6 +158,8 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
 
   bool get usePassword => currentIndex == 1;
 
+  bool get phoneReady => _phoneController.text.isNotEmpty;
+
   @override
   void initState() {
     super.initState();
@@ -308,9 +310,9 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
-                onPressed: () async {
+                onPressed: phoneReady? () async {
                   await _sendSmsCode();
-                },
+                }:null,
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Theme.of(context).primaryColor),

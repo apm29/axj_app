@@ -4,6 +4,7 @@ import 'package:axj_app/page/splash_page.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:axj_app/generated/i18n.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -42,6 +43,8 @@ class FlutterReduxApp extends StatelessWidget {
               S.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate
             ],
             supportedLocales: S.delegate.supportedLocales,
             theme: ThemeData(

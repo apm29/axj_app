@@ -1,7 +1,9 @@
 import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/main.dart';
+import 'package:axj_app/page/auth_page.dart';
 import 'package:axj_app/page/home_page.dart';
 import 'package:axj_app/page/login_page.dart';
+import 'package:axj_app/page/modal/auth_modal.dart';
 import 'package:axj_app/page/personal_settings_page.dart';
 import 'package:axj_app/page/register_page.dart';
 import 'package:axj_app/page/splash_page.dart';
@@ -30,6 +32,7 @@ class Routes {
   static String login = "/login";
   static String personalSettings = "/personal_settings";
   static String register = "/register";
+  static String authHint = "/auth_hint";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(handlerFunc: (
@@ -47,6 +50,7 @@ class Routes {
     router.define(login, handler: loginHandler);
     router.define(personalSettings, handler: personalSettingsHandler);
     router.define(register, handler: registerHandler);
+    router.define(authHint, handler: authHintHandler);
   }
 }
 
@@ -92,6 +96,12 @@ final registerHandler = new Handler(
   },
 );
 
+final authHintHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return AuthPage();
+  },
+);
+
 class AppRouter {
   static Future toHomeAndReplaceSelf(BuildContext context) {
     if(ModalRoute.of(context).settings.name == Routes.home){
@@ -130,5 +140,9 @@ class AppRouter {
       transition
           : TransitionType.cupertino,
     );
+  }
+
+  static Future toAuthHint(BuildContext context) {
+    return Navigator.of(context).push(AuthModal());
   }
 }

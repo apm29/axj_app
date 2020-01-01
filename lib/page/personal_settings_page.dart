@@ -4,6 +4,7 @@ import 'package:axj_app/main.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 ///
 /// author : ciih
@@ -16,6 +17,26 @@ class PersonalSettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).settingsPageTitle),
+        actions: <Widget>[
+          PopupMenuButton<Locale>(
+            itemBuilder: (ctx) {
+              return [
+                PopupMenuItem(
+                  child: Text('中文'),
+                  value: Locale('zh','CN'),
+                ),
+                PopupMenuItem(
+                  child: Text('English'),
+                  value: Locale('en'),
+                ),
+              ];
+            },
+            onSelected: (locale) {
+              store.dispatch(ChangeLocaleAction(locale));
+              AppRouter.toHome(context, ActiveTab.Home);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -45,38 +66,32 @@ class PersonalSettingsPage extends StatelessWidget {
               },
               child: Text(S.of(context).logoutLabel),
             ),
-            PopupMenuButton<Locale>(
-              itemBuilder: (ctx) {
-                return [
-                  PopupMenuItem(
-                    child: Text('中文'),
-                    value: Locale('zh'),
-                  ),
-                  PopupMenuItem(
-                    child: Text('English'),
-                    value: Locale('en'),
-                  ),
-                ];
+            RaisedButton(
+              onPressed: () {
+                store.dispatch(VoidTaskSimulationAction(
+                  () async {
+                    await Future.delayed(Duration(seconds: 3));
+                  },
+                  context,
+                ));
               },
-              child: Material(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    S.of(context).localeMenuLabel,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16
-                    ),
-                  ),
-                ),
-                type: MaterialType.button,
-                color: Colors.grey[300],
-                elevation: 2,
+              child: Text('void task simulate'),
+            ),
+            RaisedButton(
+              onPressed: () {
+                store.dispatch(ResultTaskSimulationAction(
+                  () async {
+                    await Future.delayed(Duration(seconds: 3));
+                    return 1;
+                  },
+                  context,
+                ));
+              },
+              child: StoreBuilder<AppState>(
+                builder: (context, store) {
+                  return Text('result task simulate:'+'${store.state.simulationResult??''}');
+                }
               ),
-              onSelected: (locale) {
-                store.dispatch(ChangeLocaleAction(locale));
-                AppRouter.toHome(context, ActiveTab.Home);
-              },
             ),
           ],
         ),

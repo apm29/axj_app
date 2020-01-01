@@ -1,6 +1,7 @@
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
+import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:redux/redux.dart';
 import 'package:oktoast/oktoast.dart';
@@ -21,6 +22,9 @@ List<Middleware<AppState>> createAppMiddleware() {
     TypedMiddleware<AppState, FastLoginAction>(loginWithSms),
     TypedMiddleware<AppState, AppInitAction>(initApp),
     TypedMiddleware<AppState, TabSwitchAction>(checkLogin),
+    TypedMiddleware<AppState, CheckAuthAction>(checkAuth),
+    TypedMiddleware<AppState, VoidTaskAction>(checkVoidTask),
+    TypedMiddleware<AppState, ResultTaskAction>(checkResultTask),
   ];
 }
 
@@ -36,7 +40,7 @@ loginWithUserName(
         if (userInfoResp.success) {
           showToast("登录成功");
           store.dispatch(LoginSuccessAction(userInfoResp.data));
-          if(!action.silent) {
+          if (!action.silent) {
             Navigator.of(action.context).pop(true);
           }
           return;
@@ -61,7 +65,7 @@ loginWithSms(
         if (userInfoResp.success) {
           showToast("登录成功");
           store.dispatch(LoginSuccessAction(userInfoResp.data));
-          if(!action.silent) {
+          if (!action.silent) {
             Navigator.of(action.context).pop(true);
           }
           return;
@@ -87,7 +91,8 @@ initApp(Store<AppState> store, action, NextDispatcher next) {
       int now = DateTime.now().millisecondsSinceEpoch;
       var minimumTime = 4000;
       if (now - start < minimumTime) {
-        await Future.delayed(Duration(milliseconds: minimumTime - (now - start)));
+        await Future.delayed(
+            Duration(milliseconds: minimumTime - (now - start)));
       }
     } catch (e) {
       store.dispatch(LoginFailAction(getErrorMessage(e)));
@@ -108,4 +113,34 @@ checkLogin(Store<AppState> store, TabSwitchAction action, NextDispatcher next) {
   } else {
     next(action);
   }
+}
+
+checkAuth(Store<AppState> store, CheckAuthAction action, NextDispatcher next) {
+  () async {
+    if(!action.intercept){
+      next(action);
+      await AppRouter.toAuthHint(action.context);
+    }else{
+      bool authResult = await AppRouter.toAuthHint(action.context);
+      if (authResult) {
+        next(action);
+      }
+    }
+
+  }();
+}
+
+checkVoidTask(Store<AppState> store, VoidTaskAction action, NextDispatcher next) {
+  () async {
+        await Navigator.of(action.context).push(TaskModal(action.task));
+        next(action);
+  }();
+}
+
+checkResultTask(Store<AppState> store, ResultTaskAction action, NextDispatcher next) {
+      () async {
+    dynamic result = await Navigator.of(action.context).push(TaskModal(action.task));
+    action.result= result;
+    next(action);
+  }();
 }

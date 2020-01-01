@@ -21,22 +21,29 @@ class AppState {
 
   Locale locale;
 
+  int simulationResult = 0;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AppState &&
-          runtimeType == other.runtimeType &&
-          userState == other.userState &&
-          homePageState == other.homePageState &&
-          loading == other.loading &&
-          locale == other.locale;
+          other is AppState &&
+              runtimeType == other.runtimeType &&
+              userState == other.userState &&
+              homePageState == other.homePageState &&
+              loading == other.loading &&
+              locale == other.locale &&
+              simulationResult == other.simulationResult;
 
   @override
   int get hashCode =>
       userState.hashCode ^
       homePageState.hashCode ^
       loading.hashCode ^
-      locale.hashCode;
+      locale.hashCode ^
+      simulationResult.hashCode;
+
+
+
 }
 
 enum ActiveTab { Home, Mine }
@@ -81,7 +88,10 @@ final appStateReducer = combineReducers<AppState>(
   [
     TypedReducer<AppState, AppInitAction>((state, action) {
       return state;
-    })
+    }),
+    TypedReducer<AppState, ResultTaskSimulationAction>((state, action) {
+      return state..simulationResult += action.result;
+    }),
   ],
 );
 
@@ -113,14 +123,18 @@ final userStateReducer = combineReducers<UserState>(
 
 final loadingReducer = combineReducers<bool>(
   [
-    TypedReducer<bool, LoginAction>(appLoadingReducer),
-    TypedReducer<bool, LoginSuccessAction>(appLoadingReducer),
-    TypedReducer<bool, LoginFailAction>(appLoadingReducer),
+    TypedReducer<bool, AppAction>(appLoadingReducer),
   ],
 );
 
 bool appLoadingReducer(bool init, action) {
-  return (action is StartAction);
+  if (action is StartAction) {
+    return true;
+  } else if (action is EndAction) {
+    return false;
+  } else {
+    return init;
+  }
 }
 
 UserState userLoginReducer(UserState state, LoginAction action) {
