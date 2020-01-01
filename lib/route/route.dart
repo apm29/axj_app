@@ -94,6 +94,9 @@ final registerHandler = new Handler(
 
 class AppRouter {
   static Future toHomeAndReplaceSelf(BuildContext context) {
+    if(ModalRoute.of(context).settings.name == Routes.home){
+      return Future.value();
+    }
     return Application.router.navigateTo(context, Routes.home, replace: true);
   }
 

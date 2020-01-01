@@ -26,6 +26,7 @@
   "registerHint": "No account,Click to Sign in",
   "registerTitle": "Sign in",
   "registerLabel": "Sign in now!",
+  "skipLabel": "Skip",
 
   "settingsPageTitle": "Personal Settings",
   "editUserProfile": "edit your profile",

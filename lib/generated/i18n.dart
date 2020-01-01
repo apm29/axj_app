@@ -44,6 +44,7 @@ class S implements WidgetsLocalizations {
   String get sendSmsCodeHint => "Send Code";
   String get settingLabel => "Settings";
   String get settingsPageTitle => "Personal Settings";
+  String get skipLabel => "Skip";
   String get smsCodeHint => "SMS Code";
   String get smsCodeLabel => "Code";
   String get smsLoginLabel => "SMS";
@@ -75,7 +76,7 @@ class $zh_CN extends S {
   @override
   String get closeNotificationHint => "关闭推送通知";
   @override
-  String get phoneLabel => "手机";
+  String get phoneLabel => "手机号";
   @override
   String get localeMenuLabel => "国际化";
   @override
@@ -93,7 +94,9 @@ class $zh_CN extends S {
   @override
   String get messageLabel => "消息";
   @override
-  String get phoneHint => "11位手机";
+  String get phoneHint => "11位手机号";
+  @override
+  String get skipLabel => "跳过";
   @override
   String get passwordLoginLabel => "密码登录";
   @override

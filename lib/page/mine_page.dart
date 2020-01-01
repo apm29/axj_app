@@ -136,8 +136,8 @@ class MinePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Visibility(
-                      visible: userState.login,
+                    Offstage(
+                      offstage: !userState.login,
                       child: Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
@@ -160,7 +160,7 @@ class MinePage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                userState.userInfo.nickName,
+                                userState.login?userState.userInfo.nickName:"",
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),

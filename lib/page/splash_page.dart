@@ -1,9 +1,10 @@
 import 'package:axj_app/action/actions.dart';
-import 'package:axj_app/main.dart';
+import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_redux_dev_tools/flutter_redux_dev_tools.dart';
 
 ///
 /// author : ciih
@@ -22,13 +23,33 @@ class SplashPage extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          endDrawer: Drawer(
-            child: ReduxDevTools(store),
-          ),
           body: SizedBox.expand(
-            child: Image.asset(
-              'assets/images/godness.jpg',
-              fit: BoxFit.cover,
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/godness.jpg',
+                  fit: BoxFit.cover,
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    child: Container(
+                      margin: EdgeInsets.all(24),
+                      padding: EdgeInsets.all(10),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                      ),
+                      child: Text(S.of(context).skipLabel,style: TextStyle(color: Colors.white),),
+                    ),
+                    onTap: (){
+                      AppRouter.toHomeAndReplaceSelf(context);
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           floatingActionButton: Builder(builder: (ctx) {

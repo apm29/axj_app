@@ -5,8 +5,8 @@
   "mineTab": "我的",
   "smsLoginLabel":"短信登录",
 
-  "phoneLabel": "手机",
-  "phoneHint": "11位手机",
+  "phoneLabel": "手机号",
+  "phoneHint": "11位手机号",
   "smsCodeLabel": "验证码",
   "smsCodeHint": "6位验证码",
   "sendSmsCodeHint": "发送验证码",
@@ -26,6 +26,7 @@
   "registerHint": "没有账户? 点击注册",
   "registerTitle": "注册",
   "registerLabel": "立即注册",
+  "skipLabel": "跳过",
 
   "settingsPageTitle": "个人设置",
   "editUserProfile": "编辑个人资料",

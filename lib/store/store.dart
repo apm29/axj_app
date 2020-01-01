@@ -1,8 +1,8 @@
+import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
-import 'package:axj_app/model/bean/user_info.dart';
 import 'package:axj_app/action/actions.dart';
 
 //数据类
@@ -54,7 +54,7 @@ class HomePageState {
 }
 
 class UserState {
-  UserInfo userInfo;
+  UserInfoDetail userInfo;
   bool login;
   String errorMsg;
 

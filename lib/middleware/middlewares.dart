@@ -1,5 +1,5 @@
 import 'package:axj_app/model/api.dart';
-import 'package:axj_app/model/bean/user_info.dart';
+import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:redux/redux.dart';
@@ -32,7 +32,7 @@ loginWithUserName(
       Navigator.of(action.context).pop(true);
       Cache().setToken(resp.token);
       if (resp.success) {
-        BaseResp<UserInfo> userInfoResp = await Repository.getUserInfo();
+        BaseResp<UserInfoDetail> userInfoResp = await Repository.getUserInfo();
         if (userInfoResp.success) {
           showToast("登录成功");
           store.dispatch(LoginSuccessAction(userInfoResp.data));
@@ -57,7 +57,7 @@ loginWithSms(
           await Repository.fastLogin(action.mobile, action.verifyCode);
       Cache().setToken(resp.token);
       if (resp.success) {
-        BaseResp<UserInfo> userInfoResp = await Repository.getUserInfo();
+        BaseResp<UserInfoDetail> userInfoResp = await Repository.getUserInfo();
         if (userInfoResp.success) {
           showToast("登录成功");
           store.dispatch(LoginSuccessAction(userInfoResp.data));
@@ -85,8 +85,9 @@ initApp(Store<AppState> store, action, NextDispatcher next) {
         store.dispatch(LoginFailAction(resp.text));
       }
       int now = DateTime.now().millisecondsSinceEpoch;
-      if (now - start < 2000) {
-        await Future.delayed(Duration(milliseconds: 2000 - (now - start)));
+      var minimumTime = 4000;
+      if (now - start < minimumTime) {
+        await Future.delayed(Duration(milliseconds: minimumTime - (now - start)));
       }
     } catch (e) {
       store.dispatch(LoginFailAction(getErrorMessage(e)));

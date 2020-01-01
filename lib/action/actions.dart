@@ -1,9 +1,9 @@
+import 'package:axj_app/model/bean/user_info_detail.dart';
 ///
 /// author : ciih
 /// date : 2019-12-25 10:40
 /// description :
 ///
-import 'package:axj_app/model/bean/user_info.dart';
 import 'package:flutter/material.dart';
 
 abstract class AppAction {}
@@ -35,7 +35,7 @@ class FastLoginAction implements AppAction, StartAction {
 }
 
 class LoginSuccessAction implements AppAction {
-  final UserInfo userInfo;
+  final UserInfoDetail userInfo;
 
   LoginSuccessAction(this.userInfo);
 

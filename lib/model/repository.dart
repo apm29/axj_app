@@ -1,15 +1,14 @@
 import 'package:axj_app/model/api.dart';
-import 'package:axj_app/model/bean/user_info.dart';
-import 'package:axj_app/model/bean/user_info_wrapper.dart';
+import 'package:axj_app/model/bean/user_info_detail.dart';
 
 class Repository {
-  static Future<BaseResp<UserInfoWrapper>> login(
+  static Future<BaseResp> login(
       String userName, String password)  {
-    return Api().get<UserInfoWrapper>(
+    return Api().get(
       "/permission/login",
       queryMap: {"userName": userName, "password": password},
       processor: (s) {
-        return UserInfoWrapper.fromJsonMap(s);
+        return null;
       },
     );
   }
@@ -24,23 +23,23 @@ class Repository {
     );
   }
 
-  static Future<BaseResp<UserInfoWrapper>> fastLogin(
+  static Future<BaseResp> fastLogin(
       String mobile, String verifyCode)  {
     return Api().get(
       "/permission/fastLogin",
       queryMap: {"mobile": mobile, "verifyCode": verifyCode},
       processor: (s) {
-        return UserInfoWrapper.fromJsonMap(s);
+        return null;
       },
     );
   }
 
-  static Future<BaseResp<UserInfo>> getUserInfo()  {
+  static Future<BaseResp<UserInfoDetail>> getUserInfo()  {
     return Api().post(
       "/permission/user/getUserInfo",
       processor: (s) {
         print(s.runtimeType);
-        return UserInfo.fromJsonMap(s);
+        return UserInfoDetail.fromJsonMap(s);
       },
     );
   }
