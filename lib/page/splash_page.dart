@@ -11,7 +11,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 /// date : 2019-12-25 14:41
 /// description :
 ///
-class SplashPage extends StatelessWidget {
+class SplashPage extends StatefulWidget {
+  @override
+  _SplashPageState createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, AppState>(
@@ -20,6 +25,12 @@ class SplashPage extends StatelessWidget {
       },
       onInit: (store) {
         store.dispatch(AppInitAction(context));
+        () async {
+          await Future.delayed(Duration(milliseconds: 4000));
+          if (mounted) {
+            AppRouter.toHomeAndReplaceSelf(context);
+          }
+        }();
       },
       builder: (context, state) {
         return Scaffold(
@@ -42,9 +53,12 @@ class SplashPage extends StatelessWidget {
                         border: Border.all(color: Colors.white),
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
-                      child: Text(S.of(context).skipLabel,style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        S.of(context).skipLabel,
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                    onTap: (){
+                    onTap: () {
                       AppRouter.toHomeAndReplaceSelf(context);
                     },
                   ),

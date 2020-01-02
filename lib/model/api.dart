@@ -60,7 +60,7 @@ class Api {
   }
 
   static bool proxyHttp = false;
-  static bool printLog = true;
+  static bool printLog = false;
   static Api _instance;
 
   static Api getInstance() {
@@ -184,6 +184,62 @@ class Api {
         contentType: ContentTypeFormUrlEncodeValue
       ),
       cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+    );
+    dynamic map;
+    if (resp.headers
+        .value(ContentTypeHeader)
+        .contains(ContentTypeTextPlainValue)) {
+      map = json.decode(resp.data);
+    } else {
+      map = resp.data;
+    }
+    dynamic status = map["status"];
+    dynamic text = map["text"];
+    dynamic token = map["token"];
+    dynamic _rawData = map["data"];
+    T data;
+    try {
+      data = processor(_rawData);
+    } catch (e) {
+      print(e);
+    }
+    return BaseResp<T>(
+        status.toString(), data, token.toString(), text.toString());
+  }
+
+  Future<BaseResp<T>> upload<T>(
+      String path, {
+        @required JsonProcessor<T> processor,
+        FormData formData,
+        CancelToken cancelToken,
+        ProgressCallback onReceiveProgress,
+        ProgressCallback onSendProgress,
+      }) async {
+    assert(processor != null);
+    processor = processor ?? (dynamic raw) => null;
+    formData = formData ?? {};
+    cancelToken = cancelToken ?? CancelToken();
+    onReceiveProgress = onReceiveProgress ??
+            (count, total) {
+          ///默认接收进度
+        };
+    onSendProgress = onSendProgress ??
+            (count, total) {
+          ///默认发送进度
+        };
+    Response resp = await _dio.post(
+      path,
+      options: RequestOptions(
+        responseType: ResponseType.json,
+        headers: {
+          AuthorizationHeader: Cache().token,
+        },
+        contentType: ContentTypeFormDataValue,
+      ),
+      data: formData,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
     dynamic map;

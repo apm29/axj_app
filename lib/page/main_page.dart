@@ -38,7 +38,7 @@ class MainPage extends StatelessWidget {
                       begin: Alignment(0.0, -1),
                       end: Alignment(0.0, 0.7),
                       colors: <Color>[
-                        Color(0x60000000),
+                        Color(0xF0000000),
                         Color(0x00000000),
                       ],
                     ),

@@ -1,5 +1,6 @@
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
@@ -26,13 +27,13 @@ class AppState {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is AppState &&
-              runtimeType == other.runtimeType &&
-              userState == other.userState &&
-              homePageState == other.homePageState &&
-              loading == other.loading &&
-              locale == other.locale &&
-              simulationResult == other.simulationResult;
+      other is AppState &&
+          runtimeType == other.runtimeType &&
+          userState == other.userState &&
+          homePageState == other.homePageState &&
+          loading == other.loading &&
+          locale == other.locale &&
+          simulationResult == other.simulationResult;
 
   @override
   int get hashCode =>
@@ -41,9 +42,6 @@ class AppState {
       loading.hashCode ^
       locale.hashCode ^
       simulationResult.hashCode;
-
-
-
 }
 
 enum ActiveTab { Home, Mine }
@@ -92,6 +90,10 @@ final appStateReducer = combineReducers<AppState>(
     TypedReducer<AppState, ResultTaskSimulationAction>((state, action) {
       return state..simulationResult += action.result;
     }),
+    TypedReducer<AppState, CheckAuthAndRouteAction>((state, action) {
+      Application.router.navigateTo(action.context, action.routeName);
+      return state;
+    }),
   ],
 );
 
@@ -115,43 +117,25 @@ final homePageReducer = combineReducers<HomePageState>(
 final userStateReducer = combineReducers<UserState>(
   [
     TypedReducer<UserState, LoginAction>(userLoginReducer),
-    TypedReducer<UserState, LoginSuccessAction>(userLoginSuccessReducer),
-    TypedReducer<UserState, LoginFailAction>(userLoginFailReducer),
     TypedReducer<UserState, LogoutAction>(userLogout),
   ],
 );
 
 final loadingReducer = combineReducers<bool>(
   [
-    TypedReducer<bool, AppAction>(appLoadingReducer),
+
   ],
 );
 
-bool appLoadingReducer(bool init, action) {
-  if (action is StartAction) {
-    return true;
-  } else if (action is EndAction) {
-    return false;
-  } else {
-    return init;
-  }
-}
 
 UserState userLoginReducer(UserState state, LoginAction action) {
-  return state;
+  print(action);
+  return state..login = action.result;
 }
 
 UserState userLogout(UserState state, LogoutAction action) {
   Cache().setToken(null);
   return UserState();
-}
-
-UserState userLoginSuccessReducer(UserState state, LoginSuccessAction action) {
-  return UserState(userInfo: action.userInfo, login: true, errorMsg: null);
-}
-
-UserState userLoginFailReducer(UserState state, LoginFailAction action) {
-  return UserState(userInfo: null, login: false, errorMsg: action.errorMsg);
 }
 
 String getErrorMessage(Object error) {

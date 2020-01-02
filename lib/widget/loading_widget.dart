@@ -9,14 +9,14 @@ class LoadingWidget extends StatefulWidget {
   final Widget child;
   final Gradient gradient;
   final PressCallback onPressed;
-  final bool unconstrained;
+  final bool constrained;
   final bool iOSStyle;
 
   LoadingWidget(
     this.child, {
     this.gradient,
     @required this.onPressed,
-    this.unconstrained = true,
+    this.constrained = true,
     this.iOSStyle = true,
   });
 
@@ -132,7 +132,7 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                 ],
               )),
         ));
-    return widget.unconstrained == true
+    return widget.constrained == true
         ? UnconstrainedBox(
             child: child,
           )

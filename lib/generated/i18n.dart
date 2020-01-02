@@ -22,15 +22,22 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get appName => "Monster";
+  String get authFaceHint => "Align your face within the frame,then tap the confirm button";
+  String get authTitle => "Authenticate";
   String get closeNotificationHint => "Close Notification Service";
+  String get confirmLabel => "Confirm";
   String get editUserProfile => "edit your profile";
   String get homeTab => "Home";
+  String get idFormHint => "Identity Card Number (11 digit)";
+  String get idFormTitle => "Confirm Identity Info";
+  String get loadingCameraHint => "Loading Camera Settings";
   String get localeMenuLabel => "Localization";
   String get loginLabel => "Login";
   String get logoutLabel => "Logout";
   String get messageLabel => "Message";
   String get mineTab => "Mine";
   String get motto => "Understated,Forbearance,massacre";
+  String get nextStepLabel => "Next Step";
   String get notAuthTitle => "You are not authenticated";
   String get notNowAuthLabel => "Not now";
   String get openNotificationHint => "Open Notification Service";
@@ -77,15 +84,21 @@ class $zh_CN extends S {
   @override
   String get loginLabel => "登录";
   @override
+  String get loadingCameraHint => "正在加载相机..";
+  @override
   String get logoutLabel => "登出";
   @override
   String get toAuthHint => "前往认证";
   @override
   String get closeNotificationHint => "关闭推送通知";
   @override
+  String get idFormHint => "11位中国身份证号码";
+  @override
   String get phoneLabel => "手机号";
   @override
   String get localeMenuLabel => "国际化";
+  @override
+  String get authFaceHint => "将您的脸对准屏幕正中心,然后轻点确认按钮";
   @override
   String get notAuthTitle => " 您还未实名认证";
   @override
@@ -96,6 +109,8 @@ class $zh_CN extends S {
   String get editUserProfile => "编辑个人资料";
   @override
   String get sendSmsCodeHint => "发送验证码";
+  @override
+  String get authTitle => "身份认证";
   @override
   String get appName => "卡牌助手";
   @override
@@ -111,6 +126,8 @@ class $zh_CN extends S {
   @override
   String get registerTitle => "注册";
   @override
+  String get nextStepLabel => "下一步";
+  @override
   String get mineTab => "我的";
   @override
   String get openNotificationHint => "打开推送通知";
@@ -121,7 +138,11 @@ class $zh_CN extends S {
   @override
   String get passwordRepeatHint => "重复密码";
   @override
+  String get idFormTitle => "确认身份信息";
+  @override
   String get motto => "智慧生活,安心陪伴";
+  @override
+  String get confirmLabel => "确认";
   @override
   String get registerHint => "没有账户? 点击注册";
   @override

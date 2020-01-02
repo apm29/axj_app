@@ -1,4 +1,4 @@
-import 'package:axj_app/page/auth_page.dart';
+import 'package:axj_app/page/auth_dialog_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class AuthModal extends ModalRoute {
       Animation<double> secondaryAnimation) {
     return Material(
       type: MaterialType.transparency,
-      child: AuthPage(),
+      child: AuthDialogPage(),
     );
   }
 

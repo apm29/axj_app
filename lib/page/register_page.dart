@@ -21,7 +21,7 @@ class RegisterPage extends StatelessWidget {
         children: <Widget>[
           SizedBox.expand(
             child: Image.asset(
-              'assets/images/car.jpg',
+              'assets/images/city.jpg',
               fit: BoxFit.cover,
             ),
           ),
@@ -176,7 +176,7 @@ class _RegisterColumnState extends State<RegisterColumn> {
                     Text(
                       S.of(context).registerTitle,
                       style: Theme.of(context).textTheme.title.copyWith(
-                            color: Colors.blue,
+                            color: Theme.of(context).secondaryHeaderColor,
                             fontSize: 36,
                             fontFamily: 'handwrite_font',
                             fontWeight: FontWeight.w600,
@@ -299,7 +299,7 @@ class _RegisterColumnState extends State<RegisterColumn> {
                             Theme.of(context).primaryColor
                           ],
                         ),
-                        unconstrained: false,
+                        constrained: false,
                       ),
                     )
                   ],

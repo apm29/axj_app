@@ -58,4 +58,13 @@ class UserInfoDetail {
     return 'UserInfoDetail{userId: $userId, userName: $userName, mobile: $mobile, isCertification: $isCertification, myName: $myName, sex: $sex, nickName: $nickName, avatar: $avatar, idCard: $idCard, house: $house, roles: $roles, menus: $menus}';
   }
 
+  bool get authorized {
+    if (roles == null || roles.isEmpty) {
+      return false;
+    } else {
+      return roles.firstWhere((r) => r.hasHouse,orElse: ()=>null) != null;
+    }
+  }
+
+  bool get isReAuthenticate => (idCard ?? "").isNotEmpty;
 }

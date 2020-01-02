@@ -1,4 +1,7 @@
+import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/main.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -12,9 +15,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 ///
 class MinePage extends StatelessWidget {
   final pageHorizontalPadding = 12.0;
+
   @override
   Widget build(BuildContext context) {
-
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
@@ -51,7 +54,8 @@ class MinePage extends StatelessWidget {
                   hint: '查看房屋信息',
                   iconData: CupertinoIcons.bell_solid,
                   onTap: () async {
-                    await Future.delayed(Duration(seconds: 2));
+                    store.dispatch(
+                        CheckAuthAndRouteAction(context, Routes.myHouse));
                   },
                 ),
               ),
@@ -160,7 +164,10 @@ class MinePage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                userState.login?userState.userInfo.nickName:"",
+                                userState.login
+                                    ? userState.userInfo?.nickName ??
+                                        userState.userInfo?.userName??""
+                                    : "",
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -279,7 +286,6 @@ class RoundCardButton extends StatelessWidget {
         child: child,
         onTap: () {
           onTap?.call();
-          print(1);
         },
       ),
     );
@@ -406,7 +412,10 @@ class _ActionTileState extends State<ActionTile> {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Row(
           children: <Widget>[
-            Icon(widget.iconData,color: Colors.grey[600],),
+            Icon(
+              widget.iconData,
+              color: Colors.grey[600],
+            ),
             SizedBox(
               width: 16,
             ),

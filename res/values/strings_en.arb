@@ -39,6 +39,15 @@
 
   "notAuthTitle": "You are not authenticated",
   "toAuthHint": "Authenticate",
-  "notNowAuthLabel": "Not now"
+  "notNowAuthLabel": "Not now",
+
+  "loadingCameraHint": "Loading Camera Settings",
+  "authTitle": "Authenticate",
+  "authFaceHint": "Align your face within the frame,then tap the confirm button",
+
+  "idFormTitle": "Confirm Identity Info",
+  "idFormHint": "Identity Card Number (11 digit)",
+  "nextStepLabel": "Next Step",
+  "confirmLabel": "Confirm"
 
 }

@@ -39,6 +39,13 @@ dependencies:
   oktoast: ^2.3.0
   # 路由
   fluro: ^1.5.1
+  # camera
+  camera: ^0.5.7+2
+  # path
+  path_provider: ^1.5.1
+
+  ## permission
+  permission_handler: ^4.0.0
 
 dev_dependencies:
   flutter_test:

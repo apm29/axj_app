@@ -1,9 +1,11 @@
 import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/main.dart';
+import 'package:axj_app/page/auth_dialog_page.dart';
 import 'package:axj_app/page/auth_page.dart';
 import 'package:axj_app/page/home_page.dart';
 import 'package:axj_app/page/login_page.dart';
 import 'package:axj_app/page/modal/auth_modal.dart';
+import 'package:axj_app/page/my_house_page.dart';
 import 'package:axj_app/page/personal_settings_page.dart';
 import 'package:axj_app/page/register_page.dart';
 import 'package:axj_app/page/splash_page.dart';
@@ -33,6 +35,11 @@ class Routes {
   static String personalSettings = "/personal_settings";
   static String register = "/register";
   static String authHint = "/auth_hint";
+  static String authForm = "/auth_form";
+  static String authFace = "/auth_face";
+  static String myHouse = "/my_house";
+
+  static String keyId = "id";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(handlerFunc: (
@@ -51,6 +58,9 @@ class Routes {
     router.define(personalSettings, handler: personalSettingsHandler);
     router.define(register, handler: registerHandler);
     router.define(authHint, handler: authHintHandler);
+    router.define(myHouse, handler: myHouseHandler);
+    router.define(authForm, handler: authHandler);
+    router.define('$authFace/:$keyId', handler: authFaceHandler);
   }
 }
 
@@ -98,13 +108,29 @@ final registerHandler = new Handler(
 
 final authHintHandler = new Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return AuthPage();
+    return AuthDialogPage();
+  },
+);
+final myHouseHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return MyHousePage();
+  },
+);
+
+final authHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return AuthFormPage();
+  },
+);
+final authFaceHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return AuthFacePage(idCardNum: params[Routes.keyId].first);
   },
 );
 
 class AppRouter {
   static Future toHomeAndReplaceSelf(BuildContext context) {
-    if(ModalRoute.of(context).settings.name == Routes.home){
+    if (ModalRoute.of(context).settings.name == Routes.home) {
       return Future.value();
     }
     return Application.router.navigateTo(context, Routes.home, replace: true);
@@ -128,8 +154,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.login,
-      transition
-          : TransitionType.inFromBottom,
+      transition: TransitionType.inFromBottom,
     );
   }
 
@@ -137,12 +162,27 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.register,
-      transition
-          : TransitionType.cupertino,
+      transition: TransitionType.cupertino,
     );
   }
 
   static Future toAuthHint(BuildContext context) {
     return Navigator.of(context).push(AuthModal());
+  }
+
+  static Future toAuthForm(BuildContext context) {
+    return Application.router.navigateTo(
+      context,
+      Routes.authForm,
+      transition: TransitionType.cupertino,
+    );
+  }
+
+  static Future toAuthFace(BuildContext context, String idCardNum) {
+    return Application.router.navigateTo(
+      context,
+      '${Routes.authFace}/$idCardNum',
+      transition: TransitionType.cupertino,
+    );
   }
 }

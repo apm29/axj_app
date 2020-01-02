@@ -39,5 +39,14 @@
 
   "notAuthTitle": " 您还未实名认证",
   "toAuthHint": "前往认证",
-  "notNowAuthLabel": "暂不认证"
+  "notNowAuthLabel": "暂不认证",
+
+  "loadingCameraHint": "正在加载相机..",
+  "authTitle": "身份认证",
+  "authFaceHint": "将您的脸对准屏幕正中心,然后轻点确认按钮",
+
+  "idFormTitle": "确认身份信息",
+  "idFormHint": "11位中国身份证号码",
+  "nextStepLabel": "下一步",
+  "confirmLabel": "确认"
 }

@@ -103,7 +103,7 @@ class LoginPage extends StatelessWidget {
         onPressed: () => _register(context),
         child: Text(
           S.of(context).registerHint,
-          style: TextStyle(color: Theme.of(context).primaryColor),
+          style: Theme.of(context).textTheme.caption,
         ),
       ),
     );
@@ -115,7 +115,9 @@ class LoginPage extends StatelessWidget {
       AppRouter.toRegister(context).then((resMap) {
         if (resMap != null) {
           store.dispatch(
-              LoginAction(resMap['userName'], resMap['password'], context));
+              LoginAction(resMap['userName'], resMap['password'], context, () {
+            Navigator.of(context).pop(true);
+          }));
         }
       });
 }
@@ -194,16 +196,16 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
     return Material(
       type: MaterialType.card,
       elevation: 3,
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       child: ListView(
         shrinkWrap: true,
         children: <Widget>[
           TabBar(
             controller: tabController,
-            labelColor: Theme.of(context).primaryColor,
+            labelColor: Theme.of(context).accentColor,
             unselectedLabelColor: Colors.grey,
             indicatorSize: TabBarIndicatorSize.label,
-            indicatorColor: Theme.of(context).primaryColor,
+            indicatorColor: Theme.of(context).accentColor,
             labelStyle: TextStyle(fontSize: 18),
             tabs: [
               Tab(text: S.of(context).smsLoginLabel),
@@ -230,26 +232,26 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
 
   Widget buildLoginButton(BuildContext context) {
     return Container(
-          margin: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-          constraints: BoxConstraints.tightFor(
-              width: MediaQuery.of(context).size.width),
-          child: LoadingWidget(
-            Text(
-              S.of(context).loginLabel,
-              style: TextStyle(fontSize: 16),
-            ),
-            onPressed: enabled
-                ? () async {
-                    _login(context);
-                  }
-                : null,
-            gradient: LinearGradient(colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor
-            ]),
-            unconstrained: false,
-          ),
-        );
+      margin: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+      constraints:
+          BoxConstraints.tightFor(width: MediaQuery.of(context).size.width),
+      child: LoadingWidget(
+        Text(
+          S.of(context).loginLabel,
+          style: TextStyle(fontSize: 16),
+        ),
+        onPressed: enabled
+            ? () async {
+                _login(context);
+              }
+            : null,
+        gradient: LinearGradient(colors: [
+          Theme.of(context).accentColor,
+          Theme.of(context).accentColor
+        ]),
+        constrained: false,
+      ),
+    );
   }
 
   Widget buildServiceProtocol() {
@@ -260,7 +262,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Theme.of(context).primaryColor),
+                shape: BoxShape.circle, color: Theme.of(context).accentColor),
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Icon(
@@ -276,7 +278,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
           Text(
             S.of(context).serviceProtocolText(
                 S.of(context).serviceProtocolName(S.of(context).appName)),
-            style: TextStyle(color: Colors.grey, fontSize: 12),
+            style: Theme.of(context).textTheme.caption,
           )
         ],
       ),
@@ -289,7 +291,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
 //      textSize: textSize,
 //      textLength: smsCount,
 //      borderSide: BorderSide(
-//        color: Theme.of(context).primaryColor.withOpacity(0.6),
+//        color: Theme.of(context).accentColor.withOpacity(0.6),
 //        width: 1.0,
 //      ),
 //    );
@@ -301,28 +303,28 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             decoration: InputDecoration(
               icon: Text(S.of(context).phoneLabel),
               hintText: S.of(context).phoneHint,
+              hintStyle: Theme.of(context).textTheme.caption,
               isDense: true,
               suffix: LoadingWidget(
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     S.of(context).sendSmsCodeHint,
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+                    style: TextStyle(color: Theme.of(context).accentColor),
                   ),
                 ),
-                onPressed: phoneReady? () async {
-                  await _sendSmsCode();
-                }:null,
+                onPressed: phoneReady
+                    ? () async {
+                        await _sendSmsCode();
+                      }
+                    : null,
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                borderSide: BorderSide(color: Theme.of(context).accentColor),
               ),
             ),
             maxLength: phoneCount,
             keyboardType: TextInputType.phone,
-            style: TextStyle(
-              fontSize: 15,
-            ),
             buildCounter: counter,
           ),
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -341,8 +343,10 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               icon: Text(S.of(context).smsCodeLabel),
+              hintText: S.of(context).smsCodeHint,
+              hintStyle: Theme.of(context).textTheme.caption,
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                borderSide: BorderSide(color: Theme.of(context).accentColor),
               ),
 //              enabledBorder: border,
 //              focusedBorder: border,
@@ -366,9 +370,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             decoration: InputDecoration(
               icon: Icon(Icons.person),
               hintText: S.of(context).userNameHint,
-            ),
-            style: TextStyle(
-              fontSize: 20,
+              hintStyle: Theme.of(context).textTheme.caption,
             ),
           ),
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -379,9 +381,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             decoration: InputDecoration(
               icon: Icon(Icons.verified_user),
               hintText: S.of(context).passwordHint,
-            ),
-            style: TextStyle(
-              fontSize: 20,
+              hintStyle: Theme.of(context).textTheme.caption,
             ),
             obscureText: true,
           ),
@@ -402,17 +402,19 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
       print(e);
       showToast(getErrorMessage(e));
     }
-
   }
 
   void _login(BuildContext context) {
     if (tabController.index == 0) {
-      store.dispatch(
-          FastLoginAction(_phoneController.text, _smsController.text,context));
+      store.dispatch(FastLoginAction(
+          _phoneController.text, _smsController.text, context, () {
+        Navigator.of(context).pop(true);
+      }));
     } else {
       store.dispatch(
-        LoginAction(_nameController.text, _wordController.text, context),
-      );
+          LoginAction(_nameController.text, _wordController.text, context, () {
+        Navigator.of(context).pop(true);
+      }));
     }
   }
 }

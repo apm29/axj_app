@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:axj_app/middleware/middlewares.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/page/splash_page.dart';
@@ -17,7 +19,34 @@ Future<void> main() async {
   await Cache().init();
   // 注册 fluro routes
   Application.init();
-  runApp(FlutterReduxApp());
+  //全局异常捕获
+  FlutterError.onError = (FlutterErrorDetails details) {
+    customerReport(detail: details);
+  };
+  runZoned(
+    () => runApp(FlutterReduxApp()),
+    onError: (Object obj, StackTrace stack) {
+      customerReport(error: obj, stackTrace: stack);
+    },
+    zoneSpecification:ZoneSpecification(
+      print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
+        report(line);
+      },
+    )
+  );
+}
+
+customerReport(
+    {FlutterErrorDetails detail, Object error, StackTrace stackTrace}) {
+  if(detail!=null){
+    print(detail);
+  }else{
+    print(error);
+    print(stackTrace);
+  }
+}
+report(line){
+  print('FROM---------->$line');
 }
 
 final DevToolsStore<AppState> store = DevToolsStore<AppState>(
@@ -59,6 +88,9 @@ class FlutterReduxApp extends StatelessWidget {
               // is not restarted.
               primarySwatch: Colors.blue,
               platform: TargetPlatform.iOS,
+            ),
+            darkTheme: ThemeData.dark().copyWith(
+              hintColor: Colors.teal,
             ),
             onGenerateRoute: Application.router.generator,
             locale: locale,
