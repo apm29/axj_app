@@ -12,7 +12,7 @@ class AppState {
       : this.userState = userState ?? UserState(),
         this.loading = loading ?? false,
         this.homePageState = HomePageState(),
-        this.locale = Locale(Cache().locale ?? 'en');
+        this.locale = Locale(Cache().locale ?? 'zh');
 
   UserState userState;
 

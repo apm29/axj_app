@@ -141,27 +141,6 @@ class ChangeLocaleAction implements AppAction {
 
 class LogoutAction implements AppAction {}
 
-class LoginSuccessAction implements AppAction {
-  final UserInfoDetail userInfo;
-
-  LoginSuccessAction(this.userInfo);
-
-  @override
-  String toString() {
-    return 'LoginSuccessAction{userInfo: $userInfo}';
-  }
-}
-
-class LoginFailAction implements AppAction {
-  final String errorMsg;
-
-  LoginFailAction(this.errorMsg);
-
-  @override
-  String toString() {
-    return 'LoginFailAction{errorMsg: $errorMsg}';
-  }
-}
 
 class AppInitAction implements AppAction {
   final BuildContext context;

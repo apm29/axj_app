@@ -144,6 +144,9 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
   final smsCount = 6;
   final phoneCount = 11;
   FocusNode _smsFocusNode = FocusNode();
+  FocusNode _phoneFocusNode = FocusNode();
+  FocusNode _nameFocusNode = FocusNode();
+  FocusNode _wordFocusNode = FocusNode();
 
   int get currentIndex => (tabController?.index ?? 0);
 
@@ -173,7 +176,13 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
     _smsController.addListener(listener);
     _nameController.addListener(listener);
     _wordController.addListener(listener);
-    tabController.addListener(listener);
+    tabController.addListener((){
+      if(currentIndex == 0){
+        FocusScope.of(context).requestFocus(_phoneFocusNode);
+      }else{
+        FocusScope.of(context).requestFocus(_nameFocusNode);
+      }
+    });
   }
 
   @override
@@ -300,6 +309,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
         Container(
           child: TextField(
             controller: _phoneController,
+            focusNode: _phoneFocusNode,
             decoration: InputDecoration(
               icon: Text(S.of(context).phoneLabel),
               hintText: S.of(context).phoneHint,
@@ -337,6 +347,11 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               fontSize: textSize,
               letterSpacing: letterSpace,
             ),
+            onChanged: (v){
+              if(v.length == smsCount){
+                FocusScope.of(context).requestFocus(FocusNode());
+              }
+            },
             maxLength: smsCount,
             buildCounter: counter,
             keyboardType: TextInputType.number,
@@ -367,17 +382,23 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
         Container(
           child: TextField(
             controller: _nameController,
+            focusNode: _nameFocusNode,
             decoration: InputDecoration(
               icon: Icon(Icons.person),
               hintText: S.of(context).userNameHint,
               hintStyle: Theme.of(context).textTheme.caption,
             ),
+            textInputAction: TextInputAction.next,
+            onSubmitted: (v){
+              FocusScope.of(context).requestFocus(_wordFocusNode);
+            },
           ),
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         ),
         Container(
           child: TextField(
             controller: _wordController,
+            focusNode: _wordFocusNode,
             decoration: InputDecoration(
               icon: Icon(Icons.verified_user),
               hintText: S.of(context).passwordHint,
@@ -397,7 +418,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
     try {
       BaseResp resp = await Repository.sendVerifyCode(_phoneController.text);
       showToast(resp.text);
-      _smsFocusNode.requestFocus();
+      FocusScope.of(context).requestFocus(_smsFocusNode);
     } catch (e) {
       print(e);
       showToast(getErrorMessage(e));

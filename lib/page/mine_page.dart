@@ -414,7 +414,6 @@ class _ActionTileState extends State<ActionTile> {
           children: <Widget>[
             Icon(
               widget.iconData,
-              color: Colors.grey[600],
             ),
             SizedBox(
               width: 16,
