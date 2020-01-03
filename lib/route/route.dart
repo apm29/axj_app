@@ -1,4 +1,4 @@
-import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/page/auth_dialog_page.dart';
 import 'package:axj_app/page/auth_page.dart';
@@ -9,7 +9,7 @@ import 'package:axj_app/page/my_house_page.dart';
 import 'package:axj_app/page/personal_settings_page.dart';
 import 'package:axj_app/page/register_page.dart';
 import 'package:axj_app/page/splash_page.dart';
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 

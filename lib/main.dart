@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:axj_app/configuration.dart';
-import 'package:axj_app/middleware/middlewares.dart';
+import 'package:axj_app/redux/middleware/middlewares.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/page/splash_page.dart';
 import 'package:axj_app/route/route.dart';
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

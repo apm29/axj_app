@@ -2,7 +2,7 @@ import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/model/repository.dart';
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 
 ///
 /// author : ciih

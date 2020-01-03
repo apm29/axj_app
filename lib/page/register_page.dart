@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';

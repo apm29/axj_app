@@ -1,6 +1,6 @@
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/bean/house.dart';
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';

@@ -5,7 +5,7 @@ import 'package:axj_app/route/route.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
-import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/redux/action/actions.dart';
 
 //数据类
 class AppState {

@@ -9,7 +9,7 @@ import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/plugin/permission.dart';
 import 'package:axj_app/route/route.dart';
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

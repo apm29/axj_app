@@ -1,4 +1,4 @@
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Cache {

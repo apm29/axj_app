@@ -1,8 +1,8 @@
-import 'package:axj_app/action/actions.dart';
+import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/route/route.dart';
-import 'package:axj_app/store/store.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
