@@ -6,7 +6,7 @@ class TaskModal extends ModalRoute {
 
   /// use [AsyncVoidTask] or [AsyncResultTask]
   final Function task;
-
+  final minimumLoadingTime = 500;
   TaskModal(this.task);
 
   @override
@@ -39,7 +39,13 @@ class TaskModal extends ModalRoute {
   @override
   void install(OverlayEntry insertionPoint) {
     ()async{
-      var result = await task();
+      int start = DateTime.now().millisecondsSinceEpoch;
+      var result = await task?.call();
+      int end = DateTime.now().millisecondsSinceEpoch;
+      if ((end - start) < minimumLoadingTime) {
+        await Future.delayed(
+            Duration(milliseconds: minimumLoadingTime - (end - start)));
+      }
       navigator.pop(result);
     }();
     super.install(insertionPoint);

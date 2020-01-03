@@ -27,6 +27,8 @@ class S implements WidgetsLocalizations {
   String get closeNotificationHint => "Close Notification Service";
   String get confirmLabel => "Confirm";
   String get editUserProfile => "edit your profile";
+  String get familyMemberActionTileHint => "Family Members/Tenants info";
+  String get familyMemberActionTileTitle => "Family Members";
   String get homeTab => "Home";
   String get idFormHint => "Identity Card Number (11 digit)";
   String get idFormTitle => "Confirm Identity Info";
@@ -37,7 +39,11 @@ class S implements WidgetsLocalizations {
   String get messageLabel => "Message";
   String get mineTab => "Mine";
   String get motto => "Understated,Forbearance,massacre";
+  String get myHouseActionTileHint => "View Houses info";
+  String get myHouseActionTileTitle => "My Houses";
   String get myHouseTitle => "Houses";
+  String get myVehicleActionTileHint => "View Vehicles info";
+  String get myVehicleActionTileTitle => "My Vehicles";
   String get nextStepLabel => "Next Step";
   String get notAuthTitle => "You are not authenticated";
   String get notNowAuthLabel => "Not now";
@@ -77,9 +83,13 @@ class $zh_CN extends S {
   @override
   String get registerLabel => "立即注册";
   @override
+  String get myHouseActionTileHint => "查看房屋信息";
+  @override
   String get passwordHint => "密码";
   @override
   String get notNowAuthLabel => "暂不认证";
+  @override
+  String get familyMemberActionTileTitle => "家庭成员";
   @override
   String get smsLoginLabel => "短信登录";
   @override
@@ -101,9 +111,15 @@ class $zh_CN extends S {
   @override
   String get authFaceHint => "将您的脸对准屏幕正中心,然后轻点确认按钮";
   @override
+  String get myVehicleActionTileHint => "查看车辆信息";
+  @override
   String get notAuthTitle => " 您还未实名认证";
   @override
   String get homeTab => "主页";
+  @override
+  String get familyMemberActionTileHint => "家庭成员,租客信息";
+  @override
+  String get myVehicleActionTileTitle => "我的爱车";
   @override
   String get smsCodeHint => "6位验证码";
   @override
@@ -132,6 +148,8 @@ class $zh_CN extends S {
   String get mineTab => "我的";
   @override
   String get openNotificationHint => "打开推送通知";
+  @override
+  String get myHouseActionTileTitle => "我的房屋";
   @override
   String get userNameHint => "用户名";
   @override

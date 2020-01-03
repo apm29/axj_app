@@ -10,7 +10,7 @@ class Dictionary {
     return 'Dictionary{districtDictionary: $districtDictionary}';
   }
 
-  init() async {
+  Future<void> init() async {
     BaseResp<List<DistrictInfo>> resp = await Repository.getDistrictInfo();
     if (resp.success) {
       districtDictionary = resp.data;

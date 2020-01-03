@@ -52,8 +52,8 @@ class MinePage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: pageHorizontalPadding),
               sliver: SliverToBoxAdapter(
                 child: ActionTile(
-                  title: '我的房屋',
-                  hint: '查看房屋信息',
+                  title: S.of(context).myHouseActionTileTitle,
+                  hint: S.of(context).myHouseActionTileHint,
                   iconData: CupertinoIcons.bell_solid,
                   onTap: () async {
                     store.dispatch(
@@ -66,8 +66,8 @@ class MinePage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: pageHorizontalPadding),
               sliver: SliverToBoxAdapter(
                 child: ActionTile(
-                  title: '家庭成员',
-                  hint: '家庭成员,租客信息',
+                  title: S.of(context).familyMemberActionTileTitle,
+                  hint: S.of(context).familyMemberActionTileHint,
                   iconData: CupertinoIcons.group_solid,
                   onTap: () async {
                     await Future.delayed(Duration(seconds: 2));
@@ -79,8 +79,8 @@ class MinePage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: pageHorizontalPadding),
               sliver: SliverToBoxAdapter(
                 child: ActionTile(
-                  title: '我的爱车',
-                  hint: '查看车辆信息',
+                  title: S.of(context).myVehicleActionTileTitle,
+                  hint: S.of(context).myVehicleActionTileHint,
                   iconData: CupertinoIcons.car,
                   onTap: () async {
                     await Future.delayed(Duration(seconds: 2));
@@ -374,13 +374,14 @@ class _ClosableSwitchSliverState extends State<ClosableSwitchSliver> {
                   onChanged: (v) {
                     () async {
                       if (v) {
-                        bool has = await Permissions.has(PermissionGroup.notification,context);
+                        bool has = await Permissions.has(
+                            PermissionGroup.notification, context);
                         print(has);
 
                         setState(() {
                           checked = has;
                         });
-                      }else{
+                      } else {
                         setState(() {
                           checked = v;
                         });
@@ -412,6 +413,7 @@ class ActionTile extends StatefulWidget {
 
 class _ActionTileState extends State<ActionTile> {
   bool loading = false;
+  int minimumLoadingTime = 600;
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +424,13 @@ class _ActionTileState extends State<ActionTile> {
               setState(() {
                 loading = true;
               });
+              int start = DateTime.now().millisecondsSinceEpoch;
               await widget.onTap?.call();
+              int end = DateTime.now().millisecondsSinceEpoch;
+              if ((end - start) < minimumLoadingTime) {
+                await Future.delayed(
+                    Duration(milliseconds: minimumLoadingTime - (end - start)));
+              }
               setState(() {
                 loading = false;
               });

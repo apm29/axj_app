@@ -33,7 +33,6 @@ class PersonalSettingsPage extends StatelessWidget {
             },
             onSelected: (locale) {
               store.dispatch(ChangeLocaleAction(locale));
-              AppRouter.toHome(context, ActiveTab.Home);
             },
           ),
         ],
@@ -68,7 +67,9 @@ class PersonalSettingsPage extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () {
-                store.state.dictionary.init();
+                store.dispatch(
+                    VoidTaskSimulationAction(store.state.dictionary.init, context)
+                );
               },
               child: Text(S.of(context).myHouseTitle),
             ),

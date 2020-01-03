@@ -50,6 +50,13 @@
   "nextStepLabel": "Next Step",
   "confirmLabel": "Confirm",
 
-  "myHouseTitle": "Houses"
+  "myHouseTitle": "Houses",
+
+  "myHouseActionTileTitle": "My Houses",
+  "myHouseActionTileHint": "View Houses info",
+  "myVehicleActionTileTitle": "My Vehicles",
+  "myVehicleActionTileHint": "View Vehicles info",
+  "familyMemberActionTileTitle": "Family Members",
+  "familyMemberActionTileHint": "Family Members/Tenants info"
 
 }

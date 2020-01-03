@@ -50,5 +50,12 @@
   "nextStepLabel": "下一步",
   "confirmLabel": "确认",
 
-  "myHouseTitle": "我的房屋"
+  "myHouseTitle": "我的房屋",
+
+  "myHouseActionTileTitle": "我的房屋",
+  "myHouseActionTileHint": "查看房屋信息",
+  "myVehicleActionTileTitle": "我的爱车",
+  "myVehicleActionTileHint": "查看车辆信息",
+  "familyMemberActionTileTitle": "家庭成员",
+  "familyMemberActionTileHint": "家庭成员,租客信息"
 }
