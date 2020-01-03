@@ -1,12 +1,14 @@
 import 'package:axj_app/action/actions.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
+import 'package:axj_app/plugin/permission.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/store/store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 ///
 /// author : ciih
@@ -166,7 +168,8 @@ class MinePage extends StatelessWidget {
                               Text(
                                 userState.login
                                     ? userState.userInfo?.nickName ??
-                                        userState.userInfo?.userName??""
+                                        userState.userInfo?.userName ??
+                                        ""
                                     : "",
                                 style: TextStyle(
                                   fontSize: 20,
@@ -188,13 +191,18 @@ class MinePage extends StatelessWidget {
                       child: Positioned.fromRelativeRect(
                         rect: RelativeRect.fill,
                         child: Center(
-                          child: Text(
-                            S.of(context).loginLabel,
-                            style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                            textAlign: TextAlign.center,
+                          child: InkWell(
+                            onTap: () {
+                              AppRouter.toLogin(context);
+                            },
+                            child: Text(
+                              S.of(context).loginLabel,
+                              style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
@@ -364,9 +372,20 @@ class _ClosableSwitchSliverState extends State<ClosableSwitchSliver> {
                 CupertinoSwitch(
                   value: checked,
                   onChanged: (v) {
-                    setState(() {
-                      checked = v;
-                    });
+                    () async {
+                      if (v) {
+                        bool has = await Permissions.has(PermissionGroup.notification,context);
+                        print(has);
+
+                        setState(() {
+                          checked = has;
+                        });
+                      }else{
+                        setState(() {
+                          checked = v;
+                        });
+                      }
+                    }();
                   },
                 )
               ],

@@ -48,5 +48,7 @@
   "idFormTitle": "确认身份信息",
   "idFormHint": "11位中国身份证号码",
   "nextStepLabel": "下一步",
-  "confirmLabel": "确认"
+  "confirmLabel": "确认",
+
+  "myHouseTitle": "我的房屋"
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:axj_app/model/api.dart';
+import 'package:axj_app/model/bean/district_info.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/roles.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
@@ -104,6 +105,18 @@ class Repository {
         "photo": imageUrl,
         "idCard": idCard,
         "isAgain": isAgain ? 1 : 0,
+      },
+    );
+  }
+
+  static Future<BaseResp<List<DistrictInfo>>> getDistrictInfo() {
+    return Api().post(
+      "/business/district/findDistrictInfo",
+      processor: (s) {
+        if (s is List) {
+          return s.map((json) => DistrictInfo.fromJsonMap(json)).toList();
+        }
+        return [];
       },
     );
   }

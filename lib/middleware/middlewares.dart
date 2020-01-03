@@ -27,6 +27,13 @@ List<Middleware<AppState>> createAppMiddleware() {
 
 initApp(Store<AppState> store, action, NextDispatcher next) {
   () async {
+
+    try{
+      await store.state.dictionary.init();
+    }catch(e){
+      print(e);
+    }
+
     try {
       BaseResp<UserInfoDetail> resp = await Repository.getUserInfo();
       if (resp.success) {
@@ -38,6 +45,10 @@ initApp(Store<AppState> store, action, NextDispatcher next) {
     } catch (e) {
       store.state.userState.login = false;
     }
+
+
+
+    next(action);
   }();
 }
 

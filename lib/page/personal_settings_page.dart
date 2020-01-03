@@ -68,6 +68,12 @@ class PersonalSettingsPage extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () {
+                store.state.dictionary.init();
+              },
+              child: Text(S.of(context).myHouseTitle),
+            ),
+            RaisedButton(
+              onPressed: () {
                 store.dispatch(VoidTaskSimulationAction(
                   () async {
                     await Future.delayed(Duration(seconds: 3));

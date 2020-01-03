@@ -61,34 +61,42 @@ class LoginAction implements AppAction, ResultTaskAction<bool> {
   LoginAction(
       this.username, this.password, this.context, VoidCallback onSuccess) {
     task = () async {
-      try {
-        BaseResp resp = await Repository.login(username, password);
-        Future.delayed(Duration(seconds: 2));
-        if (resp.success) {
-          Cache().setToken(resp.token);
-          BaseResp<UserInfoDetail> userInfoResp =
-              await Repository.getUserInfo();
-          if (userInfoResp.success) {
-            showToast("登录成功");
-            StoreProvider.of<AppState>(context, listen: false)
-                .state
-                .userState
-                .userInfo = userInfoResp.data;
-            onSuccess();
-            return true;
-          } else {
-            showToast("登录失败:${userInfoResp.text}");
-          }
-        } else {
-          showToast("登录失败:${resp.text}");
-        }
-        return false;
-      } catch (e) {
-        print(e);
-        showToast(getErrorMessage(e));
-        return false;
-      }
+      return await loginAndInit(
+          context, Repository.login(username, password), onSuccess);
     };
+  }
+}
+
+Future<bool> loginAndInit(
+    BuildContext context, Future<BaseResp> api, VoidCallback onSuccess) async {
+  try {
+    BaseResp resp = await api;
+    Future.delayed(Duration(seconds: 2));
+    if (resp.success) {
+      Cache().setToken(resp.token);
+      BaseResp<UserInfoDetail> userInfoResp = await Repository.getUserInfo();
+
+      if (userInfoResp.success) {
+        showToast("登录成功");
+        var store = StoreProvider.of<AppState>(context, listen: false);
+        store
+            .state
+            .userState
+            .userInfo = userInfoResp.data;
+        await store.state.dictionary.init();
+        onSuccess();
+        return true;
+      } else {
+        showToast("登录失败:${userInfoResp.text}");
+      }
+    } else {
+      showToast("登录失败:${resp.text}");
+    }
+    return false;
+  } catch (e) {
+    print(e);
+    showToast(getErrorMessage(e));
+    return false;
   }
 }
 
@@ -102,33 +110,8 @@ class FastLoginAction implements AppAction, ResultTaskAction<bool> {
   FastLoginAction(
       this.mobile, this.verifyCode, this.context, VoidCallback onSuccess) {
     task = () async {
-      try {
-        BaseResp resp = await Repository.fastLogin(mobile, verifyCode);
-        Future.delayed(Duration(seconds: 2));
-        if (resp.success) {
-          Cache().setToken(resp.token);
-          BaseResp<UserInfoDetail> userInfoResp =
-              await Repository.getUserInfo();
-          if (userInfoResp.success) {
-            showToast("登录成功");
-            StoreProvider.of<AppState>(context, listen: false)
-                .state
-                .userState
-                .userInfo = userInfoResp.data;
-            onSuccess();
-            return true;
-          } else {
-            showToast("登录失败:${userInfoResp.text}");
-          }
-        } else {
-          showToast("登录失败:${resp.text}");
-        }
-        return false;
-      } catch (e) {
-        print(e);
-        showToast(getErrorMessage(e));
-        return false;
-      }
+      return await loginAndInit(
+          context, Repository.fastLogin(mobile, verifyCode), onSuccess);
     };
   }
 }
@@ -140,7 +123,6 @@ class ChangeLocaleAction implements AppAction {
 }
 
 class LogoutAction implements AppAction {}
-
 
 class AppInitAction implements AppAction {
   final BuildContext context;

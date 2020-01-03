@@ -1,5 +1,6 @@
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
+import 'package:axj_app/model/dictionary.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
@@ -12,11 +13,14 @@ class AppState {
       : this.userState = userState ?? UserState(),
         this.loading = loading ?? false,
         this.homePageState = HomePageState(),
+        this.dictionary = Dictionary(),
         this.locale = Locale(Cache().locale ?? 'zh');
 
   UserState userState;
 
   HomePageState homePageState;
+
+  Dictionary dictionary;
 
   bool loading;
 
@@ -42,6 +46,13 @@ class AppState {
       loading.hashCode ^
       locale.hashCode ^
       simulationResult.hashCode;
+
+  @override
+  String toString() {
+    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $dictionary, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
+  }
+
+
 }
 
 enum ActiveTab { Home, Mine }
@@ -122,11 +133,8 @@ final userStateReducer = combineReducers<UserState>(
 );
 
 final loadingReducer = combineReducers<bool>(
-  [
-
-  ],
+  [],
 );
-
 
 UserState userLoginReducer(UserState state, LoginAction action) {
   print(action);

@@ -74,7 +74,7 @@ class _AuthFormPageState extends State<AuthFormPage> {
                       context, _idCardController.text);
                   navigatorState.pop(result);
                 },
-                gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
+                gradient: LinearGradient(colors: [Theme.of(context).accentColor, Theme.of(context).accentColor]),
                 constrained: false,
               ),
             ),
@@ -140,10 +140,10 @@ class _AuthFacePageState extends State<AuthFacePage> {
                                         .button
                                         .copyWith(color: Colors.white)),
                                 onPressed: () async {
-                                  await _doAuthorization(isAgain);
+                                  await _doAuthorization(isAgain,context);
                                 },
                                 gradient: LinearGradient(
-                                    colors: [Colors.blue, Colors.blue]),
+                                    colors: [Theme.of(context).accentColor, Theme.of(context).accentColor]),
                                 constrained: false,
                               ),
                             );
@@ -166,10 +166,10 @@ class _AuthFacePageState extends State<AuthFacePage> {
     );
   }
 
-  Future<void> _doAuthorization(bool isAgain) async {
+  Future<void> _doAuthorization(bool isAgain,BuildContext context) async {
     var result = await Navigator.of(context).push(TaskModal(() async {
       try {
-        if(await Permissions.has(PermissionGroup.storage)){
+        if(await Permissions.has(PermissionGroup.storage,context)){
           Directory tempDir = await getTemporaryDirectory();
           File imageFile = File(
               '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg');

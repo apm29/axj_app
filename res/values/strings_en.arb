@@ -48,6 +48,8 @@
   "idFormTitle": "Confirm Identity Info",
   "idFormHint": "Identity Card Number (11 digit)",
   "nextStepLabel": "Next Step",
-  "confirmLabel": "Confirm"
+  "confirmLabel": "Confirm",
+
+  "myHouseTitle": "Houses"
 
 }

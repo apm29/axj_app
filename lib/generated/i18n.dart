@@ -37,6 +37,7 @@ class S implements WidgetsLocalizations {
   String get messageLabel => "Message";
   String get mineTab => "Mine";
   String get motto => "Understated,Forbearance,massacre";
+  String get myHouseTitle => "Houses";
   String get nextStepLabel => "Next Step";
   String get notAuthTitle => "You are not authenticated";
   String get notNowAuthLabel => "Not now";
@@ -133,6 +134,8 @@ class $zh_CN extends S {
   String get openNotificationHint => "打开推送通知";
   @override
   String get userNameHint => "用户名";
+  @override
+  String get myHouseTitle => "我的房屋";
   @override
   String get smsCodeLabel => "验证码";
   @override
