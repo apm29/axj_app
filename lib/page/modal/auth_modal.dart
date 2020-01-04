@@ -1,4 +1,4 @@
-import 'package:axj_app/page/auth_dialog_page.dart';
+import 'package:axj_app/page/dialog/auth_dialog_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -56,8 +56,8 @@ class MinePage extends StatelessWidget {
                   hint: S.of(context).myHouseActionTileHint,
                   iconData: CupertinoIcons.bell_solid,
                   onTap: () async {
-                    store.dispatch(
-                        CheckAuthAndRouteAction(context, Routes.myHouse));
+                    store.dispatch(CheckAuthAndRouteAction(context,
+                        routeName: Routes.myHouse));
                   },
                 ),
               ),
@@ -70,7 +70,9 @@ class MinePage extends StatelessWidget {
                   hint: S.of(context).familyMemberActionTileHint,
                   iconData: CupertinoIcons.group_solid,
                   onTap: () async {
-                    await Future.delayed(Duration(seconds: 2));
+                    store.dispatch(CheckAuthAndRouteAction(context,
+                        routeGenerator: () =>
+                            '${Routes.myMember}/${store.state.currentHouse.houseId}'));
                   },
                 ),
               ),

@@ -29,11 +29,6 @@ Future<void> main() async {
     onError: (Object obj, StackTrace stack) {
       customerReport(error: obj, stackTrace: stack);
     },
-    zoneSpecification:ZoneSpecification(
-      print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
-        report(line);
-      },
-    )
   );
 }
 

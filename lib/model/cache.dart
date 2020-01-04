@@ -17,6 +17,7 @@ class Cache {
 
   final tokenKey = 'token';
   final localeKey = 'locale';
+  final houseKey = 'house';
 
   init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -25,6 +26,8 @@ class Cache {
   String get token => _sharedPreferences.get(tokenKey);
 
   String get locale => _sharedPreferences.get(localeKey);
+
+  String get currentHouseId => _sharedPreferences.get(houseKey);
 
   void setToken(String token) {
     try {
@@ -40,5 +43,17 @@ class Cache {
     } catch (e) {
       print(getErrorMessage(e));
     }
+  }
+
+  void setCurrentHouseId(dynamic id) {
+    try {
+      _sharedPreferences.setString(houseKey, id.toString());
+    } catch (e) {
+      print(getErrorMessage(e));
+    }
+  }
+
+  Future<bool> clear() {
+    return _sharedPreferences.clear();
   }
 }

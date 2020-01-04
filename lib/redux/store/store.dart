@@ -1,7 +1,9 @@
+import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/model/dictionary.dart';
 import 'package:axj_app/route/route.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
@@ -21,6 +23,14 @@ class AppState {
   HomePageState homePageState;
 
   Dictionary dictionary;
+
+  HouseInfo get currentHouse {
+    return dictionary.defaultHouseInfo(Cache().currentHouseId);
+  }
+
+  set currentHouse(HouseInfo val) {
+    Cache().setCurrentHouseId(val.houseId);
+  }
 
   bool loading;
 
@@ -49,10 +59,8 @@ class AppState {
 
   @override
   String toString() {
-    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $dictionary, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
+    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $dictionary, currentHouse: $currentHouse, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
   }
-
-
 }
 
 enum ActiveTab { Home, Mine }
@@ -102,7 +110,17 @@ final appStateReducer = combineReducers<AppState>(
       return state..simulationResult += action.result;
     }),
     TypedReducer<AppState, CheckAuthAndRouteAction>((state, action) {
-      Application.router.navigateTo(action.context, action.routeName);
+      Application.router.navigateTo(
+          action.context, action.routeName ?? action.routeGenerator(),
+          transition: TransitionType.cupertino);
+      return state;
+    }),
+    TypedReducer<AppState, LoginAction>((state, action) {
+      Navigator.of(action.context).pop(true);
+      return state;
+    }),
+    TypedReducer<AppState, FastLoginAction>((state, action) {
+      Navigator.of(action.context).pop(true);
       return state;
     }),
   ],
@@ -142,7 +160,8 @@ UserState userLoginReducer(UserState state, LoginAction action) {
 }
 
 UserState userLogout(UserState state, LogoutAction action) {
-  Cache().setToken(null);
+  Cache().clear();
+  AppRouter.toHome(action.context, ActiveTab.Home);
   return UserState();
 }
 

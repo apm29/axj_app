@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/district_info.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
+import 'package:axj_app/model/bean/house_info.dart';
+import 'package:axj_app/model/bean/member_detail.dart';
 import 'package:axj_app/model/bean/roles.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/bean/user_verify_info.dart';
@@ -120,4 +122,55 @@ class Repository {
       },
     );
   }
+
+  static Future<BaseResp<List<DistrictInfo>>> getMyDistrictInfo() {
+    return Api().post(
+      "/business/district/findMyDistrictInfo",
+      processor: (s) {
+        if (s is List) {
+          return s.map((json) => DistrictInfo.fromJsonMap(json)).toList();
+        }
+        return [];
+      },
+    );
+  }
+  static Future<BaseResp<List<HouseInfo>>> getMyHouseList(districtId) {
+    return Api().post(
+      "/business/houseInfo/getMyHouse",
+      formData: {
+        'districtId':districtId
+      },
+      processor: (s) {
+        if (s is List) {
+          return s.map((json) => HouseInfo.fromJsonMap(json)).toList();
+        }
+        return [];
+      },
+    );
+  }
+
+  static Future<BaseResp<MemberDetail>> getFamilyMembers(houseId) {
+    return Api().post(
+      "/business/member/getFamilyMember",
+      formData: {
+        'familyId':houseId
+      },
+      processor: (s) {
+        return MemberDetail.fromJsonMap(s);
+      },
+    );
+  }
+
+  static Future<BaseResp> deleteFamilyMembers(memberId) {
+    return Api().post(
+      "/business/member/deleteMember",
+      formData: {
+        'memberId':memberId
+      },
+      processor: (s) {
+        return null;
+      },
+    );
+  }
+
 }

@@ -19,6 +19,7 @@
 
   "loginLabel":"登录",
   "logoutLabel":"登出",
+  "confirmLogoutHint":"确定退出App吗?",
   "localeMenuLabel":"国际化",
 
   "serviceProtocolName": "${appName}用户服务协议",
@@ -49,6 +50,9 @@
   "idFormHint": "11位中国身份证号码",
   "nextStepLabel": "下一步",
   "confirmLabel": "确认",
+  "cancelLabel": "取消",
+  "deleteLabel": "删除",
+  "deleteSuccessHint": "删除成功",
 
   "myHouseTitle": "我的房屋",
 

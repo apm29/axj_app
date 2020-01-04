@@ -60,8 +60,7 @@ class PersonalSettingsPage extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () {
-                store.dispatch(LogoutAction());
-                AppRouter.toHome(context, ActiveTab.Home);
+                store.dispatch(LogoutAction(context));
               },
               child: Text(S.of(context).logoutLabel),
             ),

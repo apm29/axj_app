@@ -1,6 +1,7 @@
+import 'package:axj_app/page/member_manage_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
-import 'package:axj_app/page/auth_dialog_page.dart';
+import 'package:axj_app/page/dialog/auth_dialog_page.dart';
 import 'package:axj_app/page/auth_page.dart';
 import 'package:axj_app/page/home_page.dart';
 import 'package:axj_app/page/login_page.dart';
@@ -38,6 +39,7 @@ class Routes {
   static String authForm = "/auth_form";
   static String authFace = "/auth_face";
   static String myHouse = "/my_house";
+  static String myMember = "/my_member";
 
   static String keyId = "id";
 
@@ -61,6 +63,7 @@ class Routes {
     router.define(myHouse, handler: myHouseHandler);
     router.define(authForm, handler: authHandler);
     router.define('$authFace/:$keyId', handler: authFaceHandler);
+    router.define('$myMember/:$keyId', handler: myMemberHandler);
   }
 }
 
@@ -127,27 +130,42 @@ final authFaceHandler = new Handler(
     return AuthFacePage(idCardNum: params[Routes.keyId].first);
   },
 );
+final myMemberHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return MemberManagePage(houseId: params[Routes.keyId].first);
+  },
+);
 
 class AppRouter {
   static Future toHomeAndReplaceSelf(BuildContext context) {
     if (ModalRoute.of(context).settings.name == Routes.home) {
       return Future.value();
     }
-    return Application.router.navigateTo(context, Routes.home, replace: true);
+    return Application.router.navigateTo(
+      context,
+      Routes.home,
+      replace: true,
+      transition: TransitionType.cupertino,
+    );
   }
 
   static Future toPersonal(BuildContext context) {
     return Application.router.navigateTo(
       context,
       Routes.personalSettings,
-      transition: TransitionType.inFromBottom,
+      transition: TransitionType.cupertino,
     );
   }
 
   static Future toHome(BuildContext context, ActiveTab activeTab) {
     store.dispatch(TabSwitchAction(activeTab.index, context));
-    return Application.router
-        .navigateTo(context, Routes.home, replace: true, clearStack: true);
+    return Application.router.navigateTo(
+      context,
+      Routes.home,
+      replace: true,
+      clearStack: true,
+      transition: TransitionType.cupertino,
+    );
   }
 
   static Future toLogin(BuildContext context) {
@@ -182,6 +200,14 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.authFace}/$idCardNum',
+      transition: TransitionType.cupertino,
+    );
+  }
+
+  static Future toMembersManage(BuildContext context, dynamic id) {
+    return Application.router.navigateTo(
+      context,
+      '${Routes.myMember}/$id',
       transition: TransitionType.cupertino,
     );
   }

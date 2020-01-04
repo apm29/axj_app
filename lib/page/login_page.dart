@@ -115,9 +115,7 @@ class LoginPage extends StatelessWidget {
       AppRouter.toRegister(context).then((resMap) {
         if (resMap != null) {
           store.dispatch(
-              LoginAction(resMap['userName'], resMap['password'], context, () {
-            Navigator.of(context).pop(true);
-          }));
+              LoginAction(resMap['userName'], resMap['password'], context));
         }
       });
 }
@@ -428,14 +426,10 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
   void _login(BuildContext context) {
     if (tabController.index == 0) {
       store.dispatch(FastLoginAction(
-          _phoneController.text, _smsController.text, context, () {
-        Navigator.of(context).pop(true);
-      }));
+          _phoneController.text, _smsController.text, context));
     } else {
       store.dispatch(
-          LoginAction(_nameController.text, _wordController.text, context, () {
-        Navigator.of(context).pop(true);
-      }));
+          LoginAction(_nameController.text, _wordController.text, context));
     }
   }
 }

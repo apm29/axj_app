@@ -25,12 +25,17 @@ abstract class VoidTaskAction {
   VoidTaskAction(this.task, this.context);
 }
 
+typedef CheckResult<T> = bool Function(T);
+
 abstract class ResultTaskAction<T> {
   final AsyncResultTask<T> task;
   final BuildContext context;
   T result;
 
-  ResultTaskAction(this.task, this.context);
+  // intercept action when return false
+  final CheckResult<T> checker;
+
+  ResultTaskAction(this.task, this.context, {this.checker});
 }
 
 abstract class CheckAuthAction {
@@ -51,24 +56,28 @@ abstract class CheckLoginAction {
   CheckLoginAction(this.context, {this.intercept = false});
 }
 
+abstract class NeedHouseInfoAction {
+  final BuildContext context;
+
+  NeedHouseInfoAction(this.context);
+}
+
 class LoginAction implements AppAction, ResultTaskAction<bool> {
   final String username;
   final String password;
   final BuildContext context;
   bool result;
   AsyncResultTask<bool> task;
+  CheckResult checker = (login) => login;
 
-  LoginAction(
-      this.username, this.password, this.context, VoidCallback onSuccess) {
+  LoginAction(this.username, this.password, this.context) {
     task = () async {
-      return await loginAndInit(
-          context, Repository.login(username, password), onSuccess);
+      return await loginAndInit(context, Repository.login(username, password));
     };
   }
 }
 
-Future<bool> loginAndInit(
-    BuildContext context, Future<BaseResp> api, VoidCallback onSuccess) async {
+Future<bool> loginAndInit(BuildContext context, Future<BaseResp> api) async {
   try {
     BaseResp resp = await api;
     Future.delayed(Duration(seconds: 2));
@@ -79,12 +88,8 @@ Future<bool> loginAndInit(
       if (userInfoResp.success) {
         showToast("登录成功");
         var store = StoreProvider.of<AppState>(context, listen: false);
-        store
-            .state
-            .userState
-            .userInfo = userInfoResp.data;
+        store.state.userState.userInfo = userInfoResp.data;
         await store.state.dictionary.init();
-        onSuccess();
         return true;
       } else {
         showToast("登录失败:${userInfoResp.text}");
@@ -106,12 +111,12 @@ class FastLoginAction implements AppAction, ResultTaskAction<bool> {
   final BuildContext context;
   bool result;
   AsyncResultTask<bool> task;
+  CheckResult checker = (login) => login;
 
-  FastLoginAction(
-      this.mobile, this.verifyCode, this.context, VoidCallback onSuccess) {
+  FastLoginAction(this.mobile, this.verifyCode, this.context) {
     task = () async {
       return await loginAndInit(
-          context, Repository.fastLogin(mobile, verifyCode), onSuccess);
+          context, Repository.fastLogin(mobile, verifyCode));
     };
   }
 }
@@ -122,7 +127,11 @@ class ChangeLocaleAction implements AppAction {
   ChangeLocaleAction(this.locale);
 }
 
-class LogoutAction implements AppAction {}
+class LogoutAction implements AppAction {
+  final BuildContext context;
+
+  LogoutAction(this.context);
+}
 
 class AppInitAction implements AppAction {
   final BuildContext context;
@@ -152,6 +161,7 @@ class VoidTaskSimulationAction implements VoidTaskAction {
 class ResultTaskSimulationAction implements ResultTaskAction<int> {
   AsyncResultTask<int> task;
   final BuildContext context;
+  CheckResult checker = (v) => true;
 
   ResultTaskSimulationAction(this.task, this.context);
 
@@ -159,14 +169,26 @@ class ResultTaskSimulationAction implements ResultTaskAction<int> {
   int result;
 }
 
+typedef RouteNameGenerator = String Function();
+
 class CheckAuthAndRouteAction
-    implements CheckAuthAction, AppAction, CheckLoginAction {
+    implements
+        AppAction,
+        CheckLoginAction,
+        CheckAuthAction,
+        NeedHouseInfoAction {
   final BuildContext context;
 
   final bool intercept;
 
   final String routeName;
 
-  CheckAuthAndRouteAction(this.context, this.routeName,
-      {this.intercept = true});
+  final RouteNameGenerator routeGenerator;
+
+  CheckAuthAndRouteAction(
+    this.context, {
+    this.intercept = true,
+    this.routeGenerator,
+    this.routeName,
+  }) : assert(routeName != null || routeGenerator != null);
 }

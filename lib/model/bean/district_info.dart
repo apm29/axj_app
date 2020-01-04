@@ -9,7 +9,11 @@ class DistrictInfo {
   int companyId;
   int orderNo;
 
-	DistrictInfo.fromJsonMap(Map<String, dynamic> map): 
+
+	DistrictInfo({this.districtId, this.districtName, this.districtInfo,
+			this.districtAddr, this.districtPic, this.companyId, this.orderNo});
+
+	DistrictInfo.fromJsonMap(Map<String, dynamic> map):
 		districtId = map["districtId"],
 		districtName = map["districtName"],
 		districtInfo = map["districtInfo"],
