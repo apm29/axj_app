@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/district_info.dart';
+import 'package:axj_app/model/bean/family_member.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/member_detail.dart';
@@ -134,12 +135,11 @@ class Repository {
       },
     );
   }
+
   static Future<BaseResp<List<HouseInfo>>> getMyHouseList(districtId) {
     return Api().post(
       "/business/houseInfo/getMyHouse",
-      formData: {
-        'districtId':districtId
-      },
+      formData: {'districtId': districtId},
       processor: (s) {
         if (s is List) {
           return s.map((json) => HouseInfo.fromJsonMap(json)).toList();
@@ -152,9 +152,7 @@ class Repository {
   static Future<BaseResp<MemberDetail>> getFamilyMembers(houseId) {
     return Api().post(
       "/business/member/getFamilyMember",
-      formData: {
-        'familyId':houseId
-      },
+      formData: {'familyId': houseId},
       processor: (s) {
         return MemberDetail.fromJsonMap(s);
       },
@@ -164,8 +162,43 @@ class Repository {
   static Future<BaseResp> deleteFamilyMembers(memberId) {
     return Api().post(
       "/business/member/deleteMember",
+      formData: {'memberId': memberId},
+      processor: (s) {
+        return null;
+      },
+    );
+  }
+
+  static Future<BaseResp<FamilyMember>> getFamilyMemberDetail(
+      dynamic memberId) {
+    return Api().post(
+      "/business/member/getMemberInfo",
+      formData: {'memberId': memberId.toString()},
+      processor: (s) {
+        return FamilyMember.fromJsonMap(s);
+      },
+    );
+  }
+
+  static Future<BaseResp> updateMemberInfo({
+    dynamic memberId,
+    String memberName,
+    String memberPhone,
+    String relationType,
+    String idNo,
+    String memberPicUrl,
+    String isShare,
+  }) {
+    return Api().post(
+      "/business/member/updateMember",
       formData: {
-        'memberId':memberId
+        'memberId': memberId.toString(),
+        "memberName": memberName,
+        "memberPhone": memberPhone,
+        "relationType": relationType,
+        "memberPicUrl": memberPicUrl,
+        "idNo": idNo,
+        "isShare": isShare,
       },
       processor: (s) {
         return null;
@@ -173,4 +206,27 @@ class Repository {
     );
   }
 
+  static Future<BaseResp> addMemberInfo({
+    String memberName,
+    String memberPhone,
+    String relationType,
+    String idNo,
+    String memberPicUrl,
+    String isShare,
+  }) {
+    return Api().post(
+      "/business/member/addMember",
+      formData: {
+        "memberName": memberName,
+        "memberPhone": memberPhone,
+        "relationType": relationType,
+        "memberPicUrl": memberPicUrl,
+        "idNo": idNo,
+        "isShare": isShare,
+      },
+      processor: (s) {
+        return null;
+      },
+    );
+  }
 }

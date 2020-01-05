@@ -1,4 +1,6 @@
 class FamilyMember {
+
+
   int memberid;
   String userid;
   String membername;
@@ -21,9 +23,14 @@ class FamilyMember {
   int examine;
 
   String get presentStatue => memberstatus == 1 ? "外出" : "在家";
+
   bool get editable => edit == 1;
+
   bool get deletable => del == 1;
+
   bool get examinable => examine == 1;
+
+  bool get share => isShare == 1;
 
   FamilyMember.fromJsonMap(Map<String, dynamic> map)
       : memberid = map["memberid"],
@@ -71,4 +78,10 @@ class FamilyMember {
     data['examine'] = examine;
     return data;
   }
+
+  FamilyMember({this.memberid, this.userid, this.membername, this.memberpicurl,
+    this.memberphone, this.memberstatus, this.relationtype, this.createtime,
+    this.familyid, this.inserttime, this.updatetime, this.communityid,
+    this.idno, this.isOwner, this.isAuth, this.addUid, this.isShare,
+    this.edit, this.del, this.examine});
 }

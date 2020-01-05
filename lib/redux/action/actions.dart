@@ -58,8 +58,9 @@ abstract class CheckLoginAction {
 
 abstract class NeedHouseInfoAction {
   final BuildContext context;
+  final bool override;
 
-  NeedHouseInfoAction(this.context);
+  NeedHouseInfoAction(this.context, {this.override = false});
 }
 
 class LoginAction implements AppAction, ResultTaskAction<bool> {
@@ -180,7 +181,7 @@ class CheckAuthAndRouteAction
   final BuildContext context;
 
   final bool intercept;
-
+  final bool override;
   final String routeName;
 
   final RouteNameGenerator routeGenerator;
@@ -188,7 +189,19 @@ class CheckAuthAndRouteAction
   CheckAuthAndRouteAction(
     this.context, {
     this.intercept = true,
+    this.override = false,
     this.routeGenerator,
     this.routeName,
   }) : assert(routeName != null || routeGenerator != null);
+}
+
+class ChangeHouseAction
+    implements AppAction, CheckLoginAction, NeedHouseInfoAction {
+  final BuildContext context;
+
+  final bool intercept;
+
+  final bool override;
+
+  ChangeHouseAction(this.context, {this.intercept: true, this.override: true});
 }

@@ -160,7 +160,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
 
   void _doEditMember(BuildContext context, FamilyMember familyMember) async {
     bool result = await AppRouter.toMemberEdit(context, familyMember.memberid);
-    if (result) {
+    if (result == true) {
       setState(() {
         loadMemberData();
       });

@@ -23,7 +23,7 @@ class PersonalSettingsPage extends StatelessWidget {
               return [
                 PopupMenuItem(
                   child: Text('中文'),
-                  value: Locale('zh','CN'),
+                  value: Locale('zh', 'CN'),
                 ),
                 PopupMenuItem(
                   child: Text('English'),
@@ -38,7 +38,7 @@ class PersonalSettingsPage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Column(
+        child: ListView(
           children: <Widget>[
             RaisedButton(
               onPressed: () {
@@ -66,11 +66,16 @@ class PersonalSettingsPage extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () {
-                store.dispatch(
-                    VoidTaskSimulationAction(store.state.dictionary.init, context)
-                );
+                store.dispatch(VoidTaskSimulationAction(
+                    store.state.dictionary.init, context));
               },
               child: Text(S.of(context).myHouseTitle),
+            ),
+            RaisedButton(
+              onPressed: () {
+                store.dispatch(ChangeHouseAction(context));
+              },
+              child: Text(S.of(context).changeHouseLabel),
             ),
             RaisedButton(
               onPressed: () {
@@ -93,11 +98,10 @@ class PersonalSettingsPage extends StatelessWidget {
                   context,
                 ));
               },
-              child: StoreBuilder<AppState>(
-                builder: (context, store) {
-                  return Text('result task simulate:'+'${store.state.simulationResult??''}');
-                }
-              ),
+              child: StoreBuilder<AppState>(builder: (context, store) {
+                return Text('result task simulate:' +
+                    '${store.state.simulationResult ?? ''}');
+              }),
             ),
           ],
         ),

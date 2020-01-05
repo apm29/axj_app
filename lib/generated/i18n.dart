@@ -25,6 +25,7 @@ class S implements WidgetsLocalizations {
   String get authFaceHint => "Align your face within the frame,then tap the confirm button";
   String get authTitle => "Authenticate";
   String get cancelLabel => "Cancel";
+  String get changeHouseLabel => "Change House";
   String get closeNotificationHint => "Close Notification Service";
   String get confirmLabel => "Confirm";
   String get confirmLogoutHint => "Confirm Logout?";
@@ -166,6 +167,8 @@ class $zh_CN extends S {
   String get skipLabel => "跳过";
   @override
   String get registerTitle => "注册";
+  @override
+  String get changeHouseLabel => "更改房屋";
   @override
   String get openNotificationHint => "打开推送通知";
   @override

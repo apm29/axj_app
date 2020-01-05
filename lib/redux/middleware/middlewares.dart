@@ -138,10 +138,11 @@ checkResultTask(
 checkHouseInfo(
     Store<AppState> store, NeedHouseInfoAction action, NextDispatcher next) {
   () async {
-    if (store.state.currentHouse == null && store.state.userState.login) {
+    if (store.state.userState.login &&
+        (action.override || store.state.currentHouse == null)) {
       var navigatorState = Navigator.of(action.context);
       HouseInfo result = await navigatorState.push(HouseChooseModal());
-      store.state.currentHouse = result;
+      if (result != null) store.state.currentHouse = result;
     }
     next(action);
   }();
