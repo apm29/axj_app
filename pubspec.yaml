@@ -47,6 +47,9 @@ dependencies:
   ## permission
   permission_handler: ^4.0.0
 
+  ## 照片选择
+  image_picker: ^0.6.2+3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

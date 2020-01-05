@@ -1,3 +1,4 @@
+import 'package:axj_app/page/member_edit_page.dart';
 import 'package:axj_app/page/member_manage_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
@@ -40,6 +41,7 @@ class Routes {
   static String authFace = "/auth_face";
   static String myHouse = "/my_house";
   static String myMember = "/my_member";
+  static String editMember = "/edit_member";
 
   static String keyId = "id";
 
@@ -64,6 +66,7 @@ class Routes {
     router.define(authForm, handler: authHandler);
     router.define('$authFace/:$keyId', handler: authFaceHandler);
     router.define('$myMember/:$keyId', handler: myMemberHandler);
+    router.define('$editMember/:$keyId', handler: editMemberHandler);
   }
 }
 
@@ -133,6 +136,12 @@ final authFaceHandler = new Handler(
 final myMemberHandler = new Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return MemberManagePage(houseId: params[Routes.keyId].first);
+  },
+);
+
+final editMemberHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return MemberEditPage(memberId: params[Routes.keyId].first);
   },
 );
 
@@ -208,6 +217,14 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.myMember}/$id',
+      transition: TransitionType.cupertino,
+    );
+  }
+
+  static Future toMemberEdit(BuildContext context, dynamic memberId) {
+    return Application.router.navigateTo(
+      context,
+      '${Routes.editMember}/$memberId',
       transition: TransitionType.cupertino,
     );
   }

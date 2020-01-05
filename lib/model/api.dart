@@ -149,9 +149,10 @@ class Api {
     dynamic _rawData = map["data"];
     T data;
     try {
-      data = processor(_rawData);
-    } catch (e) {
+      if (status.toString() == '1') data = processor(_rawData);
+    } catch (e, s) {
       print(e);
+      print(s);
     }
     return BaseResp<T>(
         status.toString(), data, token.toString(), text.toString());
@@ -176,13 +177,12 @@ class Api {
       path,
       queryParameters: queryMap,
       options: RequestOptions(
-        responseType: ResponseType.json,
-        headers: {
-          AuthorizationHeader: Cache().token,
-        },
-        queryParameters: queryMap,
-        contentType: ContentTypeFormUrlEncodeValue
-      ),
+          responseType: ResponseType.json,
+          headers: {
+            AuthorizationHeader: Cache().token,
+          },
+          queryParameters: queryMap,
+          contentType: ContentTypeFormUrlEncodeValue),
       cancelToken: cancelToken,
       onReceiveProgress: onReceiveProgress,
     );
@@ -200,32 +200,33 @@ class Api {
     dynamic _rawData = map["data"];
     T data;
     try {
-      data = processor(_rawData);
-    } catch (e) {
+      if (status.toString() == '1') data = processor(_rawData);
+    } catch (e,s) {
       print(e);
+      print(s);
     }
     return BaseResp<T>(
         status.toString(), data, token.toString(), text.toString());
   }
 
   Future<BaseResp<T>> upload<T>(
-      String path, {
-        @required JsonProcessor<T> processor,
-        FormData formData,
-        CancelToken cancelToken,
-        ProgressCallback onReceiveProgress,
-        ProgressCallback onSendProgress,
-      }) async {
+    String path, {
+    @required JsonProcessor<T> processor,
+    FormData formData,
+    CancelToken cancelToken,
+    ProgressCallback onReceiveProgress,
+    ProgressCallback onSendProgress,
+  }) async {
     assert(processor != null);
     processor = processor ?? (dynamic raw) => null;
     formData = formData ?? {};
     cancelToken = cancelToken ?? CancelToken();
     onReceiveProgress = onReceiveProgress ??
-            (count, total) {
+        (count, total) {
           ///默认接收进度
         };
     onSendProgress = onSendProgress ??
-            (count, total) {
+        (count, total) {
           ///默认发送进度
         };
     Response resp = await _dio.post(
