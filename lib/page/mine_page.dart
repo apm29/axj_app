@@ -85,7 +85,10 @@ class MinePage extends StatelessWidget {
                   hint: S.of(context).myVehicleActionTileHint,
                   iconData: CupertinoIcons.car,
                   onTap: () async {
-                    await Future.delayed(Duration(seconds: 2));
+                    store.dispatch(
+                      CheckLoginAndRouteAction(context,
+                          routeName: Routes.myVehicle),
+                    );
                   },
                 ),
               ),

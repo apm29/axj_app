@@ -1,5 +1,6 @@
 import 'package:axj_app/page/member_edit_page.dart';
 import 'package:axj_app/page/member_manage_page.dart';
+import 'package:axj_app/page/vehicle_manage_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/page/dialog/auth_dialog_page.dart';
@@ -41,9 +42,11 @@ class Routes {
   static String authFace = "/auth_face";
   static String myHouse = "/my_house";
   static String myMember = "/my_member";
+  static String myVehicle = "/my_vehicle";
   static String editMember = "/edit_member";
 
   static String keyId = "id";
+  static String keyType = "type";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(handlerFunc: (
@@ -63,10 +66,11 @@ class Routes {
     router.define(register, handler: registerHandler);
     router.define(authHint, handler: authHintHandler);
     router.define(myHouse, handler: myHouseHandler);
+    router.define(myVehicle, handler: myCarHandler);
     router.define(authForm, handler: authHandler);
     router.define('$authFace/:$keyId', handler: authFaceHandler);
     router.define('$myMember/:$keyId', handler: myMemberHandler);
-    router.define('$editMember/:$keyId', handler: editMemberHandler);
+    router.define('$editMember/:$keyId/:$keyType', handler: editMemberHandler);
   }
 }
 
@@ -122,6 +126,11 @@ final myHouseHandler = new Handler(
     return MyHousePage();
   },
 );
+final myCarHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return VehicleManagePage();
+  },
+);
 
 final authHandler = new Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -141,7 +150,12 @@ final myMemberHandler = new Handler(
 
 final editMemberHandler = new Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return MemberEditPage(memberId: params[Routes.keyId].first);
+    var id = params[Routes.keyId].first;
+    var type = params[Routes.keyType].first;
+    return MemberEditPage(
+      id: id,
+      edit: type == '1',
+    );
   },
 );
 
@@ -213,6 +227,11 @@ class AppRouter {
     );
   }
 
+  static Future toVehicleManage(BuildContext context) {
+    return Application.router.navigateTo(context, Routes.myVehicle);
+  }
+
+  ///@param id: houseId(familyId)
   static Future toMembersManage(BuildContext context, dynamic id) {
     return Application.router.navigateTo(
       context,
@@ -221,10 +240,12 @@ class AppRouter {
     );
   }
 
-  static Future toMemberEdit(BuildContext context, dynamic memberId) {
+  ///当编辑家庭成员时id传入memberId,否则传入houseId(familyId)
+  static Future toMemberEdit(BuildContext context, dynamic id,
+      {bool edit = true}) {
     return Application.router.navigateTo(
       context,
-      '${Routes.editMember}/$memberId',
+      '${Routes.editMember}/$id/${edit ? 1 : 0}',
       transition: TransitionType.cupertino,
     );
   }

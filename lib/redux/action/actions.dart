@@ -195,6 +195,25 @@ class CheckAuthAndRouteAction
   }) : assert(routeName != null || routeGenerator != null);
 }
 
+
+class CheckLoginAndRouteAction
+    implements
+        AppAction,
+        CheckLoginAction{
+  final BuildContext context;
+
+  final bool intercept;
+  final String routeName;
+  final RouteNameGenerator routeGenerator;
+
+  CheckLoginAndRouteAction(
+      this.context, {
+        this.intercept = true,
+        this.routeGenerator,
+        this.routeName,
+      }) : assert(routeName != null || routeGenerator != null);
+}
+
 class ChangeHouseAction
     implements AppAction, CheckLoginAction, NeedHouseInfoAction {
   final BuildContext context;

@@ -5,6 +5,7 @@ import 'package:axj_app/model/bean/family_member.dart';
 import 'package:axj_app/model/bean/member_detail.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
+import 'package:axj_app/page/component/speed_dial.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:flutter/cupertino.dart';
@@ -101,6 +102,22 @@ class _MemberManagePageState extends State<MemberManagePage> {
             itemCount: list.familyMember.length + list.tenant.length,
           );
         },
+      ),
+      floatingActionButton: SpeedDial(
+        icons: const [
+          Icons.group_add,
+          Icons.list
+        ],
+        labels: [
+          "手动录入",
+          "申请列表"
+        ],
+        onPressList: [
+          (){
+            AppRouter.toMemberEdit(context,widget.houseId,edit: false);
+          },
+          (){},
+        ],
       ),
     );
   }

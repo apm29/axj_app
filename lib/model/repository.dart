@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:axj_app/model/api.dart';
+import 'package:axj_app/model/bean/car_info.dart';
 import 'package:axj_app/model/bean/district_info.dart';
+import 'package:axj_app/model/bean/e_bike.dart';
 import 'package:axj_app/model/bean/family_member.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/house_info.dart';
@@ -148,6 +150,28 @@ class Repository {
       },
     );
   }
+  static Future<BaseResp<List<EBike>>> getMyEBike() {
+    return Api().post(
+      "/business/ebike/query",
+      processor: (s) {
+        if (s is List) {
+          return s.map((json) => EBike.fromJsonMap(json)).toList();
+        }
+        return [];
+      },
+    );
+  }
+
+  static Future<BaseResp<CarInfo>> getMyCars({bool isVisitor}) {
+    var formData = isVisitor == null ? null : {'isVisitor': isVisitor ? 1 : 0};
+    return Api().post(
+      "/business/api/Cars/getMyCars",
+      formData: formData,
+      processor: (s) {
+        return CarInfo.fromJsonMap(s);
+      },
+    );
+  }
 
   static Future<BaseResp<MemberDetail>> getFamilyMembers(houseId) {
     return Api().post(
@@ -207,6 +231,7 @@ class Repository {
   }
 
   static Future<BaseResp> addMemberInfo({
+    String familyId,
     String memberName,
     String memberPhone,
     String relationType,
@@ -217,6 +242,7 @@ class Repository {
     return Api().post(
       "/business/member/addMember",
       formData: {
+        "familyId": familyId,
         "memberName": memberName,
         "memberPhone": memberPhone,
         "relationType": relationType,

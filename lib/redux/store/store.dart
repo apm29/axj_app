@@ -115,6 +115,12 @@ final appStateReducer = combineReducers<AppState>(
           transition: TransitionType.cupertino);
       return state;
     }),
+    TypedReducer<AppState, CheckLoginAndRouteAction>((state, action) {
+      Application.router.navigateTo(
+          action.context, action.routeName ?? action.routeGenerator(),
+          transition: TransitionType.cupertino);
+      return state;
+    }),
     TypedReducer<AppState, LoginAction>((state, action) {
       Navigator.of(action.context).pop(true);
       return state;

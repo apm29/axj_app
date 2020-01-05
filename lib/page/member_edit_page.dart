@@ -11,9 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
 class MemberEditPage extends StatefulWidget {
-  final String memberId;
+  final String id;
+  final bool edit;
 
-  const MemberEditPage({Key key, this.memberId}) : super(key: key);
+  const MemberEditPage({Key key, this.id, this.edit}) : super(key: key);
 
   @override
   _MemberEditPageState createState() => _MemberEditPageState();
@@ -28,13 +29,13 @@ class _MemberEditPageState extends State<MemberEditPage> {
   SwitchController _shareController = SwitchController();
   Future<BaseResp<FamilyMember>> future;
 
-  bool get editMember => widget.memberId != null;
+  bool get editMember => widget.edit;
   bool initialCalled = false;
 
   @override
   void initState() {
     if (editMember) {
-      future = Repository.getFamilyMemberDetail(widget.memberId);
+      future = Repository.getFamilyMemberDetail(widget.id);
     } else {
       future = Future.value(BaseResp.success(data: FamilyMember()));
     }
@@ -186,7 +187,7 @@ class _MemberEditPageState extends State<MemberEditPage> {
   Future<BaseResp> task() async {
     return editMember
         ? await Repository.updateMemberInfo(
-            memberId: widget.memberId,
+            memberId: widget.id,
             memberName: _nameController.text,
             memberPhone: _phoneController.text,
             idNo: _idController.text,
@@ -195,6 +196,7 @@ class _MemberEditPageState extends State<MemberEditPage> {
             isShare: _shareController.isShare,
           )
         : await Repository.addMemberInfo(
+            familyId: widget.id,
             memberName: _nameController.text,
             memberPhone: _phoneController.text,
             idNo: _idController.text,
