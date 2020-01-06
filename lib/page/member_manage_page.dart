@@ -34,7 +34,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("成员管理"),
+        title: Text(S.of(context).familyMemberManageTitle),
       ),
       body: BaseRespTaskBuilder<MemberDetail>(
         future: future,
@@ -64,7 +64,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
                             Icon(
                               Icons.edit,
                             ),
-                            Text('编辑'),
+                            Text(S.of(context).editLabel),
                           ],
                         ),
                         value: ActionEnum.Edit,
@@ -76,7 +76,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
                             Icon(
                               Icons.delete,
                             ),
-                            Text('删除'),
+                            Text(S.of(context).deleteLabel),
                           ],
                         ),
                         value: ActionEnum.Delete,
@@ -104,19 +104,16 @@ class _MemberManagePageState extends State<MemberManagePage> {
         },
       ),
       floatingActionButton: SpeedDial(
-        icons: const [
-          Icons.group_add,
-          Icons.list
-        ],
+        icons: const [Icons.group_add, Icons.list],
         labels: [
-          "手动录入",
-          "申请列表"
+          S.of(context).addFamilyMemberLabel,
+          S.of(context).applyListLabel
         ],
         onPressList: [
-          (){
-            AppRouter.toMemberEdit(context,widget.houseId,edit: false);
+          () {
+            AppRouter.toMemberEdit(context, widget.houseId, edit: false);
           },
-          (){},
+          () {},
         ],
       ),
     );
@@ -127,8 +124,8 @@ class _MemberManagePageState extends State<MemberManagePage> {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text("警告"),
-          content: Text("确定要删除${familyMember.membername}?"),
+          title: Text(S.of(context).warningLabel),
+          content: Text(S.of(context).deleteHint(familyMember.membername)),
           actions: <Widget>[
             CupertinoDialogAction(
               onPressed: () {
@@ -171,7 +168,8 @@ class _MemberManagePageState extends State<MemberManagePage> {
   _onExamine(FamilyMember familyMember) {
     if (familyMember.examinable) {
     } else {
-      showToast("你没有权限查看${familyMember.membername}的出入记录");
+      showToast(
+          S.of(context).recordViewNoAuthorizationHint(familyMember.membername));
     }
   }
 

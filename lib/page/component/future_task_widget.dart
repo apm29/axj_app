@@ -141,7 +141,6 @@ class BaseRespTaskBuilder2<T1, T2> extends StatelessWidget {
         if (resp1.success && resp2.success) {
           var data1 = resp1.data as T1;
           var data2 = resp2.data as T2;
-          print(resp2);
           return modelBuilder(context, data1, data2);
         } else {
           return Center(

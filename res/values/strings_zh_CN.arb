@@ -50,8 +50,12 @@
   "idFormHint": "11位中国身份证号码",
   "nextStepLabel": "下一步",
   "confirmLabel": "确认",
+  "warningLabel": "警告",
   "cancelLabel": "取消",
+  "editLabel": "编辑",
   "deleteLabel": "删除",
+  "deleteHint": "确认要删除$some ?",
+  "addLabel": "添加",
   "deleteSuccessHint": "删除成功",
 
   "myHouseTitle": "我的房屋",
@@ -62,5 +66,21 @@
   "myVehicleActionTileTitle": "我的爱车",
   "myVehicleActionTileHint": "查看车辆信息",
   "familyMemberActionTileTitle": "家庭成员",
-  "familyMemberActionTileHint": "家庭成员,租客信息"
+  "familyMemberManageTitle": "成员管理",
+  "familyMemberActionTileHint": "家庭成员,租客信息",
+  "addFamilyMemberLabel": "添加成员",
+  "applyListLabel": "申请列表",
+
+  "vehicleManageTitle": "车辆管理",
+  "vehicleInLabel": "已入库",
+  "vehicleOutLabel": "未入库",
+  "vehicleTypeCarLabel": "汽车",
+  "vehicleTypeTruckLabel": "货车",
+
+  "eBikeTagLabel": "电瓶车标签:",
+  "clickToSeeAccessRecord": "轻点查看出入记录",
+  "recordViewNoAuthorizationHint": "你没有权限查看$member 的出入记录",
+  "imageNoAvailable": "暂无图片",
+  "addEBikeLabel": "添加电动车",
+  "addVehicleLabel": "添加汽车"
 }

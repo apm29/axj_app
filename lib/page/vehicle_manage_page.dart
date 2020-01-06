@@ -1,3 +1,5 @@
+import 'package:axj_app/generated/i18n.dart';
+import 'package:flutter/material.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/car.dart';
 import 'package:axj_app/model/bean/car_info.dart';
@@ -5,7 +7,6 @@ import 'package:axj_app/model/bean/e_bike.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/page/component/speed_dial.dart';
-import 'package:flutter/material.dart';
 
 class VehicleManagePage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('车辆管理'),
+        title: Text(S.of(context).vehicleManageTitle),
       ),
       body: BaseRespTaskBuilder2(
         future1: carData,
@@ -40,7 +41,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                 delegate: SliverChildListDelegate(
                   car.rows
                       .map(
-                        (c) => buildCarLabel(context, c),
+                        (car) => buildCarLabel(context, car),
                       )
                       .toList(),
                 ),
@@ -49,7 +50,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                 delegate: SliverChildListDelegate(
                   eBike
                       .map(
-                        (c) => buildEBikeLabel(context, c),
+                        (bike) => buildEBikeLabel(context, bike),
                       )
                       .toList(),
                 ),
@@ -60,7 +61,10 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
       ),
       floatingActionButton: SpeedDial(
         icons: const [Icons.directions_car, Icons.directions_bike],
-        labels: ["添加汽车", "添加非机动车"],
+        labels: [
+          S.of(context).addEBikeLabel,
+          S.of(context).addVehicleLabel,
+        ],
         onPressList: [
           () {},
           () {},
@@ -69,7 +73,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
     );
   }
 
-  Container buildEBikeLabel(BuildContext context, EBike c) {
+  Container buildEBikeLabel(BuildContext context, EBike bike) {
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 6,
@@ -118,7 +122,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        '非机动车标签:',
+                        S.of(context).eBikeTagLabel,
                         style: Theme.of(context)
                             .textTheme
                             .title
@@ -126,7 +130,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                       ),
                       Container(
                         child: Text(
-                          c.eBilePlate,
+                          bike.eBilePlate,
                           style: Theme.of(context).textTheme.title.copyWith(
                                 color: Colors.white,
                               ),
@@ -141,7 +145,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                         ),
                       ),
                       Text(
-                        '点击查看出入记录',
+                        S.of(context).clickToSeeAccessRecord,
                         style: Theme.of(context)
                             .textTheme
                             .caption
@@ -159,7 +163,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
     );
   }
 
-  Container buildCarLabel(BuildContext context, Car c) {
+  Container buildCarLabel(BuildContext context, Car car) {
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 6,
@@ -178,11 +182,9 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                       height: MediaQuery.of(context).size.width * 0.35,
                     ),
                     Image(
-                      image: c.hasImage
-                          ? NetworkImage(c.vehicleBrand)
-                          : AssetImage(''
-                              'ass'
-                              'ets/images/car1.png'),
+                      image: car.hasImage
+                          ? NetworkImage(car.vehicleBrand)
+                          : AssetImage('assets/images/car1.png'),
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: MediaQuery.of(context).size.width * 0.35,
                       fit: BoxFit.fitWidth,
@@ -191,8 +193,8 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                       child: Align(
                         alignment: Alignment.topCenter,
                         child: Visibility(
-                          visible: !c.hasImage,
-                          child: Text("暂无图片"),
+                          visible: !car.hasImage,
+                          child: Text(S.of(context).imageNoAvailable),
                         ),
                       ),
                     )
@@ -239,7 +241,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         child: Text(
-                          c.licencePlate,
+                          car.licencePlate,
                           style: Theme.of(context)
                               .textTheme
                               .title
@@ -247,14 +249,14 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                         ),
                       ),
                       Text(
-                        c.statusLabel + c.vehicleTypeLabel,
+                        car.statusLabel + car.vehicleTypeLabel,
                         style: Theme.of(context)
                             .textTheme
                             .caption
                             .copyWith(color: Colors.black87),
                       ),
                       Text(
-                        c.visitorLabel,
+                        car.visitorLabel,
                         style: Theme.of(context)
                             .textTheme
                             .subtitle

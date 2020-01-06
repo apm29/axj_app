@@ -71,6 +71,11 @@ class DioLogInterceptor extends Interceptor{
   }
 
   void printFormat(Object jsonObject, {step = 100}) {
+    if(jsonObject is String){
+      debugPrint('---------------WARNING jsonObject\'s type is '
+          'String--------------');
+      jsonObject = json.decode(jsonObject);
+    }
     String content = formatJson(jsonObject);
     debugPrint(content);
   }
