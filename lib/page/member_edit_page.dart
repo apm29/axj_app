@@ -45,7 +45,7 @@ class _MemberEditPageState extends State<MemberEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text(editMember ? "修改成员信息" : "新增成员信息"),
       ),

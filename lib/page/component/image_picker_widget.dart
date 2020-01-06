@@ -105,10 +105,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   icon: Container(
                     child: Icon(
                       Icons.close,
-                      color: Theme.of(context).accentIconTheme.color,
+                      color: Theme.of(context).accentColor,
                     ),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).errorColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                   ),
                   onPressed: _delete,

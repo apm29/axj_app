@@ -26,5 +26,7 @@ class EBike {
 		return 'EBike{id: $id, userId: $userId, plateDecode: $plateDecode, createTime: $createTime}';
 	}
 
+	String get eBilePlate=>'$plateDecode';
+
 
 }

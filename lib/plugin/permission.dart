@@ -15,7 +15,6 @@ class Permissions {
     Map<PermissionGroup, PermissionStatus> result =
         await handler.requestPermissions([permissionGroup]);
     var status = result[permissionGroup];
-    print(status);
     if (status == PermissionStatus.granted) {
       return true;
     } else {
@@ -25,7 +24,6 @@ class Permissions {
         if (opened) {
           await Future.delayed(Duration(seconds: 2));
           var status2 = await handler.checkPermissionStatus(permissionGroup);
-          print(status2);
           return (status2) ==
               PermissionStatus.granted;
         }

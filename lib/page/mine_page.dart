@@ -381,8 +381,6 @@ class _ClosableSwitchSliverState extends State<ClosableSwitchSliver> {
                       if (v) {
                         bool has = await Permissions.has(
                             PermissionGroup.notification, context);
-                        print(has);
-
                         setState(() {
                           checked = has;
                         });
