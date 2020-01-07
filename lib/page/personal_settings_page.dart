@@ -1,3 +1,4 @@
+import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
@@ -77,10 +78,18 @@ class PersonalSettingsPage extends StatelessWidget {
               },
               child: Text(S.of(context).changeHouseLabel),
             ),
-
             RaisedButton(
               onPressed: () {
                 store.dispatch(ChangeRoleAction(context));
+              },
+              child: Text(S.of(context).changeRoleLabel),
+            ),
+            RaisedButton(
+              onPressed: () {
+                store.dispatch(ChangeRoleAction(
+                  context,
+                  roleCodeRequest: PoliceManCode,
+                ));
               },
               child: Text(S.of(context).changeRoleLabel),
             ),

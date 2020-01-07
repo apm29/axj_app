@@ -159,6 +159,15 @@ checkRoleInfo(
     if (store.state.userState.login &&
         (action.overrideRole || store.state.currentRole == null)) {
       var navigatorState = Navigator.of(action.context);
+      if(action.roleCodeRequest!=null){
+        bool hasRole = store.state.settings.hasRole(action.roleCodeRequest);
+        if(!hasRole){
+          await navigatorState.push(RoleNotAvailableModal());
+          return;
+        }
+      }
+
+
       RoleInfo result = await navigatorState.push(RoleChooseModal());
       if (result != null) store.state.currentRole = result;
     }

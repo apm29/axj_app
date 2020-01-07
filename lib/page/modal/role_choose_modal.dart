@@ -46,3 +46,44 @@ class RoleChooseModal extends ModalRoute<RoleInfo> {
     );
   }
 }
+
+class RoleNotAvailableModal extends ModalRoute{
+  @override
+  Color get barrierColor => const Color(0x66333333);
+
+  @override
+  bool get barrierDismissible => false;
+
+  @override
+  String get barrierLabel => "Role Not Available";
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return Material(
+      type: MaterialType.transparency,
+      child: RoleNotAvailableDialog(),
+    );
+  }
+
+  @override
+  bool get maintainState => false;
+
+  @override
+  bool get opaque => false;
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 250);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(0.0, 1.0),
+        end: Offset.zero,
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.ease)),
+      child: child, // child is the value returned by pageBuilder
+    );
+  }
+}

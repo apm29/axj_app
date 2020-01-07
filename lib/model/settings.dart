@@ -116,6 +116,14 @@ class Settings {
       orElse: () => null,
     );
   }
+
+  bool hasRole(String roleCodeRequest) {
+    return _userRoles.firstWhere(
+          (role) => role.roleCode == roleCodeRequest,
+          orElse: () => null,
+        ) !=
+        null;
+  }
 }
 
 class NotInitializedException implements Exception {

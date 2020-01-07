@@ -66,8 +66,10 @@ abstract class NeedHouseInfoAction {
 abstract class NeedRoleInfoAction {
   final BuildContext context;
   final bool overrideRole;
+  final String roleCodeRequest;
 
-  NeedRoleInfoAction(this.context, {this.overrideRole = false});
+  NeedRoleInfoAction(this.context,
+      {this.overrideRole = false, this.roleCodeRequest});
 }
 
 class LoginAction implements AppAction, ResultTaskAction<bool> {
@@ -202,11 +204,7 @@ class CheckAuthAndRouteAction
   }) : assert(routeName != null || routeGenerator != null);
 }
 
-
-class CheckLoginAndRouteAction
-    implements
-        AppAction,
-        CheckLoginAction{
+class CheckLoginAndRouteAction implements AppAction, CheckLoginAction {
   final BuildContext context;
 
   final bool intercept;
@@ -214,11 +212,11 @@ class CheckLoginAndRouteAction
   final RouteNameGenerator routeGenerator;
 
   CheckLoginAndRouteAction(
-      this.context, {
-        this.intercept = true,
-        this.routeGenerator,
-        this.routeName,
-      }) : assert(routeName != null || routeGenerator != null);
+    this.context, {
+    this.intercept = true,
+    this.routeGenerator,
+    this.routeName,
+  }) : assert(routeName != null || routeGenerator != null);
 }
 
 class ChangeHouseAction
@@ -229,7 +227,8 @@ class ChangeHouseAction
 
   final bool overrideHouse;
 
-  ChangeHouseAction(this.context, {this.intercept: true, this.overrideHouse: true});
+  ChangeHouseAction(this.context,
+      {this.intercept: true, this.overrideHouse: true});
 }
 
 class ChangeRoleAction
@@ -240,6 +239,12 @@ class ChangeRoleAction
 
   final bool overrideRole;
 
-  ChangeRoleAction(this.context, {this.intercept: true, this.overrideRole: true});
-}
+  final String roleCodeRequest;
 
+  ChangeRoleAction(
+    this.context, {
+    this.intercept: true,
+    this.overrideRole: true,
+    this.roleCodeRequest,
+  });
+}
