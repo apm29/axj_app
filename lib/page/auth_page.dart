@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
@@ -74,7 +73,10 @@ class _AuthFormPageState extends State<AuthFormPage> {
                       context, _idCardController.text);
                   navigatorState.pop(result);
                 },
-                gradient: LinearGradient(colors: [Theme.of(context).accentColor, Theme.of(context).accentColor]),
+                gradient: LinearGradient(colors: [
+                  Theme.of(context).accentColor,
+                  Theme.of(context).accentColor
+                ]),
                 constrained: false,
               ),
             ),
@@ -140,10 +142,12 @@ class _AuthFacePageState extends State<AuthFacePage> {
                                         .button
                                         .copyWith(color: Colors.white)),
                                 onPressed: () async {
-                                  await _doAuthorization(isAgain,context);
+                                  await _doAuthorization(isAgain, context);
                                 },
-                                gradient: LinearGradient(
-                                    colors: [Theme.of(context).accentColor, Theme.of(context).accentColor]),
+                                gradient: LinearGradient(colors: [
+                                  Theme.of(context).accentColor,
+                                  Theme.of(context).accentColor
+                                ]),
                                 constrained: false,
                               ),
                             );
@@ -166,18 +170,18 @@ class _AuthFacePageState extends State<AuthFacePage> {
     );
   }
 
-  Future<void> _doAuthorization(bool isAgain,BuildContext context) async {
+  Future<void> _doAuthorization(bool isAgain, BuildContext context) async {
     var result = await Navigator.of(context).push(TaskModal(() async {
       try {
-        if(await Permissions.has(PermissionGroup.storage,context)){
-          Directory tempDir = await getTemporaryDirectory();
-          File imageFile = File(
-              '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg');
-          imageFile.createSync();
-          controller.takePicture(imageFile.path);
+        if (await Permissions.has(PermissionGroup.storage, context)) {
+          final Directory tempDir = await getTemporaryDirectory();
+          final String dirPath = '${tempDir.path}/Pictures/faces';
+          await Directory(dirPath).create(recursive: true);
+          final String filePath =
+              '$dirPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
+          await controller.takePicture(filePath);
           BaseResp<FileDetail> imageDetailResp =
-          await Repository.uploadFile(imageFile);
-          imageFile.deleteSync();
+              await Repository.uploadFile(File(filePath));
 
           BaseResp<UserVerifyInfo> verifyResp = await Repository.verify(
               imageDetailResp.data.filePath, widget.idCardNum, isAgain);
@@ -188,7 +192,7 @@ class _AuthFacePageState extends State<AuthFacePage> {
         showToast(getErrorMessage(e));
       }
     }));
-    if(result){
+    if (result) {
       Navigator.of(context).pop(result);
     }
   }

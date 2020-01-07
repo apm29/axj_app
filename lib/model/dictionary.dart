@@ -3,8 +3,10 @@ import 'package:axj_app/model/bean/district_info.dart';
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/repository.dart';
 
-class Dictionary {
+class Settings {
   List<DistrictInfo> districtDictionary = [];
+
+  bool get authorized => null;
 
   @override
   String toString() {

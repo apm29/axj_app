@@ -67,7 +67,7 @@ class PersonalSettingsPage extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 store.dispatch(VoidTaskSimulationAction(
-                    store.state.dictionary.init, context));
+                    store.state.settings.init, context));
               },
               child: Text(S.of(context).myHouseTitle),
             ),

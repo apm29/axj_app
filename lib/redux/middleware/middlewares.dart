@@ -33,7 +33,7 @@ List<Middleware<AppState>> createAppMiddleware() {
 initApp(Store<AppState> store, action, NextDispatcher next) {
   () async {
     try {
-      await store.state.dictionary.init();
+      await store.state.settings.init();
     } catch (e) {
       print(e);
     }
@@ -74,7 +74,7 @@ confirmLogout(Store<AppState> store, LogoutAction action, NextDispatcher next) {
         ],
       ),
     );
-    if (result) next(action);
+    if (result==true) next(action);
   }();
 }
 
@@ -99,7 +99,7 @@ checkLogin(
 
 checkAuth(Store<AppState> store, CheckAuthAction action, NextDispatcher next) {
   () async {
-    if (store.state.userState.userInfo.authorized) {
+    if (store.state.authorized) {
       next(action);
     } else {
       if (!action.intercept) {
