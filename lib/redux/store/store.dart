@@ -15,23 +15,23 @@ class AppState {
       : this.userState = userState ?? UserState(),
         this.loading = loading ?? false,
         this.homePageState = HomePageState(),
-        this.settings = Settings(),
+        this.dictionary = Dictionary(),
         this.locale = Locale(Cache().locale ?? 'zh');
 
   UserState userState;
 
   HomePageState homePageState;
 
-  Settings settings;
+  Dictionary dictionary;
 
   HouseInfo get currentHouse {
-    return settings.defaultHouseInfo(Cache().currentHouseId);
+    return dictionary.defaultHouseInfo(Cache().currentHouseId);
   }
 
   ///是否已认证
-  ///需要在userState.login 并且 [Settings]已初始后调用
+  ///需要在userState.login 并且 [Dictionary]已初始后调用
   bool get authorized =>
-      (userState?.userInfo?.authorized ?? false) && settings.authorized;
+      (userState?.userInfo?.authorized ?? false) && dictionary.authorized;
 
   set currentHouse(HouseInfo val) {
     Cache().setCurrentHouseId(val.houseId);
@@ -64,7 +64,7 @@ class AppState {
 
   @override
   String toString() {
-    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $settings, currentHouse: $currentHouse, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
+    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $dictionary, currentHouse: $currentHouse, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
   }
 }
 

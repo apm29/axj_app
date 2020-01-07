@@ -90,7 +90,7 @@ Future<bool> loginAndInit(BuildContext context, Future<BaseResp> api) async {
         showToast("登录成功");
         var store = StoreProvider.of<AppState>(context, listen: false);
         store.state.userState.userInfo = userInfoResp.data;
-        await store.state.settings.init();
+        await store.state.dictionary.init();
         return true;
       } else {
         showToast("登录失败:${userInfoResp.text}");

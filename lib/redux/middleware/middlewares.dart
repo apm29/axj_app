@@ -33,7 +33,7 @@ List<Middleware<AppState>> createAppMiddleware() {
 initApp(Store<AppState> store, action, NextDispatcher next) {
   () async {
     try {
-      await store.state.settings.init();
+      await store.state.dictionary.init();
     } catch (e) {
       print(e);
     }
