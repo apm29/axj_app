@@ -45,7 +45,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
               var familyMember = allData[index];
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(familyMember.memberpicurl),
+                  backgroundImage: NetworkImage(familyMember.memberpicurl??""),
                   radius: 30,
                 ),
                 onTap: () => _onExamine(familyMember),

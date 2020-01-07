@@ -54,7 +54,7 @@ class _MemberEditPageState extends State<MemberEditPage> {
           future: future,
           modelBuilder: (context, memberInfo) {
             if (!initialCalled) {
-              _imageUrlController.url = memberInfo.memberpicurl;
+              _imageUrlController.url = memberInfo.memberpicurl??"";
               _nameController.text = memberInfo.membername;
               _phoneController.text = memberInfo.memberphone;
               _idController.text = memberInfo.idno;
