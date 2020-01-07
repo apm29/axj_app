@@ -1,7 +1,8 @@
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
+import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/cache.dart';
-import 'package:axj_app/model/dictionary.dart';
+import 'package:axj_app/model/settings.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -15,29 +16,41 @@ class AppState {
       : this.userState = userState ?? UserState(),
         this.loading = loading ?? false,
         this.homePageState = HomePageState(),
-        this.dictionary = Dictionary(),
+        this.settings = Settings(),
         this.locale = Locale(Cache().locale ?? 'zh');
 
   UserState userState;
 
   HomePageState homePageState;
 
-  Dictionary dictionary;
+  Settings settings;
 
-  //获取缓存的当前房屋信息,或者在房屋唯一时取唯一一个房屋
-  //该方法在Dictionary初始化之后才能使用
-  HouseInfo get currentHouse {
-    return dictionary.defaultHouseInfo(Cache().currentHouseId);
-  }
+
 
 
   ///是否已认证
-  ///需要在userState.login 并且 [Dictionary]已初始后调用
+  ///需要在userState.login 并且 [Settings]已初始后调用
   bool get authorized =>
-      (userState?.userInfo?.authorized ?? false) && dictionary.authorized;
-  //设置当前房屋
+      (userState?.userInfo?.authorized ?? false) && settings.authorized;
+
+
+  ///获取缓存的当前房屋信息,或者在房屋唯一时取唯一一个房屋
+  ///该方法在[Settings]初始化之后才能使用
+  HouseInfo get currentHouse {
+    return settings.defaultHouseInfo;
+  }
+  ///设置当前房屋
   set currentHouse(HouseInfo val) {
     Cache().setCurrentHouseId(val.houseId);
+  }
+  ///获取缓存角色信息,或者在角色唯一时取唯一一个角色
+  ///该方法在[Settings]初始化之后才能使用
+  RoleInfo get currentRole{
+    return settings.defaultUserRole;
+  }
+  ///设置当前角色id
+  set currentRole(RoleInfo val) {
+    Cache().setCurrentRoleId(val.roleCode);
   }
 
   bool loading;
@@ -67,8 +80,10 @@ class AppState {
 
   @override
   String toString() {
-    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $dictionary, currentHouse: $currentHouse, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
+    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $settings, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
   }
+
+
 }
 
 enum ActiveTab { Home, Mine }

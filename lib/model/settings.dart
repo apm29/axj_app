@@ -1,22 +1,29 @@
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/district_info.dart';
 import 'package:axj_app/model/bean/house_info.dart';
+import 'package:axj_app/model/bean/role_info.dart';
+import 'package:axj_app/model/bean/verify_status.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/model/repository.dart';
 
-class Dictionary {
+class Settings {
   //所有小区字典
   List<DistrictInfo> districtDictionary = [];
 
-  bool get authorized => null;
+  //根据接口信息确定
+  bool get authorized => _verifyStatus?.isVerified ?? false;
+
+  VerifyStatus _verifyStatus;
+
+  List<RoleInfo> _userRoles = [];
 
   @override
   String toString() {
-    return 'Dictionary{districtDictionary: $districtDictionary}';
+    return 'Settings{districtDictionary: $districtDictionary, unknownDistrict: $unknownDistrict, myDistrictList: $myDistrictList, myHouseMap: $_myHouseMap}';
   }
 
-  //字典初始化,在登录成功或者已登录进入App时初始化
-  //需要缓存的token不为空
+  ///字典初始化,在登录成功或者已登录进入App时初始化
+  ///需要缓存的token不为空
   Future<void> init() async {
     var token = Cache().token;
     if (token == null || token.isEmpty) {
@@ -33,14 +40,26 @@ class Dictionary {
         await Repository.getMyDistrictInfo();
     if (districtResp.success) {
       myDistrictList = districtResp.data;
-      myHouseMap.clear();
+      _myHouseMap.clear();
       for (DistrictInfo districtInfo in myDistrictList) {
         BaseResp<List<HouseInfo>> houseResp =
             await Repository.getMyHouseList(districtInfo.districtId);
         if (houseResp.success) {
-          myHouseMap[districtInfo] = houseResp.data;
+          _myHouseMap[districtInfo] = houseResp.data;
         }
       }
+    }
+
+    //获取认证信息
+    BaseResp<VerifyStatus> verifyResp = await Repository.getVerifyStatus();
+    if (verifyResp.success) {
+      _verifyStatus = verifyResp.data;
+    }
+
+    //获取角色信息
+    BaseResp<List<RoleInfo>> rolesResp = await Repository.findUserRoles();
+    if (rolesResp.success) {
+      _userRoles = rolesResp.data;
     }
   }
 
@@ -58,14 +77,21 @@ class Dictionary {
   List<DistrictInfo> myDistrictList = [];
 
   //我的小区-房屋映射
-  Map<DistrictInfo, List<HouseInfo>> myHouseMap = {};
+  Map<DistrictInfo, List<HouseInfo>> _myHouseMap = {};
 
   //获取房子信息
-  HouseInfo defaultHouseInfo(houseId) {
-    if (myHouseMap.isEmpty) {
+  HouseInfo get defaultHouseInfo {
+    String houseId = Cache().currentHouseId;
+    if (_myHouseMap.isEmpty) {
       throw NotInitializedException("房屋字典未初始化");
     }
-    for (List list in myHouseMap.values) {
+    //单个房子直接返回房子
+    if (houseId == null &&
+        _myHouseMap.length == 1 &&
+        _myHouseMap.values.first.length == 1) {
+      return _myHouseMap.values.first.first;
+    }
+    for (List list in _myHouseMap.values) {
       HouseInfo houseInfo = list.firstWhere(
           (h) => h.houseId.toString() == houseId.toString(),
           orElse: () => null);
@@ -73,13 +99,22 @@ class Dictionary {
         return houseInfo;
       }
     }
-    //单个房子直接返回房子
-    if (houseId == null &&
-        myHouseMap.length == 1 &&
-        myHouseMap.values.first.length == 1) {
-      return myHouseMap.values.first.first;
-    }
     return null;
+  }
+
+  RoleInfo get defaultUserRole {
+    String houseId = Cache().currentRoleId;
+    if (_userRoles.isEmpty) {
+      throw NotInitializedException("角色信息未初始化");
+    }
+    //单个房子直接返回房子
+    if (houseId == null && _userRoles.length == 1) {
+      return _userRoles.first;
+    }
+    return _userRoles.firstWhere(
+      (role) => role.roleCode == houseId,
+      orElse: () => null,
+    );
   }
 }
 

@@ -31,6 +31,7 @@ class S implements WidgetsLocalizations {
   String get authTitle => "Authenticate";
   String get cancelLabel => "Cancel";
   String get changeHouseLabel => "Change House";
+  String get changeRoleLabel => "Change Role";
   String get clickToSeeAccessRecord => "Tap to see access record";
   String get closeNotificationHint => "Close Notification Service";
   String get confirmLabel => "Confirm";
@@ -136,6 +137,8 @@ class $zh_CN extends S {
   String get myVehicleActionTileTitle => "我的爱车";
   @override
   String get editUserProfile => "编辑个人资料";
+  @override
+  String get changeRoleLabel => "切换角色";
   @override
   String get cancelLabel => "取消";
   @override

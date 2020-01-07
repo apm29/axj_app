@@ -11,7 +11,7 @@ import 'cache.dart';
 
 typedef JsonProcessor<T> = T Function(dynamic json);
 
-const BaseUrl = "http://axjwx.ciih.net/";
+const BaseUrl = "http://axj.ciih.net/";
 const AuthorizationHeader = "Authorization";
 const ContentTypeHeader = "content-type";
 const ContentTypeFormUrlEncodeValue = "application/x-www-form-urlencoded";
@@ -59,7 +59,7 @@ class Api {
     init();
   }
 
-  static bool proxyHttp = true;
+  static bool proxyHttp = false;
   static bool printLog = true;
   static Api _instance;
 

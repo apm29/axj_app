@@ -1,8 +1,10 @@
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/house_info.dart';
+import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/page/modal/house_choose_modal.dart';
+import 'package:axj_app/page/modal/role_choose_modal.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,13 +29,14 @@ List<Middleware<AppState>> createAppMiddleware() {
     TypedMiddleware<AppState, VoidTaskAction>(checkVoidTask),
     TypedMiddleware<AppState, ResultTaskAction>(checkResultTask),
     TypedMiddleware<AppState, NeedHouseInfoAction>(checkHouseInfo),
+    TypedMiddleware<AppState, NeedRoleInfoAction>(checkRoleInfo),
   ];
 }
 
 initApp(Store<AppState> store, action, NextDispatcher next) {
   () async {
     try {
-      await store.state.dictionary.init();
+      await store.state.settings.init();
     } catch (e) {
       print(e);
     }
@@ -62,19 +65,21 @@ confirmLogout(Store<AppState> store, LogoutAction action, NextDispatcher next) {
         content: Text(S.of(c).confirmLogoutHint),
         actions: <Widget>[
           CupertinoButton(
-              child: Text(S.of(c).confirmLabel),
-              onPressed: () {
-                Navigator.of(c).pop(true);
-              }),
+            child: Text(S.of(c).confirmLabel),
+            onPressed: () {
+              Navigator.of(c).pop(true);
+            },
+          ),
           CupertinoButton(
-              child: Text(S.of(c).cancelLabel),
-              onPressed: () {
-                Navigator.of(c).pop(false);
-              }),
+            child: Text(S.of(c).cancelLabel),
+            onPressed: () {
+              Navigator.of(c).pop(false);
+            },
+          ),
         ],
       ),
     );
-    if (result==true) next(action);
+    if (result == true) next(action);
   }();
 }
 
@@ -139,10 +144,23 @@ checkHouseInfo(
     Store<AppState> store, NeedHouseInfoAction action, NextDispatcher next) {
   () async {
     if (store.state.userState.login &&
-        (action.override || store.state.currentHouse == null)) {
+        (action.overrideHouse || store.state.currentHouse == null)) {
       var navigatorState = Navigator.of(action.context);
       HouseInfo result = await navigatorState.push(HouseChooseModal());
       if (result != null) store.state.currentHouse = result;
+    }
+    next(action);
+  }();
+}
+
+checkRoleInfo(
+    Store<AppState> store, NeedRoleInfoAction action, NextDispatcher next) {
+  () async {
+    if (store.state.userState.login &&
+        (action.overrideRole || store.state.currentRole == null)) {
+      var navigatorState = Navigator.of(action.context);
+      RoleInfo result = await navigatorState.push(RoleChooseModal());
+      if (result != null) store.state.currentRole = result;
     }
     next(action);
   }();

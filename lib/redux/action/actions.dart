@@ -58,9 +58,16 @@ abstract class CheckLoginAction {
 
 abstract class NeedHouseInfoAction {
   final BuildContext context;
-  final bool override;
+  final bool overrideHouse;
 
-  NeedHouseInfoAction(this.context, {this.override = false});
+  NeedHouseInfoAction(this.context, {this.overrideHouse = false});
+}
+
+abstract class NeedRoleInfoAction {
+  final BuildContext context;
+  final bool overrideRole;
+
+  NeedRoleInfoAction(this.context, {this.overrideRole = false});
 }
 
 class LoginAction implements AppAction, ResultTaskAction<bool> {
@@ -90,7 +97,7 @@ Future<bool> loginAndInit(BuildContext context, Future<BaseResp> api) async {
         showToast("登录成功");
         var store = StoreProvider.of<AppState>(context, listen: false);
         store.state.userState.userInfo = userInfoResp.data;
-        await store.state.dictionary.init();
+        await store.state.settings.init();
         return true;
       } else {
         showToast("登录失败:${userInfoResp.text}");
@@ -181,7 +188,7 @@ class CheckAuthAndRouteAction
   final BuildContext context;
 
   final bool intercept;
-  final bool override;
+  final bool overrideHouse;
   final String routeName;
 
   final RouteNameGenerator routeGenerator;
@@ -189,7 +196,7 @@ class CheckAuthAndRouteAction
   CheckAuthAndRouteAction(
     this.context, {
     this.intercept = true,
-    this.override = false,
+    this.overrideHouse = false,
     this.routeGenerator,
     this.routeName,
   }) : assert(routeName != null || routeGenerator != null);
@@ -220,7 +227,19 @@ class ChangeHouseAction
 
   final bool intercept;
 
-  final bool override;
+  final bool overrideHouse;
 
-  ChangeHouseAction(this.context, {this.intercept: true, this.override: true});
+  ChangeHouseAction(this.context, {this.intercept: true, this.overrideHouse: true});
 }
+
+class ChangeRoleAction
+    implements AppAction, CheckLoginAction, NeedRoleInfoAction {
+  final BuildContext context;
+
+  final bool intercept;
+
+  final bool overrideRole;
+
+  ChangeRoleAction(this.context, {this.intercept: true, this.overrideRole: true});
+}
+

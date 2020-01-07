@@ -23,7 +23,7 @@ class _HouseChooseDialogState extends State<HouseChooseDialog> {
           modelBuilder: (context, List<DistrictInfo> model) {
             return CupertinoActionSheet(
               title: Text("选择小区"),
-              message: Text("选择当前居住的小区"*3),
+              message: Text("选择当前居住的小区"),
               actions: model
                   .map(
                     (d) => CupertinoActionSheetAction(

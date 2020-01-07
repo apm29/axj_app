@@ -8,6 +8,9 @@ import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
+
+const keyUserName = "userName";
+const keyPassword = "password";
 ///
 /// author : ciih
 /// date : 2019-12-30 14:33
@@ -317,10 +320,12 @@ class _RegisterColumnState extends State<RegisterColumn> {
       BaseResp resp = await Repository.register(_phoneController.text,
           _smsController.text, _wordController.text, _nameController.text);
       showToast(resp.text);
-      Navigator.of(context).pop({
-        "userName": _nameController.text,
-        "password": _wordController.text,
-      });
+      if(resp.success) {
+        Navigator.of(context).pop({
+          keyUserName: _nameController.text,
+          keyPassword: _wordController.text,
+        });
+      }
     }
   }
 

@@ -67,7 +67,7 @@ class PersonalSettingsPage extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 store.dispatch(VoidTaskSimulationAction(
-                    store.state.dictionary.init, context));
+                    store.state.settings.init, context));
               },
               child: Text(S.of(context).myHouseTitle),
             ),
@@ -76,6 +76,13 @@ class PersonalSettingsPage extends StatelessWidget {
                 store.dispatch(ChangeHouseAction(context));
               },
               child: Text(S.of(context).changeHouseLabel),
+            ),
+
+            RaisedButton(
+              onPressed: () {
+                store.dispatch(ChangeRoleAction(context));
+              },
+              child: Text(S.of(context).changeRoleLabel),
             ),
             RaisedButton(
               onPressed: () {

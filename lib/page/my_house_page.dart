@@ -28,7 +28,7 @@ class MyHousePage extends StatelessWidget {
                 children: [
                   ...houseList.map((house) {
                     var districtInfo =
-                        model.dictionary.getDistrictInfo(house.districtId);
+                        model.settings.getDistrictInfo(house.districtId);
                     return ListTile(
                       onTap: () {
                         AppRouter.toMembersManage(context, house.houseId);

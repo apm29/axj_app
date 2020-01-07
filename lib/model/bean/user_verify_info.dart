@@ -1,7 +1,7 @@
 import 'package:axj_app/model/bean/house.dart';
 
 ///
-///人脸认证/certification/userVerify 接口返回的结果信息
+///人脸认证/userCertification/verify 接口返回的结果信息
 ///
 class UserVerifyInfo {
   List<House> rows;

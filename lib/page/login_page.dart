@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:axj_app/page/register_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/model/api.dart';
@@ -111,13 +112,13 @@ class LoginPage extends StatelessWidget {
 
   bool _close(BuildContext context) => Navigator.of(context).pop();
 
-  void _register(BuildContext context) =>
-      AppRouter.toRegister(context).then((resMap) {
-        if (resMap != null) {
-          store.dispatch(
-              LoginAction(resMap['userName'], resMap['password'], context));
-        }
-      });
+  Future<void> _register(BuildContext context) async {
+    var resMap = await AppRouter.toRegister(context);
+    if (resMap != null && resMap is Map) {
+      store.dispatch(
+          LoginAction(resMap[keyUserName], resMap[keyPassword], context));
+    }
+  }
 }
 
 class LoginCard extends StatefulWidget {
