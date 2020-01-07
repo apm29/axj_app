@@ -24,10 +24,13 @@ class AppState {
 
   Dictionary dictionary;
 
+  //获取缓存的当前房屋信息,或者在房屋唯一时取唯一一个房屋
+  //该方法在Dictionary初始化之后才能使用
   HouseInfo get currentHouse {
     return dictionary.defaultHouseInfo(Cache().currentHouseId);
   }
 
+  //设置当前房屋
   set currentHouse(HouseInfo val) {
     Cache().setCurrentHouseId(val.houseId);
   }

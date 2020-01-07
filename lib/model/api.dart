@@ -11,7 +11,7 @@ import 'cache.dart';
 
 typedef JsonProcessor<T> = T Function(dynamic json);
 
-const BaseUrl = "http://axj.ciih.net/";
+const BaseUrl = "http://axjwx.ciih.net/";
 const AuthorizationHeader = "Authorization";
 const ContentTypeHeader = "content-type";
 const ContentTypeFormUrlEncodeValue = "application/x-www-form-urlencoded";
@@ -59,7 +59,7 @@ class Api {
     init();
   }
 
-  static bool proxyHttp = false;
+  static bool proxyHttp = true;
   static bool printLog = true;
   static Api _instance;
 
@@ -90,7 +90,7 @@ class Api {
         // config the http client
         client.findProxy = (uri) {
           //proxy all request to localhost:8888
-          return "PROXY 192.168.99.181:8888";
+          return "PROXY 192.168.0.105:8888";
         };
         // you can also create a new HttpClient to dio
         // return new HttpClient();
