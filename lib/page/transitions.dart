@@ -18,20 +18,20 @@ class TingleTransition extends StatefulWidget {
   });
 
   @override
-  _TingleTransitionState createState() => _TingleTransitionState();
+  _TingleTransitionState createState() => _TingleTransitionState(tingleCount);
 }
 
 class _TingleTransitionState extends State<TingleTransition>
     with TickerProviderStateMixin {
   AnimationController controller;
 
-  int count = 15;
+
+  _TingleTransitionState(this.count);
+
+  int count = 0;
 
   @override
   void initState() {
-    if (widget.tingleCount != null) {
-      count = widget.tingleCount;
-    }
     controller = AnimationController(
       vsync: this,
       duration: Duration(
@@ -44,10 +44,10 @@ class _TingleTransitionState extends State<TingleTransition>
         return;
       }
       if (status == AnimationStatus.completed) {
-        controller.reverse();
+        controller.reverse().orCancel;
         count -= 1;
       } else if (status == AnimationStatus.dismissed) {
-        controller.forward();
+        controller.forward().orCancel;
       }
     });
 
