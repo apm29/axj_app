@@ -21,33 +21,12 @@ class MyHousePage extends StatelessWidget {
       body: StoreBuilder<AppState>(
         builder: (context, store) {
           var model = store.state;
-          return BaseRespTaskBuilder<List<HouseInfo>>(
-            future: Repository.getMyHouseList(model.currentHouse.districtId),
-            modelBuilder: (context, houseList) {
-              return ListView(
-                children: [
-                  ...houseList.map((house) {
-                    var districtInfo =
-                        model.settings.getDistrictInfo(house.districtId);
-                    return ListTile(
-                      onTap: () {
-                        AppRouter.toMembersManage(context, house.houseId);
-                      },
-                      title: Text(
-                        districtInfo.districtName,
-                      ),
-                      subtitle: Text(
-                        house.addr + "\r\n" + districtInfo.districtAddr,
-                      ),
-                      isThreeLine: true,
-                      leading: Icon(Icons.home),
-                      trailing: Text(
-                        house.name,
-                      ),
-                    );
-                  }).toList(),
-                ],
-              );
+          return TaskBuilder(
+            task: () async => [
+              await Repository.getMyHouseList(model.currentHouse.districtId)
+            ],
+            modelBuilder: (context, resp) {
+              return buildListView(resp[0].data, model, context);
             },
           );
         },
@@ -70,6 +49,33 @@ class MyHousePage extends StatelessWidget {
         },
         child: Icon(Icons.library_books),
       ),
+    );
+  }
+
+  ListView buildListView(
+      List<HouseInfo> houseList, AppState model, BuildContext context) {
+    return ListView(
+      children: [
+        ...houseList.map((house) {
+          var districtInfo = model.settings.getDistrictInfo(house.districtId);
+          return ListTile(
+            onTap: () {
+              AppRouter.toMembersManage(context, house.houseId);
+            },
+            title: Text(
+              districtInfo.districtName,
+            ),
+            subtitle: Text(
+              house.addr + "\r\n" + districtInfo.districtAddr,
+            ),
+            isThreeLine: true,
+            leading: Icon(Icons.home),
+            trailing: Text(
+              house.name,
+            ),
+          );
+        }).toList(),
+      ],
     );
   }
 

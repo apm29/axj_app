@@ -38,6 +38,7 @@ class FutureTaskWidget<T> extends StatelessWidget {
   }
 }
 
+@deprecated
 class BaseRespTaskBuilder<T> extends StatelessWidget {
   final Future<BaseResp<T>> future;
   final ModelBuilder<T> modelBuilder;
