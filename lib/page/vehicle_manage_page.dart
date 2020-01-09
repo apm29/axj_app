@@ -28,6 +28,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
       ),
       body: TaskBuilder(
         task: () async {
+          await Future.delayed(Duration(milliseconds: 800));
           return [await Repository.getMyCars(), await Repository.getMyEBike()];
         },
         modelBuilder: (context, resp) {

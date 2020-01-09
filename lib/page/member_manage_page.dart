@@ -22,84 +22,26 @@ class MemberManagePage extends StatefulWidget {
 }
 
 class _MemberManagePageState extends State<MemberManagePage> {
-  Future<BaseResp<MemberDetail>> future;
-
-  @override
-  void initState() {
-    loadMemberData();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).familyMemberManageTitle),
       ),
-      body: BaseRespTaskBuilder<MemberDetail>(
-        future: future,
+      body: TaskBuilder(
+        task: () async => [await Repository.getFamilyMembers(widget.houseId)],
         modelBuilder: (context, list) {
           return ListView.builder(
             itemBuilder: (context, index) {
-              List allData = [...list.familyMember, ...list.tenant];
+              List allData = [
+                ...list[0].data.familyMember,
+                ...list[0].data.tenant
+              ];
               var familyMember = allData[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(familyMember.memberpicurl??""),
-                  radius: 30,
-                ),
-                onTap: () => _onExamine(familyMember),
-                isThreeLine: true,
-                title: Text(familyMember.membername),
-                subtitle: Text(familyMember.presentStatue +
-                    "\r\n" +
-                    familyMember.relationtype),
-                trailing: PopupMenuButton<ActionEnum>(
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        enabled: familyMember.editable,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.edit,
-                            ),
-                            Text(S.of(context).editLabel),
-                          ],
-                        ),
-                        value: ActionEnum.Edit,
-                      ),
-                      PopupMenuItem(
-                        enabled: familyMember.deletable,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.delete,
-                            ),
-                            Text(S.of(context).deleteLabel),
-                          ],
-                        ),
-                        value: ActionEnum.Delete,
-                      ),
-                    ];
-                  },
-                  onSelected: (v) {
-                    switch (v) {
-                      case ActionEnum.Edit:
-                        _doEditMember(context, familyMember);
-                        break;
-                      case ActionEnum.Delete:
-                        _doDeleteMember(context, familyMember);
-                        break;
-                      case ActionEnum.Examine:
-                        break;
-                    }
-                  },
-                  icon: Icon(Icons.more_vert),
-                ),
-              );
+              return buildListTile(familyMember, context);
             },
-            itemCount: list.familyMember.length + list.tenant.length,
+            itemCount:
+                list[0].data.familyMember.length + list[0].data.tenant.length,
           );
         },
       ),
@@ -115,6 +57,66 @@ class _MemberManagePageState extends State<MemberManagePage> {
           },
           () {},
         ],
+      ),
+    );
+  }
+
+  ListTile buildListTile(familyMember, BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(familyMember.memberpicurl ?? ""),
+        child: familyMember.memberpicurl != null
+            ? null
+            : Text("暂无照片",style: Theme.of(context).textTheme.caption,),
+        radius: 30,
+      ),
+      onTap: () => _onExamine(familyMember),
+      isThreeLine: true,
+      title: Text(familyMember.membername),
+      subtitle:
+          Text(familyMember.presentStatue + "\r\n" + familyMember.relationtype),
+      trailing: PopupMenuButton<ActionEnum>(
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              enabled: familyMember.editable,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.edit,
+                  ),
+                  Text(S.of(context).editLabel),
+                ],
+              ),
+              value: ActionEnum.Edit,
+            ),
+            PopupMenuItem(
+              enabled: familyMember.deletable,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.delete,
+                  ),
+                  Text(S.of(context).deleteLabel),
+                ],
+              ),
+              value: ActionEnum.Delete,
+            ),
+          ];
+        },
+        onSelected: (v) {
+          switch (v) {
+            case ActionEnum.Edit:
+              _doEditMember(context, familyMember);
+              break;
+            case ActionEnum.Delete:
+              _doDeleteMember(context, familyMember);
+              break;
+            case ActionEnum.Examine:
+              break;
+          }
+        },
+        icon: Icon(Icons.more_vert),
       ),
     );
   }
@@ -145,9 +147,6 @@ class _MemberManagePageState extends State<MemberManagePage> {
                   if (result.success) {
                     showToast(S.of(context).deleteLabel);
                     Navigator.of(context).pop(true);
-                    setState(() {
-                      loadMemberData();
-                    });
                   } else {
                     showToast(result.text);
                   }
@@ -159,10 +158,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
         );
       },
     );
-  }
-
-  void loadMemberData() {
-    future = Repository.getFamilyMembers(widget.houseId);
+    TaskBuilder.of(context).refresh(context);
   }
 
   _onExamine(FamilyMember familyMember) {
@@ -176,9 +172,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
   void _doEditMember(BuildContext context, FamilyMember familyMember) async {
     bool result = await AppRouter.toMemberEdit(context, familyMember.memberid);
     if (result == true) {
-      setState(() {
-        loadMemberData();
-      });
+      TaskBuilder.of(context).refresh(context);
     }
   }
 }

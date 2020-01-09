@@ -71,10 +71,14 @@ class TaskBuilder extends StatefulWidget {
   const TaskBuilder({Key key, this.task, this.modelBuilder}) : super(key: key);
 
   @override
-  _TaskBuilderState createState() => _TaskBuilderState();
+  TaskBuilderState createState() => TaskBuilderState();
+
+  static TaskBuilderState of(BuildContext context) {
+    return context.findAncestorStateOfType<TaskBuilderState>();
+  }
 }
 
-class _TaskBuilderState extends State<TaskBuilder> {
+class TaskBuilderState extends State<TaskBuilder> {
   Future future;
   String refreshToken;
 
@@ -96,26 +100,71 @@ class _TaskBuilderState extends State<TaskBuilder> {
         return FutureBuilder(
           future: future,
           builder: (context, snapshot) {
-            if (snapshot.hasData &&
-                snapshot.connectionState == ConnectionState.done) {
-              var data = snapshot.data;
-              return widget.modelBuilder(context, data);
-            } else if (snapshot.hasError) {
-              return InkWell(
-                child: ErrorHintWidget(
-                  errors: [getErrorMessage(snapshot.error)],
-                  refreshToken: refreshToken,
-                ),
-              );
-            } else {
-              return Center(
-                child: CupertinoActivityIndicator(),
-              );
-            }
+            return AnimatedSwitcher(
+              child: buildChild(context, snapshot),
+              transitionBuilder: (child, animation) {
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child,
+                );
+              },
+
+              duration: Duration(milliseconds: 200),
+            );
           },
         );
       },
     );
+  }
+
+  Future refresh(BuildContext context) async {
+    await Future.delayed(Duration(milliseconds: 800));
+    await StoreProvider.of<AppState>(context)
+        .dispatch(RefreshAction(refreshToken));
+  }
+
+  bool _waiting(AsyncSnapshot snapshot) =>
+      snapshot.connectionState != ConnectionState.done && !snapshot.hasError;
+
+  bool _success(AsyncSnapshot snapshot) {
+    return snapshot.hasData && snapshot.connectionState == ConnectionState.done;
+  }
+
+  buildChild(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    if(_waiting(snapshot)){
+      return LayoutBuilder(
+        builder: (c, constraint) {
+          return SizedBox(
+            width: constraint.maxWidth == double.infinity
+                   ? MediaQuery.of(context).size.width
+                   : double.infinity,
+            height: constraint.maxHeight == double.infinity
+                    ? MediaQuery.of(context).size.height
+                    : double.infinity,
+            child: Center(
+              child: CupertinoActivityIndicator(),
+            ),
+          );
+        },
+      );
+    }else if(_success(snapshot)){
+      return RefreshIndicator(
+        onRefresh: () async {
+          await refresh(context);
+        },
+        child: widget.modelBuilder(context, snapshot.data),
+      );
+    }else{
+      return InkWell(
+        child: ErrorHintWidget(
+          errors: [getErrorMessage(snapshot.error)],
+          refreshToken: refreshToken,
+        ),
+      );
+    }
   }
 }
 
