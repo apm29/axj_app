@@ -248,3 +248,10 @@ class ChangeRoleAction
     this.roleCodeRequest,
   });
 }
+
+
+class RefreshAction{
+  final String refreshToken;
+
+  RefreshAction(this.refreshToken);
+}

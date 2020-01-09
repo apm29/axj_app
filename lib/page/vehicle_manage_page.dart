@@ -14,13 +14,9 @@ class VehicleManagePage extends StatefulWidget {
 }
 
 class _VehicleManagePageState extends State<VehicleManagePage> {
-  Future<BaseResp<CarInfo>> carData;
-  Future<BaseResp<List<EBike>>> eBikeInfo;
 
   @override
   void initState() {
-    carData = Repository.getMyCars();
-    eBikeInfo = Repository.getMyEBike();
     super.initState();
   }
 
@@ -30,33 +26,12 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
       appBar: AppBar(
         title: Text(S.of(context).vehicleManageTitle),
       ),
-      body: BaseRespTaskBuilder2(
-        future1: carData,
-        future2: eBikeInfo,
-        modelBuilder: (context, CarInfo car, List<EBike> eBike) {
-          return CustomScrollView(
-            slivers: <Widget>[
-              SliverPadding(padding: EdgeInsets.all(8)),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  car.rows
-                      .map(
-                        (car) => buildCarLabel(context, car),
-                      )
-                      .toList(),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  eBike
-                      .map(
-                        (bike) => buildEBikeLabel(context, bike),
-                      )
-                      .toList(),
-                ),
-              )
-            ],
-          );
+      body: TaskBuilder(
+        task: () async {
+          return [await Repository.getMyCars(), await Repository.getMyEBike()];
+        },
+        modelBuilder: (context, resp) {
+          return buildCustomScrollView(resp[0].data, context, resp[1].data);
         },
       ),
       floatingActionButton: SpeedDial(
@@ -70,6 +45,33 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
           () {},
         ],
       ),
+    );
+  }
+
+  CustomScrollView buildCustomScrollView(
+      CarInfo car, BuildContext context, List<EBike> eBike) {
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverPadding(padding: EdgeInsets.all(8)),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            car.rows
+                .map(
+                  (car) => buildCarLabel(context, car),
+                )
+                .toList(),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            eBike
+                .map(
+                  (bike) => buildEBikeLabel(context, bike),
+                )
+                .toList(),
+          ),
+        )
+      ],
     );
   }
 
