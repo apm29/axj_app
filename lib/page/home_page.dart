@@ -50,22 +50,27 @@ class HomePage extends StatelessWidget {
     return StoreConnector<AppState, int>(
       converter: (store) =>
           ActiveTab.values.indexOf(store.state.homePageState.currentTab),
-      builder: (ctx, index) => BottomNavigationBar(
-        currentIndex: index,
-        onTap: (index) {
-          store
-              .dispatch(TabSwitchAction(index, context));
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text(S.of(context).homeTab),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text(S.of(context).mineTab),
-          ),
-        ],
+      builder: (ctx, index) => Theme(
+        data: Theme.of(context).copyWith(
+          primaryColor: Color(0xff1a7fd5),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: index,
+          onTap: (index) {
+            store
+                .dispatch(TabSwitchAction(index, context));
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text(S.of(context).homeTab),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              title: Text(S.of(context).mineTab),
+            ),
+          ],
+        ),
       ),
     );
   }

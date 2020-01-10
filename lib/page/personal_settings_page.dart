@@ -1,4 +1,5 @@
 import 'package:axj_app/model/bean/role_info.dart';
+import 'package:axj_app/page/theme_test_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
@@ -118,6 +119,13 @@ class PersonalSettingsPage extends StatelessWidget {
                 return Text('result task simulate:' +
                     '${store.state.simulationResult ?? ''}');
               }),
+            ),
+            RaisedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ThemeTestPage()));
+              },
+              child: Text('Test'),
             ),
           ],
         ),

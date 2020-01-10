@@ -19,33 +19,38 @@ const keyPassword = "password";
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          SizedBox.expand(
-            child: Image.asset(
-              'assets/images/city.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-          RegisterColumn(),
-          Positioned(
-            right: 16,
-            top: 0,
-            child: SafeArea(
-              child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  size: 36,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+    return Theme(
+      data: Theme.of(context).copyWith(
+        hintColor: Colors.teal.withAlpha(0x88)
+      ),
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            SizedBox.expand(
+              child: Image.asset(
+                'assets/images/city.jpg',
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-        ],
+            RegisterColumn(),
+            Positioned(
+              right: 16,
+              top: 0,
+              child: SafeArea(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    size: 36,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

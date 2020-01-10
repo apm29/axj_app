@@ -222,6 +222,7 @@ class MinePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16))),
                     clipBehavior: Clip.antiAlias,
+                    color: Theme.of(context).primaryColor,
                     child: InkWell(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -246,6 +247,7 @@ class MinePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16))),
                     clipBehavior: Clip.antiAlias,
+                    color: Theme.of(context).primaryColor,
                     child: InkWell(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -325,6 +327,7 @@ class _ClosableSwitchSliverState extends State<ClosableSwitchSliver> {
             Radius.circular(6),
           ),
         ),
+        color: Theme.of(context).primaryColor,
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,7 +338,7 @@ class _ClosableSwitchSliverState extends State<ClosableSwitchSliver> {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                    color: Colors.grey[200],
+                    color: Theme.of(context).primaryColorLight,
                     padding: const EdgeInsets.only(
                         left: 8.0, right: 8.0, top: 4.0, bottom: 4.0),
                     child: Align(
@@ -343,7 +346,7 @@ class _ClosableSwitchSliverState extends State<ClosableSwitchSliver> {
                       child: InkWell(
                         child: Icon(
                           Icons.close,
-                          color: Colors.grey[400],
+                          color: Theme.of(context).iconTheme.color,
                         ),
                         onTap: () {
                           setState(() {
