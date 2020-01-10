@@ -67,8 +67,14 @@ class BaseRespTaskBuilder<T> extends StatelessWidget {
 class TaskBuilder extends StatefulWidget {
   final AsyncResultTask<List<BaseResp>> task;
   final ModelBuilder<List<BaseResp>> modelBuilder;
+  final bool pullToRefresh;
 
-  const TaskBuilder({Key key, this.task, this.modelBuilder}) : super(key: key);
+  const TaskBuilder({
+    Key key,
+    this.task,
+    this.modelBuilder,
+    this.pullToRefresh: true,
+  }) : super(key: key);
 
   @override
   TaskBuilderState createState() => TaskBuilderState();
@@ -111,7 +117,6 @@ class TaskBuilderState extends State<TaskBuilder> {
                   child: child,
                 );
               },
-
               duration: Duration(milliseconds: 200),
             );
           },
@@ -134,30 +139,33 @@ class TaskBuilderState extends State<TaskBuilder> {
   }
 
   buildChild(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-    if(_waiting(snapshot)){
+    if (_waiting(snapshot)) {
       return LayoutBuilder(
         builder: (c, constraint) {
           return SizedBox(
             width: constraint.maxWidth == double.infinity
-                   ? MediaQuery.of(context).size.width
-                   : double.infinity,
+                ? MediaQuery.of(context).size.width
+                : double.infinity,
             height: constraint.maxHeight == double.infinity
-                    ? MediaQuery.of(context).size.height
-                    : double.infinity,
+                ? MediaQuery.of(context).size.height
+                : double.infinity,
             child: Center(
               child: CupertinoActivityIndicator(),
             ),
           );
         },
       );
-    }else if(_success(snapshot)){
-      return RefreshIndicator(
-        onRefresh: () async {
-          await refresh(context);
-        },
-        child: widget.modelBuilder(context, snapshot.data),
-      );
-    }else{
+    } else if (_success(snapshot)) {
+      var buildLayout = widget.modelBuilder(context, snapshot.data);
+      return widget.pullToRefresh
+          ? RefreshIndicator(
+              onRefresh: () async {
+                await refresh(context);
+              },
+              child: buildLayout,
+            )
+          : buildLayout;
+    } else {
       return InkWell(
         child: ErrorHintWidget(
           errors: [getErrorMessage(snapshot.error)],
