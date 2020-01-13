@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:axj_app/configuration.dart';
 import 'package:axj_app/redux/middleware/middlewares.dart';
 import 'package:axj_app/model/cache.dart';
@@ -76,7 +75,7 @@ class FlutterReduxApp extends StatelessWidget {
             ],
             supportedLocales: S.delegate.supportedLocales,
             theme: twitterLight,
-            darkTheme: twitterDark,
+            darkTheme: twitterLight,
             onGenerateRoute: Application.router.generator,
             locale: locale,
             home: SplashPage(),
@@ -86,3 +85,4 @@ class FlutterReduxApp extends StatelessWidget {
     );
   }
 }
+
