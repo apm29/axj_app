@@ -51,7 +51,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
         color: Colors.white.withAlpha(0x00),
       ),
     );
-    double alpha = percent;
+    double alpha = easeInExpoPercent;
 
     final TextStyle buttonTextStyle = Theme.of(context).textTheme.caption;
     final TextStyleTween buttonStyleTween = TextStyleTween(
@@ -133,9 +133,9 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment(0.0, -1),
-              end: Alignment(0.0, 0.7),
+              end: Alignment(0.0, 0.0),
               colors: <Color>[
-                Color(0xF0000000),
+                Color(0x70000000),
                 Color(0x00000000),
               ],
             ),

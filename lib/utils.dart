@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:axj_app/model/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:oktoast/oktoast.dart';
 
 ///
@@ -22,7 +23,7 @@ showAppToast(
     dismissAllToast(showAnim: true);
   };
   return showToastWidget(
-    _toastWidget( type, text, dismissible, onPressed),
+    _toastWidget(type, text, dismissible, onPressed),
     position: ToastPosition(align: Alignment.bottomCenter, offset: -100.0),
     duration: toastDuration(type),
     handleTouch: true,
@@ -37,8 +38,8 @@ showAppToast(
   );
 }
 
-Material _toastWidget( ToastType type, String text,
-    bool dismissible, VoidCallback onPressed) {
+Material _toastWidget(
+    ToastType type, String text, bool dismissible, VoidCallback onPressed) {
   final Material child = Material(
     type: MaterialType.transparency,
     child: Container(
@@ -173,12 +174,27 @@ double calcTrueTextWidth(double textSize, String text) {
     ..layout(ParagraphConstraints(width: double.infinity));
   return p.minIntrinsicWidth;
 }
-Size calcTrueTextSize(double textSize, String text) {
+
+Size calcTrueTextSize(double textSize, String text, BoxConstraints constraint,
+    BuildContext context,int maxLines) {
   // 测量实际长度
   var paragraph = ParagraphBuilder(ParagraphStyle(fontSize: textSize))
     ..addText(text);
   var p = paragraph.build()
     ..layout(ParagraphConstraints(width: double.infinity));
-  var lineMetrics = p.computeLineMetrics();
-  return Size(p.minIntrinsicWidth, lineMetrics.first.height*lineMetrics.length);
+
+  RenderParagraph renderParagraph = RenderParagraph(
+    TextSpan(
+      text: text,
+      style: TextStyle(
+        fontSize: textSize,
+      ),
+    ),
+    textDirection: TextDirection.ltr,
+    maxLines: maxLines,
+  );
+  renderParagraph.layout(constraint);
+  double height = renderParagraph.getMinIntrinsicHeight(textSize).ceilToDouble();
+  print(height);
+  return Size(p.minIntrinsicWidth, height);
 }

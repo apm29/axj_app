@@ -1,5 +1,6 @@
 import 'package:axj_app/page/member_edit_page.dart';
 import 'package:axj_app/page/member_manage_page.dart';
+import 'package:axj_app/page/notice/notice_detail.dart';
 import 'package:axj_app/page/vehicle_manage_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
@@ -44,6 +45,7 @@ class Routes {
   static String myMember = "/my_member";
   static String myVehicle = "/my_vehicle";
   static String editMember = "/edit_member";
+  static String noticeDetail = "/notice";
 
   static String keyId = "id";
   static String keyType = "type";
@@ -70,6 +72,7 @@ class Routes {
     router.define(authForm, handler: authHandler);
     router.define('$authFace/:$keyId', handler: authFaceHandler);
     router.define('$myMember/:$keyId', handler: myMemberHandler);
+    router.define('$noticeDetail/:$keyId', handler: noticeDetailHandler);
     router.define('$editMember/:$keyId/:$keyType', handler: editMemberHandler);
   }
 }
@@ -148,6 +151,12 @@ final myMemberHandler = new Handler(
   },
 );
 
+final noticeDetailHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return NoticeDetailPage(noticeId: params[Routes.keyId].first);
+  },
+);
+
 final editMemberHandler = new Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var id = params[Routes.keyId].first;
@@ -168,7 +177,7 @@ class AppRouter {
       context,
       Routes.home,
       replace: true,
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
     );
   }
 
@@ -176,7 +185,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.personalSettings,
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
     );
   }
 
@@ -187,7 +196,7 @@ class AppRouter {
       Routes.home,
       replace: true,
       clearStack: true,
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
     );
   }
 
@@ -203,7 +212,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.register,
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
     );
   }
 
@@ -215,7 +224,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.authForm,
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
     );
   }
 
@@ -223,7 +232,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.authFace}/$idCardNum',
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
     );
   }
 
@@ -236,7 +245,15 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.myMember}/$id',
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
+    );
+  }
+
+  ///@param id: houseId(familyId)
+  static Future toNoticeDetail(BuildContext context, dynamic noticeId) {
+    return Application.router.navigateTo(
+      context,
+      '${Routes.noticeDetail}/$noticeId',
     );
   }
 
@@ -246,7 +263,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.editMember}/$id/${edit ? 1 : 0}',
-      transition: TransitionType.cupertino,
+      transition: TransitionType.material,
     );
   }
 }

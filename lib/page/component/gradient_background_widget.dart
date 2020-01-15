@@ -107,7 +107,7 @@ class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
                 ),
               ),
             ),
-            child
+            child??Container()
           ],
         ),
       ),

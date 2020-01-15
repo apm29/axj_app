@@ -1,9 +1,12 @@
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/repository.dart';
-import 'package:axj_app/page/component/bottom_fade_container.dart';
+import 'package:axj_app/page/component/image_picker_widget.dart';
+import 'package:axj_app/page/notice/notice_detail.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/route/route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -29,8 +32,8 @@ class NoticeSlivers extends StatelessWidget {
       },
       builder: (context, state) => SliverList(
         delegate: SliverChildBuilderDelegate(
-            (context, index) => NoticeItemWidget(state.noticeList[index]),
-            childCount: state.noticeList?.length ?? 0),
+            (context, index) => NoticeItemWidget(state.latestNoticeList[index]),
+            childCount: state.latestNoticeList?.length ?? 0),
       ),
       converter: (store) => store.state.homePageState,
     );
@@ -47,69 +50,137 @@ class NoticeItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var styleBody =
+        Theme.of(context).textTheme.overline.copyWith(color: Colors.white70);
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      margin:
+          EdgeInsets.symmetric(vertical: 4, horizontal: 12).copyWith(bottom: 0),
       child: Card(
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: 200,
-          ),
-          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Flexible(
-                flex: 7,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      notice.noticeTitle,
-                      style: Theme.of(context).textTheme.subtitle,
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    BottomFadeContainer(
-                      child: Text(
-                        notice.contentSummary,
-                        style: Theme.of(context).textTheme.body1,
+        child: InkWell(
+          onTap: () => toNoticeDetail(context, notice),
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: 200,
+            ),
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Flexible(
+                  flex: 7,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Hero(
+                        tag: notice.noticeTitle,
+                        child: Text(
+                          notice.noticeTitle,
+                          style: Theme.of(context).textTheme.subtitle,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    Text(
-                      notice.createTime,
-                      style: Theme.of(context).textTheme.overline,
-                    ),
-                    Text(
-                      notice.companyName,
-                      style: Theme.of(context).textTheme.overline,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 18,
+                      ),
+                      Text(
+                        notice.formattedCreatedTime,
+                        style: Theme.of(context).textTheme.overline,
+                      ),
+                      Text(
+                        notice.companyName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .overline
+                            .copyWith(color: Theme.of(context).accentColor),
+                      ),
+                      Divider(),
+                      Expanded(
+                        child: Hero(
+                          tag: notice.noticeContent,
+                          flightShuttleBuilder:
+                              (context, animation, d, from, to) {
+                            return Text(
+                              notice.contentSummary,
+                              style: TextStyleTween(
+                                begin: styleBody,
+                                end: Theme.of(context).textTheme.body1
+                              ).transform(animation.value),
+                              maxLines: 5,
+                              overflow: TextOverflow.fade,
+                            );
+                          },
+                          child: Text(
+                            notice.contentSummary,
+                            style: styleBody,
+                            maxLines: 5,
+                            overflow: TextOverflow.fade,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Flexible(
-                flex: notice.hasImage ? 4 : 0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Expanded(
-                      child: notice.hasImage
-                          ? Image.network(
-                              notice.firstImage,
-                              fit: BoxFit.fitHeight,
-                            )
-                          : Container(),
-                    ),
-                  ],
+                SizedBox(
+                  width: notice.hasImage ? 12 : 0,
                 ),
-              )
-            ],
+                Flexible(
+                  flex: notice.hasImage ? 4 : 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Expanded(
+                        child: notice.hasImage
+                            ? Material(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6)),
+                                clipBehavior: Clip.antiAlias,
+                                type: MaterialType.card,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: <Widget>[
+                                    Hero(
+                                      tag: notice.firstImage,
+                                      child: Image.network(
+                                        notice.firstImage,
+                                        fit: BoxFit.fitHeight,
+                                        loadingBuilder: defaultLoadingBuilder,
+                                      ),
+                                    ),
+                                    DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment(1.0, 1.0),
+                                          end: Alignment(0.0, 0.5),
+                                          colors: <Color>[
+                                            Color(0xF0000000),
+                                            Color(0x00000000),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  toNoticeDetail(BuildContext context, Notice notice) {
+    //AppRouter.toNoticeDetail(context, notice.noticeId);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => NoticeDetailPage(
+          notice: notice,
         ),
       ),
     );

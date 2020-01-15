@@ -1,4 +1,5 @@
 import 'package:axj_app/model/bean/notice/notice_type.dart';
+import 'package:intl/intl.dart';
 
 class Notice {
   int noticeId;
@@ -65,14 +66,28 @@ class Notice {
     return data;
   }
 
-  int get summaryCount=>hasImage?30:60;
+  int get summaryCount => hasImage ? 60 : 100;
 
-  String get contentSummary => (noticeContent.length > summaryCount
-      ? noticeContent.substring(0, summaryCount)
-      : noticeContent)+'...';
+  String get contentSummary =>
+      (noticeContent.length > summaryCount
+          ? noticeContent.substring(0, summaryCount)
+          : noticeContent) +
+      '...';
 
   bool get hasImage =>
       noticeBanner.isNotEmpty && noticeBanner.any((src) => src.isNotEmpty);
 
   String get firstImage => noticeBanner.firstWhere((src) => src.isNotEmpty);
+
+  DateFormat get dateFormat => DateFormat("yyyy年MM月dd日 HH:mm:ss");
+
+  String get formattedCreatedTime =>
+      dateFormat.format(DateTime.tryParse(createTime).toLocal());
+
+  @override
+  String toString() {
+    return 'Notice{noticeId: $noticeId, noticeTitle: $noticeTitle, noticeContent: $noticeContent, noticeBanner: $noticeBanner, noticeType: $noticeType, noticeScope: $noticeScope, districtId: $districtId, userId: $userId, companyId: $companyId, userName: $userName, nickName: $nickName, companyName: $companyName, createTime: $createTime, orderNo: $orderNo, likeNum: $likeNum, commentNum: $commentNum, shareNum: $shareNum, isLike: $isLike, types: $types}';
+  }
+
+
 }

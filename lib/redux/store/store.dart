@@ -28,8 +28,6 @@ class AppState {
 
   Settings settings;
 
-
-
   HashSet refreshPool = HashSet();
 
   bool needRefresh(token) {
@@ -106,6 +104,9 @@ class HomePageState {
   bool hideBottomNavigation = false;
 
   List<Notice> noticeList = [];
+
+  List<Notice> get latestNoticeList =>
+      noticeList.length > 3 ? noticeList.sublist(0, 3) : noticeList;
 
   HomePageState({ActiveTab currentTab})
       : this.currentTab = currentTab ?? ActiveTab.Home;
@@ -191,7 +192,7 @@ final homePageReducer = combineReducers<HomePageState>(
     ),
     TypedReducer<HomePageState, HomeScrollAction>(
       (state, action) {
-        return state;//..hideBottomNavigation = action.hide;
+        return state; //..hideBottomNavigation = action.hide;
       },
     ),
   ],

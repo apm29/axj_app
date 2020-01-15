@@ -97,31 +97,33 @@ class TaskBuilderState extends State<TaskBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<AppState>(
-      builder: (context, store) {
-        if (store.state.needRefresh(refreshToken)) {
-          future = widget.task();
-          store.state.cancelRefresh(refreshToken);
-        }
-        return FutureBuilder(
-          future: future,
-          builder: (context, snapshot) {
-            return AnimatedSwitcher(
-              child: buildChild(context, snapshot),
-              transitionBuilder: (child, animation) {
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(1.0, 0.0),
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
-                );
-              },
-              duration: Duration(milliseconds: 200),
-            );
-          },
-        );
-      },
+    return Material(
+      child: StoreBuilder<AppState>(
+        builder: (context, store) {
+          if (store.state.needRefresh(refreshToken)) {
+            future = widget.task();
+            store.state.cancelRefresh(refreshToken);
+          }
+          return FutureBuilder(
+            future: future,
+            builder: (context, snapshot) {
+              return AnimatedSwitcher(
+                child: buildChild(context, snapshot),
+                transitionBuilder: (child, animation) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+                duration: Duration(milliseconds: 200),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

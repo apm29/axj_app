@@ -73,7 +73,7 @@ class PersonalSettingsPage extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    StoreProvider.of<AppState>(context).dispatch(VoidTaskSimulationAction(
+                    StoreProvider.of<AppState>(context).dispatch(ExplicitTaskAction(
                         StoreProvider.of<AppState>(context).state.settings.init, context));
                   },
                   child: Text(S.of(context).myHouseTitle),
@@ -101,7 +101,7 @@ class PersonalSettingsPage extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    StoreProvider.of<AppState>(context).dispatch(VoidTaskSimulationAction(
+                    StoreProvider.of<AppState>(context).dispatch(ExplicitTaskAction(
                       () async {
                         await Future.delayed(Duration(seconds: 3));
                       },

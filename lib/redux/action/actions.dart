@@ -162,12 +162,12 @@ class TabSwitchAction implements AppAction {
   }
 }
 
-class VoidTaskSimulationAction implements VoidTaskAction {
+class ExplicitTaskAction implements VoidTaskAction {
   AsyncVoidTask task;
   final BuildContext context;
   bool showMask = true;
 
-  VoidTaskSimulationAction(this.task, this.context);
+  ExplicitTaskAction(this.task, this.context);
 }
 
 class ResultTaskSimulationAction implements ResultTaskAction<int> {

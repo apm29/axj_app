@@ -297,4 +297,14 @@ class Repository {
       },
     );
   }
+
+  static Future<BaseResp<Notice>> getNoticeDetail(String noticeId) {
+    return Api().post(
+      '/business/notice/getOneNotice',
+      formData: {
+        'noticeId':noticeId
+      },
+      processor: (s)=>Notice.fromJsonMap(s),
+    );
+  }
 }
