@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/utils.dart';
 import 'package:flutter/material.dart';
 
 ///
@@ -27,6 +28,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
     final ColorTween tween2 =
         ColorTween(begin: Colors.transparent, end: endColor.withAlpha(0xdd));
     double easeInExpoPercent = Curves.easeInExpo.transform(percent);
+    //Appbar顶框高度
     final double elevation = easeInExpoPercent * 8.0;
     final double realElevation = elevation > 6.0 ? elevation : 0.0;
 
@@ -45,17 +47,17 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
     final TextStyleTween styleTween = TextStyleTween(
       begin: textStyle.copyWith(color: Colors.white),
       end: textStyle.copyWith(
-        fontSize: 1,
+        fontSize: 0,
         color: Colors.white.withAlpha(0x00),
       ),
     );
-    double alpha = easeInExpoPercent;
+    double alpha = percent;
 
     final TextStyle buttonTextStyle = Theme.of(context).textTheme.caption;
     final TextStyleTween buttonStyleTween = TextStyleTween(
       begin: buttonTextStyle.copyWith(color: Colors.white70),
       end: buttonTextStyle.copyWith(
-        fontSize: 1,
+        fontSize: 0,
         color: Colors.white70.withAlpha(0x00),
       ),
     );
@@ -72,9 +74,9 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
     final double buttonMargin = 12.0;
     double systemPadding = 20.0;
     final marginBottomOfButtons = Tween(
-        begin: (bottomHeight - buttonSize) / 2.0,
-        end: (minExtent - buttonSize - systemPadding) / 2.0);
-
+      begin: 0.0, //(bottomHeight - buttonSize) / 2.0,
+      end: 0.0, //(minExtent - buttonSize - systemPadding) / 2.0
+    );
     final screenWidth = MediaQuery.of(context).size.width;
     int buttonCount = buttonTextList.length;
     // |--buttonHorizontalDistance--|--buttonMargin--|--buttonSize+TextWidth--|--buttonMargin--|
@@ -91,8 +93,13 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
             textLength) /
         (buttonCount + 1);
 
+    final Tween<double> buttonHPaddingTween =
+        Tween(begin: buttonHorizontalDistance, end: 0.0);
+    final Tween<double> buttonVPaddingTween = Tween(
+      begin: (bottomHeight - buttonSize) / 2.0,
+      end: (minExtent - systemPadding - buttonSize) / 2,
+    );
     final Function calculateButtonLeftAtBottom = (int index) {
-      double distance = buttonHorizontalDistance * (index + 1);
       num body = (index == 0
               ? 0
               : buttonTextList
@@ -103,7 +110,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                   )
                   .reduce((sum, size) => sum + size)) +
           buttonSize * index;
-      return distance + body + (2 * index) * buttonMargin;
+      return body + (2 * index) * buttonMargin;
     };
 
     final Function calculateButtonLeftAtTop = (int index) {
@@ -112,7 +119,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
 
     final ColorTween iconColorTween = ColorTween(
       begin: Colors.white70,
-      end: Colors.grey,
+      end: Theme.of(context).accentColor,
     );
 
     return Stack(
@@ -149,15 +156,18 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
-              backgroundBlendMode: BlendMode.screen,
             ),
             child: Stack(
               children: <Widget>[
                 Opacity(
                   opacity: alpha,
                   child: Padding(
-                    padding: EdgeInsets.only(top: systemPadding),
+                    padding: EdgeInsets.only(
+                        top: systemPadding +
+                            (minExtent - systemPadding - 36) / 2.0,
+                        right: 16),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(
                           width: buttonMargin * buttonCount * 2 +
@@ -168,18 +178,35 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                             height: 36,
                             padding: EdgeInsets.only(left: 16),
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6)),
-                                color: Colors.grey[200]),
+                              border: Border.all(
+                                  color: Theme.of(context).accentColor),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6)),
+                              color: Theme.of(context)
+                                  .floatingActionButtonTheme.backgroundColor,
+                            ),
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              "搜索",
-                              style: Theme.of(context).textTheme.caption,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "搜索",
+                                    style: Theme.of(context).textTheme
+                                        .caption.copyWith(
+                                      color: Theme.of(context)
+                                          .floatingActionButtonTheme.foregroundColor
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.search,size: buttonSize,),
+                                  onPressed: null,
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        IconButton(icon: Icon(Icons.search), onPressed: null),
                       ],
                     ),
                   ),
@@ -189,8 +216,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                   height: sizeTween.transform(percent),
                   child: Text(
                     S.of(context).appName,
-                    style: styleTween
-                        .transform(easeInExpoPercent),
+                    style: styleTween.transform(easeInExpoPercent),
                   ),
                 ),
                 Container(
@@ -222,28 +248,39 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                               buttonTextList.indexOf(s)),
                           end: calculateButtonLeftAtTop(
                               buttonTextList.indexOf(s)),
-                        ).transform( easeInExpoPercent),
+                        ).transform(easeInExpoPercent),
                         child: InkWell(
-                          onTap: (){},
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                width: buttonMargin,
-                              ),
-                              Icon(
-                                buttonIconList[buttonTextList.indexOf(s)],
-                                size: buttonSize,
-                                color: iconColorTween.transform( easeInExpoPercent),
-                              ),
-                              Container(
-                                width: buttonMargin,
-                              ),
-                              Text(
-                                s,
-                                style: buttonStyleTween.transform(
-                                    easeInExpoPercent),
-                              ),
-                            ],
+                          onTap: () {
+                            showAppToast(s * 5);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: buttonHPaddingTween
+                                  .transform(easeInExpoPercent),
+                              vertical: buttonVPaddingTween
+                                  .transform(easeInExpoPercent),
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  width: buttonMargin,
+                                ),
+                                Icon(
+                                  buttonIconList[buttonTextList.indexOf(s)],
+                                  size: buttonSize,
+                                  color: iconColorTween
+                                      .transform(easeInExpoPercent),
+                                ),
+                                Container(
+                                  width: buttonMargin,
+                                ),
+                                Text(
+                                  s,
+                                  style: buttonStyleTween
+                                      .transform(easeInExpoPercent),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

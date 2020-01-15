@@ -3,6 +3,7 @@ import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 
 ///
 /// author : ciih
@@ -11,7 +12,6 @@ import 'package:axj_app/redux/store/store.dart';
 ///
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:oktoast/oktoast.dart';
 
 abstract class AppAction {}
 
@@ -96,21 +96,21 @@ Future<bool> loginAndInit(BuildContext context, Future<BaseResp> api) async {
       BaseResp<UserInfoDetail> userInfoResp = await Repository.getUserInfo();
 
       if (userInfoResp.success) {
-        showToast("登录成功");
+        showAppToast("登录成功");
         var store = StoreProvider.of<AppState>(context, listen: false);
         store.state.userState.userInfo = userInfoResp.data;
         await store.state.settings.init();
         return true;
       } else {
-        showToast("登录失败:${userInfoResp.text}");
+        showAppToast("登录失败:${userInfoResp.text}");
       }
     } else {
-      showToast("登录失败:${resp.text}");
+      showAppToast("登录失败:${resp.text}");
     }
     return false;
   } catch (e) {
     print(e);
-    showToast(getErrorMessage(e));
+    showAppToast(getErrorMessage(e));
     return false;
   }
 }

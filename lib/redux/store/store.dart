@@ -188,7 +188,7 @@ final homePageReducer = combineReducers<HomePageState>(
     ),
     TypedReducer<HomePageState, HomeScrollAction>(
       (state, action) {
-        return state..hideBottomNavigation = action.hide;
+        return state;//..hideBottomNavigation = action.hide;
       },
     ),
   ],

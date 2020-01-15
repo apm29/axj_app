@@ -11,12 +11,12 @@ import 'package:axj_app/plugin/permission.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -258,14 +258,14 @@ class _AuthFacePageState extends State<AuthFacePage> {
             await Future.delayed(Duration(seconds: 2));
           }
           //重新获取信息
-          showToast(verifyResp.text + '\r\n' + verifyStatusResp.text);
+          showAppToast(verifyResp.text + '\r\n' + verifyStatusResp.text);
           StoreProvider.of<AppState>(context).dispatch(AppInitAction(context));
           await verifyResultHint(context, verifyResp, verifyStatusResp);
           return verifyStatusResp.data.isVerified;
         }
       } catch (e) {
         print(e);
-        showToast(getErrorMessage(e));
+        showAppToast(getErrorMessage(e));
         return false;
       } finally {
         setState(() {

@@ -75,7 +75,7 @@ class FlutterReduxApp extends StatelessWidget {
             ],
             supportedLocales: S.delegate.supportedLocales,
             theme: twitterLight,
-            darkTheme: twitterLight,
+            darkTheme: twitterDark,
             onGenerateRoute: Application.router.generator,
             locale: locale,
             home: SplashPage(),

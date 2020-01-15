@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 /// description :
 ///
 class GradientBackgroundWidget extends StatefulWidget {
+  final Widget child;
+
+  const GradientBackgroundWidget({Key key, this.child}) : super(key: key);
   @override
   _GradientBackgroundWidgetState createState() =>
       _GradientBackgroundWidgetState();
@@ -74,42 +77,74 @@ class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
             SizedBox.expand(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: WaveAnimationWidget(),
-              ),
-            ),
-            SizedBox.expand(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: WaveAnimationWidget(
-                  offset: pi/4,
+                child: WaveWidget(
+                  offset: pi / 4,
                   duration: Duration(seconds: 8),
                   height: 120,
+                  controller: colorController,
                 ),
               ),
             ),
             SizedBox.expand(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: WaveAnimationWidget(
-                  offset: pi*2/3,
+                child: WaveWidget(
+                  offset: pi * 2 / 3,
                   duration: Duration(seconds: 10),
                   height: 160,
+                  controller: colorController,
                 ),
               ),
             ),
             SizedBox.expand(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: WaveAnimationWidget(
-                  offset: pi/2,
+                child: WaveWidget(
+                  offset: pi / 2,
                   duration: Duration(seconds: 12),
                   height: 160,
+                  controller: colorController,
                 ),
               ),
             ),
+            child
           ],
         ),
       ),
+      child: widget.child,
+    );
+  }
+}
+
+class WaveWidget extends StatelessWidget {
+  final double height;
+  final Duration duration;
+  final double offset;
+  final AnimationController controller;
+
+  const WaveWidget({
+    Key key,
+    this.height: 100,
+    this.duration: const Duration(seconds: 6),
+    this.offset: 0,
+    this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      builder: (context, child) => LayoutBuilder(
+        builder: (context, constraint) => SizedBox(
+          width: constraint.maxWidth,
+          height: height,
+          child: CustomPaint(
+            foregroundPainter: CurvePainter(
+              Tween(begin: 0.0, end: 2 * pi).evaluate(controller) + offset,
+            ),
+          ),
+        ),
+      ),
+      animation: controller,
     );
   }
 }
@@ -158,20 +193,18 @@ class _WaveAnimationWidgetState extends State<WaveAnimationWidget>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      builder: (context, child) {
-        return LayoutBuilder(
-          builder: (context, constraint) => SizedBox(
-            width: constraint.maxWidth,
-            height: widget.height,
-            child: CustomPaint(
-              foregroundPainter: CurvePainter(
-                Tween(begin: 0.0, end: 2 * pi).evaluate(controller) +
-                    widget.offset,
-              ),
+      builder: (context, child) => LayoutBuilder(
+        builder: (context, constraint) => SizedBox(
+          width: constraint.maxWidth,
+          height: widget.height,
+          child: CustomPaint(
+            foregroundPainter: CurvePainter(
+              Tween(begin: 0.0, end: 2 * pi).evaluate(controller) +
+                  widget.offset,
             ),
           ),
-        );
-      },
+        ),
+      ),
       animation: controller,
     );
   }

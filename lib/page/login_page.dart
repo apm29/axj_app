@@ -7,10 +7,11 @@ import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 ///
 /// author : ciih
@@ -115,7 +116,7 @@ class LoginPage extends StatelessWidget {
   Future<void> _register(BuildContext context) async {
     var resMap = await AppRouter.toRegister(context);
     if (resMap != null && resMap is Map) {
-      store.dispatch(
+      StoreProvider.of<AppState>(context).dispatch(
           LoginAction(resMap[keyUserName], resMap[keyPassword], context));
     }
   }
@@ -416,20 +417,20 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
   Future _sendSmsCode() async {
     try {
       BaseResp resp = await Repository.sendVerifyCode(_phoneController.text);
-      showToast(resp.text);
+      showAppToast(resp.text);
       FocusScope.of(context).requestFocus(_smsFocusNode);
     } catch (e) {
       print(e);
-      showToast(getErrorMessage(e));
+      showAppToast(getErrorMessage(e));
     }
   }
 
   void _login(BuildContext context) {
     if (tabController.index == 0) {
-      store.dispatch(FastLoginAction(
+      StoreProvider.of<AppState>(context).dispatch(FastLoginAction(
           _phoneController.text, _smsController.text, context));
     } else {
-      store.dispatch(
+      StoreProvider.of<AppState>(context).dispatch(
           LoginAction(_nameController.text, _wordController.text, context));
     }
   }

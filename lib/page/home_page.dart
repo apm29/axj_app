@@ -48,7 +48,6 @@ class HomePage extends StatelessWidget {
             return store.state.homePageState.hideBottomNavigation;
           },
           builder: (context, hide) {
-            print(hide);
             return AutoSlideDownWidget(
               hide: hide,
               child: buildBottomNavigationBar(context),
@@ -58,12 +57,22 @@ class HomePage extends StatelessWidget {
         endDrawer: Drawer(
           child: ReduxDevTools(store),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            AppRouter.toPersonal(context);
+        floatingActionButton: StoreConnector<AppState, bool>(
+          converter: (store) {
+            return store.state.homePageState.hideBottomNavigation;
           },
-          elevation: 10,
+          builder: (context, hide) {
+            return AutoSlideDownWidget(
+              hide: hide,
+              child:  FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  AppRouter.toPersonal(context);
+                },
+                elevation: 10,
+              ),
+            );
+          },
         ),
         extendBody: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -78,7 +87,7 @@ class HomePage extends StatelessWidget {
           ActiveTab.values.indexOf(store.state.homePageState.currentTab),
       builder: (ctx, index) => Theme(
         data: Theme.of(context).copyWith(
-          primaryColor: Color(0xff1a7fd5),
+          primaryColor: Theme.of(context).accentColor,
         ),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: marginHorizontal),

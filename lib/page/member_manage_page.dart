@@ -2,15 +2,14 @@ import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/enum_config.dart';
 import 'package:axj_app/model/bean/family_member.dart';
-import 'package:axj_app/model/bean/member_detail.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/page/component/speed_dial.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/route/route.dart';
+import 'package:axj_app/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
 
 class MemberManagePage extends StatefulWidget {
   final houseId;
@@ -145,10 +144,10 @@ class _MemberManagePageState extends State<MemberManagePage> {
                     ),
                   );
                   if (result.success) {
-                    showToast(S.of(context).deleteLabel);
+                    showAppToast(S.of(context).deleteLabel);
                     Navigator.of(context).pop(true);
                   } else {
-                    showToast(result.text);
+                    showAppToast(result.text);
                   }
                 }();
               },
@@ -164,7 +163,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
   _onExamine(FamilyMember familyMember) {
     if (familyMember.examinable) {
     } else {
-      showToast(
+      showAppToast(
           S.of(context).recordViewNoAuthorizationHint(familyMember.membername));
     }
   }

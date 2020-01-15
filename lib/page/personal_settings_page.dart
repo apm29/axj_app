@@ -35,7 +35,8 @@ class PersonalSettingsPage extends StatelessWidget {
               ];
             },
             onSelected: (locale) {
-              store.dispatch(ChangeLocaleAction(locale));
+              StoreProvider.of<AppState>(context).dispatch(ChangeLocaleAction
+                (locale));
             },
           ),
         ],
@@ -66,32 +67,32 @@ class PersonalSettingsPage extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    store.dispatch(LogoutAction(context));
+                    StoreProvider.of<AppState>(context).dispatch(LogoutAction(context));
                   },
                   child: Text(S.of(context).logoutLabel),
                 ),
                 RaisedButton(
                   onPressed: () {
-                    store.dispatch(VoidTaskSimulationAction(
-                        store.state.settings.init, context));
+                    StoreProvider.of<AppState>(context).dispatch(VoidTaskSimulationAction(
+                        StoreProvider.of<AppState>(context).state.settings.init, context));
                   },
                   child: Text(S.of(context).myHouseTitle),
                 ),
                 RaisedButton(
                   onPressed: () {
-                    store.dispatch(ChangeHouseAction(context));
+                    StoreProvider.of<AppState>(context).dispatch(ChangeHouseAction(context));
                   },
                   child: Text(S.of(context).changeHouseLabel),
                 ),
                 RaisedButton(
                   onPressed: () {
-                    store.dispatch(ChangeRoleAction(context));
+                    StoreProvider.of<AppState>(context).dispatch(ChangeRoleAction(context));
                   },
                   child: Text(S.of(context).changeRoleLabel),
                 ),
                 RaisedButton(
                   onPressed: () {
-                    store.dispatch(ChangeRoleAction(
+                    StoreProvider.of<AppState>(context).dispatch(ChangeRoleAction(
                       context,
                       roleCodeRequest: PoliceManCode,
                     ));
@@ -100,7 +101,7 @@ class PersonalSettingsPage extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    store.dispatch(VoidTaskSimulationAction(
+                    StoreProvider.of<AppState>(context).dispatch(VoidTaskSimulationAction(
                       () async {
                         await Future.delayed(Duration(seconds: 3));
                       },
@@ -111,7 +112,7 @@ class PersonalSettingsPage extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    store.dispatch(ResultTaskSimulationAction(
+                    StoreProvider.of<AppState>(context).dispatch(ResultTaskSimulationAction(
                       () async {
                         await Future.delayed(Duration(seconds: 3));
                         return 1;

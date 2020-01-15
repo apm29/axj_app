@@ -1,6 +1,5 @@
 import 'package:axj_app/generated/i18n.dart';
 import 'package:flutter/material.dart';
-import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/car.dart';
 import 'package:axj_app/model/bean/car_info.dart';
 import 'package:axj_app/model/bean/e_bike.dart';

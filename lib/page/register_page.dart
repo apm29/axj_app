@@ -4,9 +4,9 @@ import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
 
 
 const keyUserName = "userName";
@@ -324,7 +324,7 @@ class _RegisterColumnState extends State<RegisterColumn> {
     if (Form.of(context).validate()) {
       BaseResp resp = await Repository.register(_phoneController.text,
           _smsController.text, _wordController.text, _nameController.text);
-      showToast(resp.text);
+      showAppToast(resp.text);
       if(resp.success) {
         Navigator.of(context).pop({
           keyUserName: _nameController.text,
@@ -339,9 +339,9 @@ class _RegisterColumnState extends State<RegisterColumn> {
       try {
         BaseResp resp = await Repository.sendVerifyCode(_phoneController.text,
                   isRegister: true);
-        showToast(resp.text);
+        showAppToast(resp.text);
       } catch (e) {
-        showToast(getErrorMessage(e));
+        showAppToast(getErrorMessage(e));
       }
 
     }

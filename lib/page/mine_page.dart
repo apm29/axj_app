@@ -56,7 +56,7 @@ class MinePage extends StatelessWidget {
                   hint: S.of(context).myHouseActionTileHint,
                   iconData: CupertinoIcons.bell_solid,
                   onTap: () async {
-                    store.dispatch(CheckAuthAndRouteAction(context,
+                    StoreProvider.of<AppState>(context).dispatch(CheckAuthAndRouteAction(context,
                         routeName: Routes.myHouse));
                   },
                 ),
@@ -70,9 +70,9 @@ class MinePage extends StatelessWidget {
                   hint: S.of(context).familyMemberActionTileHint,
                   iconData: CupertinoIcons.group_solid,
                   onTap: () async {
-                    store.dispatch(CheckAuthAndRouteAction(context,
+                    StoreProvider.of<AppState>(context).dispatch(CheckAuthAndRouteAction(context,
                         routeGenerator: () =>
-                            '${Routes.myMember}/${store.state.currentHouse.houseId}'));
+                            '${Routes.myMember}/${StoreProvider.of<AppState>(context).state.currentHouse.houseId}'));
                   },
                 ),
               ),
@@ -85,7 +85,7 @@ class MinePage extends StatelessWidget {
                   hint: S.of(context).myVehicleActionTileHint,
                   iconData: CupertinoIcons.car,
                   onTap: () async {
-                    store.dispatch(
+                    StoreProvider.of<AppState>(context).dispatch(
                       CheckLoginAndRouteAction(context,
                           routeName: Routes.myVehicle),
                     );

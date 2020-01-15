@@ -4,10 +4,10 @@ import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/plugin/permission.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum ImageSourceType { Gallery, Camera, All }
@@ -166,11 +166,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         if (imageResp.success) {
           controller.url = imageResp.data.filePath;
         } else {
-          showToast(imageResp.text);
+          showAppToast(imageResp.text);
         }
       }
     } catch (e) {
-      showToast(getErrorMessage(e));
+      showAppToast(getErrorMessage(e));
     } finally {
       setState(() {
         loading = false;

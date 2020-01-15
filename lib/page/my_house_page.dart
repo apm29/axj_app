@@ -6,10 +6,10 @@ import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/route/route.dart';
+import 'package:axj_app/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:oktoast/oktoast.dart';
 
 class MyHousePage extends StatelessWidget {
   @override
@@ -43,7 +43,7 @@ class MyHousePage extends StatelessWidget {
                     return _buildModal(context, resp.data);
                   });
             } else {
-              showToast(resp.text);
+              showAppToast(resp.text);
             }
           }();
         },
