@@ -255,3 +255,9 @@ class RefreshAction{
 
   RefreshAction(this.refreshToken);
 }
+
+class HomeScrollAction implements AppAction{
+  final bool hide;
+
+  HomeScrollAction(this.hide);
+}

@@ -1,5 +1,6 @@
 import 'package:axj_app/page/component/gradient_background_widget.dart';
 import 'package:axj_app/page/component/home_appbar_widget.dart';
+import 'package:axj_app/page/component/skeleton_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -16,48 +17,21 @@ class MainPage extends StatelessWidget {
         GradientBackgroundWidget(),
         CustomScrollView(
           slivers: <Widget>[
-//            SliverAppBar(
-//              stretch: true,
-//              onStretchTrigger: () {
-//                // Function callback for stretch
-//                return;
-//              },
-//              expandedHeight: 200.0,
-//              flexibleSpace: FlexibleSpaceBar(
-//                stretchModes: <StretchMode>[
-//                  StretchMode.zoomBackground,
-//                  StretchMode.blurBackground,
-//                  StretchMode.fadeTitle,
-//                ],
-//                collapseMode: CollapseMode.parallax,
-//                centerTitle: true,
-//                title: Text(S.of(context).appName),
-//                background: Stack(
-//                  fit: StackFit.expand,
-//                  children: [
-//                    Image.asset(
-//                      'assets/images/login_banner.jpg',
-//                      fit: BoxFit.cover,
-//                    ),
-//                    const DecoratedBox(
-//                      decoration: BoxDecoration(
-//                        gradient: LinearGradient(
-//                          begin: Alignment(0.0, -1),
-//                          end: Alignment(0.0, 0.7),
-//                          colors: <Color>[
-//                            Color(0xF0000000),
-//                            Color(0x00000000),
-//                          ],
-//                        ),
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//              ),
-//            ),
             SliverPersistentHeader(
               delegate: HomeAppbarDelegate(),
               pinned: true,
+            ),
+            SliverToBoxAdapter(
+              child: SkeletonWidget(skeletonType: SkeletonType.Card,),
+            ),
+            SliverToBoxAdapter(
+              child: SkeletonWidget(skeletonType: SkeletonType.Card,),
+            ),
+            SliverToBoxAdapter(
+              child: SkeletonWidget(skeletonType: SkeletonType.Card,),
+            ),
+            SliverToBoxAdapter(
+              child: SkeletonWidget(skeletonType: SkeletonType.Card,),
             ),
             SliverToBoxAdapter(
               child: Text(

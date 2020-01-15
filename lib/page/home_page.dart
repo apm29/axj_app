@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:axj_app/page/component/auto_slide_down_widget.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
@@ -7,6 +8,7 @@ import 'package:axj_app/page/mine_page.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_dev_tools/flutter_redux_dev_tools.dart';
 
@@ -18,35 +20,54 @@ import 'package:flutter_redux_dev_tools/flutter_redux_dev_tools.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StoreConnector<AppState, ActiveTab>(
-        converter: (store) {
-          return store.state.homePageState.currentTab;
-        },
-        builder: (ctx, currentTab) {
-          switch (currentTab) {
-            case ActiveTab.Home:
-              return MainPage();
-            case ActiveTab.Mine:
-              return MinePage();
-            default:
-              throw Exception('Unknow index enum: $currentTab');
-          }
-        },
+    return NotificationListener<UserScrollNotification>(
+      onNotification: (notification) {
+        StoreProvider.of<AppState>(context).dispatch(
+          HomeScrollAction(notification.direction == ScrollDirection.reverse),
+        );
+        return false;
+      },
+      child: Scaffold(
+        body: StoreConnector<AppState, ActiveTab>(
+          converter: (store) {
+            return store.state.homePageState.currentTab;
+          },
+          builder: (ctx, currentTab) {
+            switch (currentTab) {
+              case ActiveTab.Home:
+                return MainPage();
+              case ActiveTab.Mine:
+                return MinePage();
+              default:
+                throw Exception('Unknow index enum: $currentTab');
+            }
+          },
+        ),
+        bottomNavigationBar: StoreConnector<AppState, bool>(
+          converter: (store) {
+            return store.state.homePageState.hideBottomNavigation;
+          },
+          builder: (context, hide) {
+            print(hide);
+            return AutoSlideDownWidget(
+              hide: hide,
+              child: buildBottomNavigationBar(context),
+            );
+          },
+        ),
+        endDrawer: Drawer(
+          child: ReduxDevTools(store),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            AppRouter.toPersonal(context);
+          },
+          elevation: 10,
+        ),
+        extendBody: true,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
-      bottomNavigationBar: buildBottomNavigationBar(context),
-      endDrawer: Drawer(
-        child: ReduxDevTools(store),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          AppRouter.toPersonal(context);
-        },
-        elevation: 10,
-      ),
-      extendBody: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
