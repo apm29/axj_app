@@ -123,7 +123,11 @@ checkAuth(Store<AppState> store, CheckAuthAction action, NextDispatcher next) {
 checkVoidTask(
     Store<AppState> store, VoidTaskAction action, NextDispatcher next) {
   () async {
-    await Navigator.of(action.context).push(TaskModal(action.task));
+    if(action.showMask) {
+      await Navigator.of(action.context).push(TaskModal(action.task));
+    }else{
+      await action.task();
+    }
     next(action);
   }();
 }

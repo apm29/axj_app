@@ -83,7 +83,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
     double textLength = buttonTextList
         .map(
           (s) =>
-              calcTrueTextSize(buttonStyleTween.transform(percent).fontSize, s),
+              calcTrueTextWidth(buttonStyleTween.transform(percent).fontSize, s),
         )
         .reduce((sum, size) => sum + size);
     //底部button平均间距
@@ -105,7 +105,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
               : buttonTextList
                   .sublist(0, index)
                   .map(
-                    (s) => calcTrueTextSize(
+                    (s) => calcTrueTextWidth(
                         buttonStyleTween.transform(percent).fontSize, s),
                   )
                   .reduce((sum, size) => sum + size)) +
@@ -303,14 +303,5 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
     return true;
-  }
-
-  double calcTrueTextSize(double textSize, String text) {
-    // 测量实际长度
-    var paragraph = ParagraphBuilder(ParagraphStyle(fontSize: textSize))
-      ..addText(text);
-    var p = paragraph.build()
-      ..layout(ParagraphConstraints(width: double.infinity));
-    return p.minIntrinsicWidth;
   }
 }

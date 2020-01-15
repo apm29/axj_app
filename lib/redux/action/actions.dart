@@ -21,6 +21,7 @@ typedef AsyncVoidTask = Future<void> Function();
 abstract class VoidTaskAction {
   final AsyncVoidTask task;
   final BuildContext context;
+  bool showMask = true;
 
   VoidTaskAction(this.task, this.context);
 }
@@ -164,6 +165,7 @@ class TabSwitchAction implements AppAction {
 class VoidTaskSimulationAction implements VoidTaskAction {
   AsyncVoidTask task;
   final BuildContext context;
+  bool showMask = true;
 
   VoidTaskSimulationAction(this.task, this.context);
 }
@@ -260,4 +262,15 @@ class HomeScrollAction implements AppAction{
   final bool hide;
 
   HomeScrollAction(this.hide);
+}
+
+class ImplicitTaskAction implements AppAction,VoidTaskAction{
+
+  final AsyncVoidTask task;
+  final BuildContext context;
+  bool showMask = false;
+
+  ImplicitTaskAction(this.task, this.context);
+
+
 }

@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:axj_app/model/bean/house_info.dart';
+import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/cache.dart';
@@ -103,6 +104,8 @@ class HomePageState {
   final ActiveTab currentTab;
 
   bool hideBottomNavigation = false;
+
+  List<Notice> noticeList = [];
 
   HomePageState({ActiveTab currentTab})
       : this.currentTab = currentTab ?? ActiveTab.Home;

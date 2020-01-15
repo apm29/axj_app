@@ -164,3 +164,21 @@ class RoundedRectangleClipper extends CustomClipper<Path> {
     return false;
   }
 }
+
+double calcTrueTextWidth(double textSize, String text) {
+  // 测量实际长度
+  var paragraph = ParagraphBuilder(ParagraphStyle(fontSize: textSize))
+    ..addText(text);
+  var p = paragraph.build()
+    ..layout(ParagraphConstraints(width: double.infinity));
+  return p.minIntrinsicWidth;
+}
+Size calcTrueTextSize(double textSize, String text) {
+  // 测量实际长度
+  var paragraph = ParagraphBuilder(ParagraphStyle(fontSize: textSize))
+    ..addText(text);
+  var p = paragraph.build()
+    ..layout(ParagraphConstraints(width: double.infinity));
+  var lineMetrics = p.computeLineMetrics();
+  return Size(p.minIntrinsicWidth, lineMetrics.first.height*lineMetrics.length);
+}

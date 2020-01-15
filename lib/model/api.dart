@@ -60,7 +60,7 @@ class Api {
   }
 
   static bool proxyHttp = false;
-  static bool printLog = false;
+  static bool printLog = true;
   static Api _instance;
 
   static Api getInstance() {

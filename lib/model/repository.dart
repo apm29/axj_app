@@ -7,10 +7,12 @@ import 'package:axj_app/model/bean/family_member.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/member_detail.dart';
+import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/bean/user_verify_info.dart';
 import 'package:axj_app/model/bean/verify_status.dart';
+import 'package:axj_app/model/bean/notice/notice_type.dart';
 import 'package:dio/dio.dart';
 
 class Repository {
@@ -159,6 +161,7 @@ class Repository {
       },
     );
   }
+
   static Future<BaseResp<List<EBike>>> getMyEBike() {
     return Api().post(
       "/business/ebike/query",
@@ -261,6 +264,36 @@ class Repository {
       },
       processor: (s) {
         return null;
+      },
+    );
+  }
+
+  //获取信息Notice
+  static Future<BaseResp<List<Notice>>> getAllNotice() async {
+    List<NoticeType> noticeType = (await getAllNoticeType()).data;
+    return Api().post(
+      '/business/notice/getAllNewNotice',
+      formData: {'noticeType': noticeType.map((t) => t.typeId).join(',')},
+      processor: (s) {
+        if (s is List) {
+          return s
+              .map((j) => Notice.fromJsonMap(j)..types = noticeType)
+              .toList();
+        }
+        return [];
+      },
+    );
+  }
+
+  //获取信息Notice
+  static Future<BaseResp<List<NoticeType>>> getAllNoticeType() {
+    return Api().post(
+      '/business/noticeDict/getAllType',
+      processor: (s) {
+        if (s is List) {
+          return s.map((j) => NoticeType.fromJsonMap(j)).toList();
+        }
+        return [];
       },
     );
   }
