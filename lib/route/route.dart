@@ -177,7 +177,7 @@ class AppRouter {
       context,
       Routes.home,
       replace: true,
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 
@@ -185,7 +185,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.personalSettings,
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 
@@ -196,7 +196,7 @@ class AppRouter {
       Routes.home,
       replace: true,
       clearStack: true,
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 
@@ -212,7 +212,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.register,
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 
@@ -224,7 +224,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.authForm,
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 
@@ -232,7 +232,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.authFace}/$idCardNum',
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 
@@ -245,7 +245,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.myMember}/$id',
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 
@@ -263,7 +263,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.editMember}/$id/${edit ? 1 : 0}',
-      transition: TransitionType.material,
+      transition: TransitionType.native,
     );
   }
 }

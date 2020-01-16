@@ -1,14 +1,17 @@
 import 'dart:collection';
 
+import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/cache.dart';
+import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/model/settings.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
 import 'package:axj_app/redux/action/actions.dart';
@@ -99,7 +102,7 @@ class AppState {
 enum ActiveTab { Home, Mine }
 
 class HomePageState {
-  final ActiveTab currentTab;
+  ActiveTab currentTab;
 
   bool hideBottomNavigation = false;
 
@@ -111,10 +114,42 @@ class HomePageState {
   HomePageState({ActiveTab currentTab})
       : this.currentTab = currentTab ?? ActiveTab.Home;
 
+  void getNoticeList(
+    BuildContext context,
+    Store<AppState> store, {
+    bool refresh = false,
+  }) {
+    var getFromRemote = refresh || noticeList == null || noticeList.isEmpty;
+    if (getFromRemote) {
+      store.dispatch(
+        ImplicitTaskAction(
+          () async {
+            BaseResp<List<Notice>> notice = await Repository.getAllNotice();
+            noticeList = notice.data ?? [];
+          },
+          context,
+        ),
+      );
+    } else {}
+  }
+
   @override
   String toString() {
     return 'HomePageState{currentTab: $currentTab}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HomePageState &&
+          runtimeType == other.runtimeType &&
+          currentTab == other.currentTab &&
+          hideBottomNavigation == other.hideBottomNavigation &&
+          noticeList == other.noticeList;
+
+  @override
+  int get hashCode =>
+      currentTab.hashCode ^ hideBottomNavigation.hashCode ^ noticeList.hashCode;
 }
 
 class UserState {
@@ -187,10 +222,15 @@ final homePageReducer = combineReducers<HomePageState>(
   [
     TypedReducer<HomePageState, TabSwitchAction>(
       (state, action) {
-        return HomePageState(currentTab: ActiveTab.values[action.index]);
+        return state..currentTab = ActiveTab.values[action.index];
       },
     ),
     TypedReducer<HomePageState, HomeScrollAction>(
+      (state, action) {
+        return state; //..hideBottomNavigation = action.hide;
+      },
+    ),
+    TypedReducer<HomePageState, TabReselectedAction>(
       (state, action) {
         return state; //..hideBottomNavigation = action.hide;
       },

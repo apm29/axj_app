@@ -89,5 +89,6 @@ class Notice {
     return 'Notice{noticeId: $noticeId, noticeTitle: $noticeTitle, noticeContent: $noticeContent, noticeBanner: $noticeBanner, noticeType: $noticeType, noticeScope: $noticeScope, districtId: $districtId, userId: $userId, companyId: $companyId, userName: $userName, nickName: $nickName, companyName: $companyName, createTime: $createTime, orderNo: $orderNo, likeNum: $likeNum, commentNum: $commentNum, shareNum: $shareNum, isLike: $isLike, types: $types}';
   }
 
-
+  String get hashTags=>'\t#'+types.firstWhere((t)=>t.typeId==noticeType)
+      .typeName;
 }

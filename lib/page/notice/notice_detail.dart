@@ -47,6 +47,7 @@ class NoticeDetailPage extends StatelessWidget {
               collapseMode: CollapseMode.parallax,
               centerTitle: true,
               title: Hero(
+                transitionOnUserGestures: true,
                 tag: data.noticeTitle,
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
@@ -62,6 +63,7 @@ class NoticeDetailPage extends StatelessWidget {
                   data.hasImage
                       ? SizedBox.expand(
                           child: Hero(
+                            transitionOnUserGestures: true,
                             child: Image.network(
                               data.firstImage,
                               fit: BoxFit.cover,
@@ -69,7 +71,10 @@ class NoticeDetailPage extends StatelessWidget {
                             tag: data.firstImage,
                           ),
                         )
-                      : Container(),
+                      : Image.asset(
+                          'assets/images/home.png',
+                          fit: BoxFit.cover,
+                        ),
                   const DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -88,6 +93,7 @@ class NoticeDetailPage extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Hero(
+              transitionOnUserGestures: true,
               child: Text(data.noticeContent),
               tag: data.noticeContent,
             ),

@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:intl/intl.dart' as intl;
 import 'package:axj_app/model/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -175,13 +175,17 @@ double calcTrueTextWidth(double textSize, String text) {
   return p.minIntrinsicWidth;
 }
 
-Size calcTrueTextSize(double textSize, String text, BoxConstraints constraint,
-    BuildContext context,int maxLines) {
+Size calcTrueTextSize(
+  double textSize,
+  String text,
+  BoxConstraints constraint,
+  int maxLines,
+) {
   // 测量实际长度
   var paragraph = ParagraphBuilder(ParagraphStyle(fontSize: textSize))
     ..addText(text);
   var p = paragraph.build()
-    ..layout(ParagraphConstraints(width: double.infinity));
+    ..layout(ParagraphConstraints(width: constraint.maxWidth));
 
   RenderParagraph renderParagraph = RenderParagraph(
     TextSpan(
@@ -194,7 +198,13 @@ Size calcTrueTextSize(double textSize, String text, BoxConstraints constraint,
     maxLines: maxLines,
   );
   renderParagraph.layout(constraint);
-  double height = renderParagraph.getMinIntrinsicHeight(textSize).ceilToDouble();
-  print(height);
+  double height =
+      renderParagraph.getMinIntrinsicHeight(textSize).ceilToDouble();
+  renderParagraph.getMaxIntrinsicHeight(textSize).ceilToDouble();
   return Size(p.minIntrinsicWidth, height);
 }
+
+final intl.DateFormat dateFormat = intl.DateFormat("yyyy年MM月dd日 HH:mm:ss");
+
+String formattedTime(String time) =>
+    dateFormat.format(DateTime.tryParse(time).toLocal());

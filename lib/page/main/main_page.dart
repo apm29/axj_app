@@ -20,6 +20,7 @@ class MainPage extends StatelessWidget {
             delegate: HomeAppbarDelegate(),
             pinned: true,
           ),
+          NoticeTitle(),
           NoticeSlivers(),
           SliverToBoxAdapter(
             child: SkeletonWidget(

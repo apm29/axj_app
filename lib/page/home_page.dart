@@ -33,14 +33,11 @@ class HomePage extends StatelessWidget {
             return store.state.homePageState.currentTab;
           },
           builder: (ctx, currentTab) {
-            switch (currentTab) {
-              case ActiveTab.Home:
-                return MainPage();
-              case ActiveTab.Mine:
-                return MinePage();
-              default:
-                throw Exception('Unknow index enum: $currentTab');
-            }
+            return IndexedStack(
+              sizing: StackFit.expand,
+              children: <Widget>[MainPage(), MinePage()],
+              index: currentTab.index,
+            );
           },
         ),
         bottomNavigationBar: StoreConnector<AppState, bool>(
@@ -64,7 +61,7 @@ class HomePage extends StatelessWidget {
           builder: (context, hide) {
             return AutoSlideDownWidget(
               hide: hide,
-              child:  FloatingActionButton(
+              child: FloatingActionButton(
                 child: Icon(Icons.add),
                 onPressed: () {
                   AppRouter.toPersonal(context);

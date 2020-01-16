@@ -27,6 +27,7 @@ List<Middleware<AppState>> createAppMiddleware() {
     TypedMiddleware<AppState, CheckLoginAction>(checkLogin),
     TypedMiddleware<AppState, CheckAuthAction>(checkAuth),
     TypedMiddleware<AppState, VoidTaskAction>(checkVoidTask),
+    TypedMiddleware<AppState, TabSwitchAction>(checkTab),
     TypedMiddleware<AppState, ResultTaskAction>(checkResultTask),
     TypedMiddleware<AppState, NeedHouseInfoAction>(checkHouseInfo),
     TypedMiddleware<AppState, NeedRoleInfoAction>(checkRoleInfo),
@@ -123,13 +124,21 @@ checkAuth(Store<AppState> store, CheckAuthAction action, NextDispatcher next) {
 checkVoidTask(
     Store<AppState> store, VoidTaskAction action, NextDispatcher next) {
   () async {
-    if(action.showMask) {
+    if (action.showMask) {
       await Navigator.of(action.context).push(TaskModal(action.task));
-    }else{
+    } else {
       await action.task();
     }
     next(action);
   }();
+}
+
+checkTab(Store<AppState> store, TabSwitchAction action, NextDispatcher next) {
+  if (store.state.homePageState.currentTab == ActiveTab.values[action.index]) {
+    store.dispatch(TabReselectedAction(action.index, action.context));
+  } else {
+    next(action);
+  }
 }
 
 checkResultTask(
@@ -163,14 +172,13 @@ checkRoleInfo(
     if (store.state.userState.login &&
         (action.overrideRole || store.state.currentRole == null)) {
       var navigatorState = Navigator.of(action.context);
-      if(action.roleCodeRequest!=null){
+      if (action.roleCodeRequest != null) {
         bool hasRole = store.state.settings.hasRole(action.roleCodeRequest);
-        if(!hasRole){
+        if (!hasRole) {
           await navigatorState.push(RoleNotAvailableModal());
           return;
         }
       }
-
 
       RoleInfo result = await navigatorState.push(RoleChooseModal());
       if (result != null) store.state.currentRole = result;

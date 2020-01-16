@@ -162,6 +162,20 @@ class TabSwitchAction implements AppAction {
   }
 }
 
+class TabReselectedAction implements AppAction {
+  final int index;
+  final BuildContext context;
+
+  TabReselectedAction(this.index, this.context);
+
+  @override
+  String toString() {
+    return 'TabReselectedAction{index: $index, context: $context}';
+  }
+}
+
+
+
 class ExplicitTaskAction implements VoidTaskAction {
   AsyncVoidTask task;
   final BuildContext context;
