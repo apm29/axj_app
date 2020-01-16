@@ -1,10 +1,7 @@
-import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/notice/notice.dart';
-import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/image_picker_widget.dart';
-import 'package:axj_app/page/notice/notice_detail.dart';
-import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -19,10 +16,14 @@ import 'package:flutter_redux/flutter_redux.dart';
 class NoticeTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 18),
-        child: Text("社区信息"),
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        [
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 6, horizontal: 18),
+            child: Text("社区信息"),
+          ),
+        ],
       ),
     );
   }
@@ -62,7 +63,7 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
 
-  _NoticeItemWidgetState():super();
+  _NoticeItemWidgetState() : super();
 
   @override
   void initState() {
@@ -115,9 +116,12 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                           tag: widget.notice.noticeTitle,
                           child: Text(
                             widget.notice.noticeTitle,
-                            style: Theme.of(context).textTheme.subtitle.copyWith(
-                              color: Theme.of(context).cardColor.withAlpha(0xaa)
-                            ),
+                            style:
+                                Theme.of(context).textTheme.subtitle.copyWith(
+                                      color: Theme.of(context)
+                                          .cardColor
+                                          .withAlpha(0xaa),
+                                    ),
                           ),
                         ),
                         SizedBox(
@@ -236,12 +240,6 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
 
   toNoticeDetail(BuildContext context, Notice notice) {
     //AppRouter.toNoticeDetail(context, notice.noticeId);
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => NoticeDetailPage(
-          notice: notice,
-        ),
-      ),
-    );
+    AppRouter.toNoticeDetailWithData(context, notice);
   }
 }

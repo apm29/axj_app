@@ -104,7 +104,7 @@ class TaskBuilderState extends State<TaskBuilder> {
             future = widget.task();
             store.state.cancelRefresh(refreshToken);
           }
-          return FutureBuilder(
+          return FutureBuilder<List<BaseResp>>(
             future: future,
             builder: (context, snapshot) {
               return AnimatedSwitcher(
@@ -136,11 +136,21 @@ class TaskBuilderState extends State<TaskBuilder> {
   bool _waiting(AsyncSnapshot snapshot) =>
       snapshot.connectionState != ConnectionState.done && !snapshot.hasError;
 
-  bool _success(AsyncSnapshot snapshot) {
-    return snapshot.hasData && snapshot.connectionState == ConnectionState.done;
+  bool _success(AsyncSnapshot<List<BaseResp>> snapshot) {
+    return snapshot.hasData &&
+        snapshot.connectionState == ConnectionState.done &&
+        snapshot.data.every((resp) => resp.success);
   }
 
-  buildChild(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+  String _error(AsyncSnapshot<List<BaseResp>> snapshot) {
+    if (snapshot.hasError) {
+      return snapshot.error;
+    } else {
+      return snapshot.data.firstWhere((resp) => !resp.success).text;
+    }
+  }
+
+  buildChild(BuildContext context, AsyncSnapshot<List<BaseResp>> snapshot) {
     if (_waiting(snapshot)) {
       return LayoutBuilder(
         builder: (c, constraint) {
@@ -170,7 +180,7 @@ class TaskBuilderState extends State<TaskBuilder> {
     } else {
       return InkWell(
         child: ErrorHintWidget(
-          errors: [getErrorMessage(snapshot.error)],
+          errors: [getErrorMessage(_error(snapshot))],
           refreshToken: refreshToken,
         ),
       );

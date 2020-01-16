@@ -22,7 +22,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     double percent = shrinkOffset / (maxExtent - minExtent);
     percent = percent.clamp(0.0, 1.0);
-    final Color endColor = Theme.of(context).primaryColor.withAlpha(0xdd);
+    final Color endColor = Theme.of(context).colorScheme.surface;
     final ColorTween tween1 =
         ColorTween(begin: Colors.transparent, end: endColor);
     final ColorTween tween2 =
@@ -52,6 +52,8 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
     );
     double alpha = easeInExpoPercent;
 
+    Tween<double> fadeTween = Tween(begin: 1.0, end: 0.0);
+
     final TextStyle buttonTextStyle = Theme.of(context).textTheme.caption;
     final TextStyleTween buttonStyleTween = TextStyleTween(
       begin: buttonTextStyle.copyWith(color: Colors.white70),
@@ -68,7 +70,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
       Icons.lightbulb_outline,
       Icons.help_outline
     ];
-
+    Color onSurface = Theme.of(context).colorScheme.onSurface;
     final double buttonSize = 18.0;
     final double buttonMargin = 12.0;
     double systemPadding = 20.0;
@@ -118,9 +120,12 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
 
     final ColorTween iconColorTween = ColorTween(
       begin: Colors.white70,
-      end: Theme.of(context).accentColor,
+      end: onSurface,
+      //end: Theme.of(context).accentColor,
     );
 
+
+    Color blurForeground = Theme.of(context).colorScheme.surface.withAlpha(77);
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
@@ -178,12 +183,11 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                             padding: EdgeInsets.only(left: 16),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Theme.of(context).accentColor),
+                                color: onSurface,
+                              ),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(6)),
-                              color: Theme.of(context)
-                                  .floatingActionButtonTheme
-                                  .backgroundColor,
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                             alignment: Alignment.centerLeft,
                             child: Row(
@@ -196,9 +200,8 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                                         .textTheme
                                         .caption
                                         .copyWith(
-                                            color: Theme.of(context)
-                                                .floatingActionButtonTheme
-                                                .foregroundColor),
+                                          color: onSurface,
+                                        ),
                                   ),
                                 ),
                                 IconButton(
@@ -226,8 +229,8 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                 ),
                 Container(
                   alignment: Alignment(0.0, 1.0),
-                  child: SizedBox(
-                    height: buttonSizeTween.transform(percent),
+                  child: Opacity(
+                    opacity: fadeTween.transform(easeInExpoPercent),
                     child: ClipRect(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(
@@ -236,9 +239,11 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                         ),
                         child: Container(
                           width: MediaQuery.of(context).size.width,
-                          height: buttonSizeTween.transform(percent),
+                          height: bottomHeight,
                           decoration: BoxDecoration(
-                              color: Colors.black.withAlpha(0x55)),
+                            //color: Colors.black.withAlpha(0x55),
+                            color: blurForeground,
+                          ),
                         ),
                       ),
                     ),

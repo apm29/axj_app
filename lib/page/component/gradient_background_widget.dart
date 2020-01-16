@@ -20,6 +20,7 @@ class GradientBackgroundWidget extends StatefulWidget {
 class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
     with TickerProviderStateMixin {
   AnimationController colorController;
+  AnimationController controller;
   var colorTween1 = ColorTween(
     begin: Color(0xffA83279),
     end: Colors.blue.shade600,
@@ -47,12 +48,25 @@ class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
       }
     });
     colorController.forward();
+
+    controller = AnimationController(vsync: this, duration: Duration(seconds: 8));
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.reset();
+        controller.forward();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.forward();
+      }
+    });
+    controller.forward();
+
     super.initState();
   }
 
   @override
   void dispose() {
     colorController?.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
@@ -79,9 +93,8 @@ class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
                 alignment: Alignment.bottomCenter,
                 child: WaveWidget(
                   offset: pi / 4,
-                  duration: Duration(seconds: 8),
                   height: 120,
-                  controller: colorController,
+                  controller: controller,
                 ),
               ),
             ),
@@ -90,9 +103,8 @@ class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
                 alignment: Alignment.bottomCenter,
                 child: WaveWidget(
                   offset: pi * 2 / 3,
-                  duration: Duration(seconds: 10),
                   height: 160,
-                  controller: colorController,
+                  controller: controller,
                 ),
               ),
             ),
@@ -101,9 +113,8 @@ class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
                 alignment: Alignment.bottomCenter,
                 child: WaveWidget(
                   offset: pi / 2,
-                  duration: Duration(seconds: 12),
                   height: 160,
-                  controller: colorController,
+                  controller: controller,
                 ),
               ),
             ),
@@ -118,14 +129,12 @@ class _GradientBackgroundWidgetState extends State<GradientBackgroundWidget>
 
 class WaveWidget extends StatelessWidget {
   final double height;
-  final Duration duration;
   final double offset;
   final AnimationController controller;
 
   const WaveWidget({
     Key key,
     this.height: 100,
-    this.duration: const Duration(seconds: 6),
     this.offset: 0,
     this.controller,
   }) : super(key: key);

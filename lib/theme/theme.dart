@@ -48,69 +48,94 @@ ThemeData twitterLight = ThemeData(
   primaryColorDark: Color(0xfffdfdfd),
   accentColor: Color(0xff1a7fd5),
   accentColorBrightness: Brightness.dark,
+  cardColor: Color(0xff1c162e),
   canvasColor: Color(0xfffdfdfd),
   scaffoldBackgroundColor: Color(0xfffdfdfd),
   iconTheme: IconThemeData(
     color: Color(0xff1a7fd5),
   ),
-);
-
-ThemeData twitterDark = ThemeData(
-  brightness: Brightness.dark,
-  platform: TargetPlatform.iOS,
-  appBarTheme: AppBarTheme(
-    brightness: Brightness.dark,
-    color: Color(0xff111820),
-    iconTheme: IconThemeData(
-      color: Colors.white,
+  textTheme: TextTheme(
+    overline: TextStyle(
+      color: Color(0xffa0a9b2),
     ),
-    actionsIconTheme: IconThemeData(
-      color: Colors.white,
-    ),
-    textTheme: TextTheme(),
+    title: TextStyle(
+      fontFamily: 'xmt',
+      fontWeight: FontWeight.w600
+    )
   ),
-  applyElevationOverlayColor: true,
-  primaryColor: Color(0xff131d27),
-  primaryColorBrightness: Brightness.dark,
-  primaryColorLight: Color(0xff2f4254),
-  primaryColorDark: Color(0xff111820),
-  accentColor: Color(0xff1a7fd5),
-  accentColorBrightness: Brightness.dark,
-  canvasColor: Color(0xff111820),
-  scaffoldBackgroundColor: Color(0xff111820),
-  cardColor: Color(0xff1c162e),
-  cardTheme: CardTheme(
-    clipBehavior: Clip.antiAlias,
-    color: Color(0xff1c162e),
-    elevation: 4,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(
-        Radius.circular(12),
-      ),
-    ),
-  ),
-  textTheme: TextTheme(overline: TextStyle(color: Color(0xffa0a9b2))),
   colorScheme: ColorScheme(
-    primary: Color(0xffffffff),
+    onPrimary: Color(0xffffffff),
     primaryVariant: Color(0xff111820),
     secondary: Color(0xff1a7fd5),
     secondaryVariant: Color(0xff4755ef),
-    onPrimary: Colors.white,
-    onBackground: Color(0xff1a7fd5),
+    primary: Color(0xff1a7fd5),
+    background: Color(0xff1a7fd5),
     onError: Colors.white,
     brightness: Brightness.dark,
-    onSurface: Color(0xffa0a9b2),
+    surface: Color(0xfff3f3f3),
     onSecondary: Colors.white,
-    surface: Color(0xff1c162e),
-    background: Color(0xff332d43),
+    onSurface: Color(0xff1c162e),
+    onBackground: Color(0xff332d43),
     error: Color(0xffed457d),
   ),
-
-  pageTransitionsTheme: PageTransitionsTheme(
-      builders: {
-        TargetPlatform.macOS:OpenUpwardsPageTransitionsBuilder(),
-        TargetPlatform.iOS:OpenUpwardsPageTransitionsBuilder(),
-        TargetPlatform.android:OpenUpwardsPageTransitionsBuilder(),
-      }
-  )
 );
+
+ThemeData twitterDark = ThemeData(
+    brightness: Brightness.dark,
+    platform: TargetPlatform.iOS,
+    appBarTheme: AppBarTheme(
+      brightness: Brightness.dark,
+      color: Color(0xff111820),
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+      actionsIconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+      textTheme: TextTheme(),
+    ),
+    applyElevationOverlayColor: true,
+    primaryColor: Color(0xff131d27),
+    primaryColorBrightness: Brightness.dark,
+    primaryColorLight: Color(0xff2f4254),
+    primaryColorDark: Color(0xff111820),
+    accentColor: Color(0xff1a7fd5),
+    accentColorBrightness: Brightness.dark,
+    canvasColor: Color(0xff111820),
+    scaffoldBackgroundColor: Color(0xff111820),
+    cardColor: Color(0xff1c162e),
+    cardTheme: CardTheme(
+      clipBehavior: Clip.antiAlias,
+      color: Color(0xff1c162e),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12),
+        ),
+      ),
+    ),
+    textTheme: TextTheme(
+      overline: TextStyle(
+        color: Color(0xffa0a9b2),
+      ),
+    ),
+    colorScheme: ColorScheme(
+      primary: Color(0xffffffff),
+      primaryVariant: Color(0xff111820),
+      secondary: Color(0xff1a7fd5),
+      secondaryVariant: Color(0xff4755ef),
+      onPrimary: Colors.white,
+      onBackground: Color(0xff1a7fd5),
+      onError: Colors.white,
+      brightness: Brightness.dark,
+      onSurface: Color(0xffa0a9b2),
+      onSecondary: Colors.white,
+      surface: Color(0xff1c162e),
+      background: Color(0xff332d43),
+      error: Color(0xffed457d),
+    ),
+    pageTransitionsTheme: PageTransitionsTheme(builders: {
+      TargetPlatform.macOS: OpenUpwardsPageTransitionsBuilder(),
+      TargetPlatform.iOS: OpenUpwardsPageTransitionsBuilder(),
+      TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
+    }));
