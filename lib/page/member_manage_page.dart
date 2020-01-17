@@ -2,15 +2,14 @@ import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/enum_config.dart';
 import 'package:axj_app/model/bean/family_member.dart';
-import 'package:axj_app/model/bean/member_detail.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/page/component/speed_dial.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/route/route.dart';
+import 'package:axj_app/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
 
 class MemberManagePage extends StatefulWidget {
   final houseId;
@@ -22,102 +21,101 @@ class MemberManagePage extends StatefulWidget {
 }
 
 class _MemberManagePageState extends State<MemberManagePage> {
-  Future<BaseResp<MemberDetail>> future;
-
-  @override
-  void initState() {
-    loadMemberData();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("成员管理"),
+        title: Text(S.of(context).familyMemberManageTitle),
       ),
-      body: BaseRespTaskBuilder<MemberDetail>(
-        future: future,
+      body: TaskBuilder(
+        task: () async => [await Repository.getFamilyMembers(widget.houseId)],
         modelBuilder: (context, list) {
           return ListView.builder(
             itemBuilder: (context, index) {
-              List allData = [...list.familyMember, ...list.tenant];
+              List allData = [
+                ...list[0].data.familyMember,
+                ...list[0].data.tenant
+              ];
               var familyMember = allData[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(familyMember.memberpicurl),
-                  radius: 30,
-                ),
-                onTap: () => _onExamine(familyMember),
-                isThreeLine: true,
-                title: Text(familyMember.membername),
-                subtitle: Text(familyMember.presentStatue +
-                    "\r\n" +
-                    familyMember.relationtype),
-                trailing: PopupMenuButton<ActionEnum>(
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        enabled: familyMember.editable,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.edit,
-                            ),
-                            Text('编辑'),
-                          ],
-                        ),
-                        value: ActionEnum.Edit,
-                      ),
-                      PopupMenuItem(
-                        enabled: familyMember.deletable,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.delete,
-                            ),
-                            Text('删除'),
-                          ],
-                        ),
-                        value: ActionEnum.Delete,
-                      ),
-                    ];
-                  },
-                  onSelected: (v) {
-                    switch (v) {
-                      case ActionEnum.Edit:
-                        _doEditMember(context, familyMember);
-                        break;
-                      case ActionEnum.Delete:
-                        _doDeleteMember(context, familyMember);
-                        break;
-                      case ActionEnum.Examine:
-                        break;
-                    }
-                  },
-                  icon: Icon(Icons.more_vert),
-                ),
-              );
+              return buildListTile(familyMember, context);
             },
-            itemCount: list.familyMember.length + list.tenant.length,
+            itemCount:
+                list[0].data.familyMember.length + list[0].data.tenant.length,
           );
         },
       ),
       floatingActionButton: SpeedDial(
-        icons: const [
-          Icons.group_add,
-          Icons.list
-        ],
+        icons: const [Icons.group_add, Icons.list],
         labels: [
-          "手动录入",
-          "申请列表"
+          S.of(context).addFamilyMemberLabel,
+          S.of(context).applyListLabel
         ],
         onPressList: [
-          (){
-            AppRouter.toMemberEdit(context,widget.houseId,edit: false);
+          () {
+            AppRouter.toMemberEdit(context, widget.houseId, edit: false);
           },
-          (){},
+          () {},
         ],
+      ),
+    );
+  }
+
+  ListTile buildListTile(familyMember, BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(familyMember.memberpicurl ?? ""),
+        child: familyMember.memberpicurl != null
+            ? null
+            : Text("暂无照片",style: Theme.of(context).textTheme.caption,),
+        radius: 30,
+      ),
+      onTap: () => _onExamine(familyMember),
+      isThreeLine: true,
+      title: Text(familyMember.membername),
+      subtitle:
+          Text(familyMember.presentStatue + "\r\n" + familyMember.relationtype),
+      trailing: PopupMenuButton<ActionEnum>(
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              enabled: familyMember.editable,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.edit,
+                  ),
+                  Text(S.of(context).editLabel),
+                ],
+              ),
+              value: ActionEnum.Edit,
+            ),
+            PopupMenuItem(
+              enabled: familyMember.deletable,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.delete,
+                  ),
+                  Text(S.of(context).deleteLabel),
+                ],
+              ),
+              value: ActionEnum.Delete,
+            ),
+          ];
+        },
+        onSelected: (v) {
+          switch (v) {
+            case ActionEnum.Edit:
+              _doEditMember(context, familyMember);
+              break;
+            case ActionEnum.Delete:
+              _doDeleteMember(context, familyMember);
+              break;
+            case ActionEnum.Examine:
+              break;
+          }
+        },
+        icon: Icon(Icons.more_vert),
       ),
     );
   }
@@ -127,8 +125,8 @@ class _MemberManagePageState extends State<MemberManagePage> {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text("警告"),
-          content: Text("确定要删除${familyMember.membername}?"),
+          title: Text(S.of(context).warningLabel),
+          content: Text(S.of(context).deleteHint(familyMember.membername)),
           actions: <Widget>[
             CupertinoDialogAction(
               onPressed: () {
@@ -146,13 +144,10 @@ class _MemberManagePageState extends State<MemberManagePage> {
                     ),
                   );
                   if (result.success) {
-                    showToast(S.of(context).deleteLabel);
+                    showAppToast(S.of(context).deleteLabel);
                     Navigator.of(context).pop(true);
-                    setState(() {
-                      loadMemberData();
-                    });
                   } else {
-                    showToast(result.text);
+                    showAppToast(result.text);
                   }
                 }();
               },
@@ -162,25 +157,21 @@ class _MemberManagePageState extends State<MemberManagePage> {
         );
       },
     );
-  }
-
-  void loadMemberData() {
-    future = Repository.getFamilyMembers(widget.houseId);
+    TaskBuilder.of(context).refresh(context);
   }
 
   _onExamine(FamilyMember familyMember) {
     if (familyMember.examinable) {
     } else {
-      showToast("你没有权限查看${familyMember.membername}的出入记录");
+      showAppToast(
+          S.of(context).recordViewNoAuthorizationHint(familyMember.membername));
     }
   }
 
   void _doEditMember(BuildContext context, FamilyMember familyMember) async {
     bool result = await AppRouter.toMemberEdit(context, familyMember.memberid);
     if (result == true) {
-      setState(() {
-        loadMemberData();
-      });
+      TaskBuilder.of(context).refresh(context);
     }
   }
 }

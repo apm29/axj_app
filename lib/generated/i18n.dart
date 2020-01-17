@@ -21,22 +21,33 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get addEBikeLabel => "Add E-Bike";
+  String get addFamilyMemberLabel => "Add Member";
+  String get addLabel => "Add";
+  String get addVehicleLabel => "Add Car";
   String get appName => "Monster";
+  String get applyListLabel => "Application List";
   String get authFaceHint => "Align your face within the frame,then tap the confirm button";
   String get authTitle => "Authenticate";
   String get cancelLabel => "Cancel";
   String get changeHouseLabel => "Change House";
+  String get changeRoleLabel => "Change Role";
+  String get clickToSeeAccessRecord => "Tap to see access record";
   String get closeNotificationHint => "Close Notification Service";
   String get confirmLabel => "Confirm";
   String get confirmLogoutHint => "Confirm Logout?";
   String get deleteLabel => "Delete";
   String get deleteSuccessHint => "Delete Success";
+  String get eBikeTagLabel => "E-Bike Tag:";
+  String get editLabel => "Edit";
   String get editUserProfile => "edit your profile";
   String get familyMemberActionTileHint => "Family Members/Tenants info";
   String get familyMemberActionTileTitle => "Family Members";
+  String get familyMemberManageTitle => "Member Manage";
   String get homeTab => "Home";
   String get idFormHint => "Identity Card Number (11 digit)";
   String get idFormTitle => "Confirm Identity Info";
+  String get imageNoAvailable => "Image not available";
   String get loadingCameraHint => "Loading Camera Settings";
   String get localeMenuLabel => "Localization";
   String get loginLabel => "Login";
@@ -71,6 +82,13 @@ class S implements WidgetsLocalizations {
   String get smsLoginLabel => "SMS";
   String get toAuthHint => "Authenticate";
   String get userNameHint => "username";
+  String get vehicleInLabel => "In the Garage";
+  String get vehicleManageTitle => "Vehicle Manage";
+  String get vehicleTypeCarLabel => "Car";
+  String get vehicleTypeTruckLabel => "Truck";
+  String get warningLabel => "Warning";
+  String deleteHint(String some) => "Confirm to Delete $some ?";
+  String recordViewNoAuthorizationHint(String member) => "You are Not authorized to view $member 's Access Record";
   String serviceProtocolName(String appName) => "$appName Service Protocol";
   String serviceProtocolText(String serviceProtocolName) => "I agree with <<$serviceProtocolName>>";
 }
@@ -92,6 +110,8 @@ class $zh_CN extends S {
   @override
   String get passwordHint => "密码";
   @override
+  String get applyListLabel => "申请列表";
+  @override
   String get familyMemberActionTileTitle => "家庭成员";
   @override
   String get smsLoginLabel => "短信登录";
@@ -101,6 +121,8 @@ class $zh_CN extends S {
   String get logoutLabel => "登出";
   @override
   String get closeNotificationHint => "关闭推送通知";
+  @override
+  String get addLabel => "添加";
   @override
   String get phoneLabel => "手机号";
   @override
@@ -116,7 +138,13 @@ class $zh_CN extends S {
   @override
   String get editUserProfile => "编辑个人资料";
   @override
+  String get changeRoleLabel => "切换角色";
+  @override
   String get cancelLabel => "取消";
+  @override
+  String get clickToSeeAccessRecord => "轻点查看出入记录";
+  @override
+  String get vehicleTypeTruckLabel => "货车";
   @override
   String get passwordRepeatError => "密码不一致";
   @override
@@ -128,11 +156,21 @@ class $zh_CN extends S {
   @override
   String get mineTab => "我的";
   @override
+  String get addEBikeLabel => "添加电动车";
+  @override
   String get passwordRepeatHint => "重复密码";
   @override
   String get idFormTitle => "确认身份信息";
   @override
+  String get editLabel => "编辑";
+  @override
+  String get vehicleTypeCarLabel => "汽车";
+  @override
   String get motto => "智慧生活,安心陪伴";
+  @override
+  String get vehicleInLabel => "已入库";
+  @override
+  String get eBikeTagLabel => "电瓶车标签:";
   @override
   String get settingLabel => "设置";
   @override
@@ -141,6 +179,8 @@ class $zh_CN extends S {
   String get notNowAuthLabel => "暂不认证";
   @override
   String get deleteSuccessHint => "删除成功";
+  @override
+  String get addVehicleLabel => "添加汽车";
   @override
   String get loginLabel => "登录";
   @override
@@ -154,6 +194,10 @@ class $zh_CN extends S {
   @override
   String get smsCodeHint => "6位验证码";
   @override
+  String get familyMemberManageTitle => "成员管理";
+  @override
+  String get addFamilyMemberLabel => "添加成员";
+  @override
   String get sendSmsCodeHint => "发送验证码";
   @override
   String get authTitle => "身份认证";
@@ -161,6 +205,8 @@ class $zh_CN extends S {
   String get appName => "卡牌助手";
   @override
   String get messageLabel => "消息";
+  @override
+  String get vehicleManageTitle => "车辆管理";
   @override
   String get confirmLogoutHint => "确定退出App吗?";
   @override
@@ -180,15 +226,23 @@ class $zh_CN extends S {
   @override
   String get smsCodeLabel => "验证码";
   @override
+  String get warningLabel => "警告";
+  @override
   String get confirmLabel => "确认";
   @override
   String get registerHint => "没有账户? 点击注册";
   @override
   String get settingsPageTitle => "个人设置";
   @override
+  String get imageNoAvailable => "暂无图片";
+  @override
   String serviceProtocolName(String appName) => "${appName}用户服务协议";
   @override
+  String recordViewNoAuthorizationHint(String member) => "你没有权限查看$member 的出入记录";
+  @override
   String serviceProtocolText(String serviceProtocolName) => "登录即视为同意<<$serviceProtocolName>>";
+  @override
+  String deleteHint(String some) => "确认要删除$some ?";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {

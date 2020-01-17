@@ -50,18 +50,38 @@
   "idFormHint": "Identity Card Number (11 digit)",
   "nextStepLabel": "Next Step",
   "confirmLabel": "Confirm",
+  "warningLabel": "Warning",
   "cancelLabel": "Cancel",
+  "editLabel": "Edit",
   "deleteLabel": "Delete",
+  "deleteHint": "Confirm to Delete $some ?",
+  "addLabel": "Add",
   "deleteSuccessHint": "Delete Success",
 
   "myHouseTitle": "Houses",
   "changeHouseLabel": "Change House",
+  "changeRoleLabel": "Change Role",
 
   "myHouseActionTileTitle": "My Houses",
   "myHouseActionTileHint": "View Houses info",
   "myVehicleActionTileTitle": "My Vehicles",
   "myVehicleActionTileHint": "View Vehicles info",
   "familyMemberActionTileTitle": "Family Members",
-  "familyMemberActionTileHint": "Family Members/Tenants info"
+  "familyMemberManageTitle": "Member Manage",
+  "familyMemberActionTileHint": "Family Members/Tenants info",
+  "addFamilyMemberLabel": "Add Member",
+  "applyListLabel": "Application List",
+
+  "vehicleManageTitle": "Vehicle Manage",
+  "vehicleInLabel": "In the Garage",
+  "vehicleTypeCarLabel": "Car",
+  "vehicleTypeTruckLabel": "Truck",
+
+  "eBikeTagLabel": "E-Bike Tag:",
+  "clickToSeeAccessRecord": "Tap to see access record",
+  "recordViewNoAuthorizationHint": "You are Not authorized to view $member 's Access Record",
+  "imageNoAvailable": "Image not available",
+  "addEBikeLabel": "Add E-Bike",
+  "addVehicleLabel": "Add Car"
 
 }

@@ -6,10 +6,10 @@ import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/route/route.dart';
+import 'package:axj_app/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:oktoast/oktoast.dart';
 
 class MyHousePage extends StatelessWidget {
   @override
@@ -21,33 +21,12 @@ class MyHousePage extends StatelessWidget {
       body: StoreBuilder<AppState>(
         builder: (context, store) {
           var model = store.state;
-          return BaseRespTaskBuilder<List<HouseInfo>>(
-            future: Repository.getMyHouseList(model.currentHouse.districtId),
-            modelBuilder: (context, houseList) {
-              return ListView(
-                children: [
-                  ...houseList.map((house) {
-                    var districtInfo =
-                        model.dictionary.getDistrictInfo(house.districtId);
-                    return ListTile(
-                      onTap: () {
-                        AppRouter.toMembersManage(context, house.houseId);
-                      },
-                      title: Text(
-                        districtInfo.districtName,
-                      ),
-                      subtitle: Text(
-                        house.addr + "\r\n" + districtInfo.districtAddr,
-                      ),
-                      isThreeLine: true,
-                      leading: Icon(Icons.home),
-                      trailing: Text(
-                        house.name,
-                      ),
-                    );
-                  }).toList(),
-                ],
-              );
+          return TaskBuilder(
+            task: () async => [
+              await Repository.getMyHouseList(model.currentHouse.districtId)
+            ],
+            modelBuilder: (context, resp) {
+              return buildListView(resp[0].data, model, context);
             },
           );
         },
@@ -64,12 +43,39 @@ class MyHousePage extends StatelessWidget {
                     return _buildModal(context, resp.data);
                   });
             } else {
-              showToast(resp.text);
+              showAppToast(resp.text);
             }
           }();
         },
         child: Icon(Icons.library_books),
       ),
+    );
+  }
+
+  ListView buildListView(
+      List<HouseInfo> houseList, AppState model, BuildContext context) {
+    return ListView(
+      children: [
+        ...houseList.map((house) {
+          var districtInfo = model.settings.getDistrictInfo(house.districtId);
+          return ListTile(
+            onTap: () {
+              AppRouter.toMembersManage(context, house.houseId);
+            },
+            title: Text(
+              districtInfo.districtName,
+            ),
+            subtitle: Text(
+              house.addr + "\r\n" + districtInfo.districtAddr,
+            ),
+            isThreeLine: true,
+            leading: Icon(Icons.home),
+            trailing: Text(
+              house.name,
+            ),
+          );
+        }).toList(),
+      ],
     );
   }
 

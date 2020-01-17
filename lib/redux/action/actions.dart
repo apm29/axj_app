@@ -3,6 +3,7 @@ import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 
 ///
 /// author : ciih
@@ -11,7 +12,6 @@ import 'package:axj_app/redux/store/store.dart';
 ///
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:oktoast/oktoast.dart';
 
 abstract class AppAction {}
 
@@ -21,6 +21,7 @@ typedef AsyncVoidTask = Future<void> Function();
 abstract class VoidTaskAction {
   final AsyncVoidTask task;
   final BuildContext context;
+  bool showMask = true;
 
   VoidTaskAction(this.task, this.context);
 }
@@ -58,9 +59,18 @@ abstract class CheckLoginAction {
 
 abstract class NeedHouseInfoAction {
   final BuildContext context;
-  final bool override;
+  final bool overrideHouse;
 
-  NeedHouseInfoAction(this.context, {this.override = false});
+  NeedHouseInfoAction(this.context, {this.overrideHouse = false});
+}
+
+abstract class NeedRoleInfoAction {
+  final BuildContext context;
+  final bool overrideRole;
+  final String roleCodeRequest;
+
+  NeedRoleInfoAction(this.context,
+      {this.overrideRole = false, this.roleCodeRequest});
 }
 
 class LoginAction implements AppAction, ResultTaskAction<bool> {
@@ -87,21 +97,21 @@ Future<bool> loginAndInit(BuildContext context, Future<BaseResp> api) async {
       BaseResp<UserInfoDetail> userInfoResp = await Repository.getUserInfo();
 
       if (userInfoResp.success) {
-        showToast("登录成功");
+        showAppToast("登录成功");
         var store = StoreProvider.of<AppState>(context, listen: false);
         store.state.userState.userInfo = userInfoResp.data;
-        await store.state.dictionary.init();
+        await store.state.settings.init();
         return true;
       } else {
-        showToast("登录失败:${userInfoResp.text}");
+        showAppToast("登录失败:${userInfoResp.text}");
       }
     } else {
-      showToast("登录失败:${resp.text}");
+      showAppToast("登录失败:${resp.text}");
     }
     return false;
   } catch (e) {
     print(e);
-    showToast(getErrorMessage(e));
+    showAppToast(getErrorMessage(e));
     return false;
   }
 }
@@ -152,11 +162,26 @@ class TabSwitchAction implements AppAction {
   }
 }
 
-class VoidTaskSimulationAction implements VoidTaskAction {
-  AsyncVoidTask task;
+class TabReselectedAction implements AppAction {
+  final int index;
   final BuildContext context;
 
-  VoidTaskSimulationAction(this.task, this.context);
+  TabReselectedAction(this.index, this.context);
+
+  @override
+  String toString() {
+    return 'TabReselectedAction{index: $index, context: $context}';
+  }
+}
+
+
+
+class ExplicitTaskAction implements VoidTaskAction {
+  AsyncVoidTask task;
+  final BuildContext context;
+  bool showMask = true;
+
+  ExplicitTaskAction(this.task, this.context);
 }
 
 class ResultTaskSimulationAction implements ResultTaskAction<int> {
@@ -181,7 +206,7 @@ class CheckAuthAndRouteAction
   final BuildContext context;
 
   final bool intercept;
-  final bool override;
+  final bool overrideHouse;
   final String routeName;
 
   final RouteNameGenerator routeGenerator;
@@ -189,17 +214,13 @@ class CheckAuthAndRouteAction
   CheckAuthAndRouteAction(
     this.context, {
     this.intercept = true,
-    this.override = false,
+    this.overrideHouse = false,
     this.routeGenerator,
     this.routeName,
   }) : assert(routeName != null || routeGenerator != null);
 }
 
-
-class CheckLoginAndRouteAction
-    implements
-        AppAction,
-        CheckLoginAction{
+class CheckLoginAndRouteAction implements AppAction, CheckLoginAction {
   final BuildContext context;
 
   final bool intercept;
@@ -207,11 +228,11 @@ class CheckLoginAndRouteAction
   final RouteNameGenerator routeGenerator;
 
   CheckLoginAndRouteAction(
-      this.context, {
-        this.intercept = true,
-        this.routeGenerator,
-        this.routeName,
-      }) : assert(routeName != null || routeGenerator != null);
+    this.context, {
+    this.intercept = true,
+    this.routeGenerator,
+    this.routeName,
+  }) : assert(routeName != null || routeGenerator != null);
 }
 
 class ChangeHouseAction
@@ -220,7 +241,50 @@ class ChangeHouseAction
 
   final bool intercept;
 
-  final bool override;
+  final bool overrideHouse;
 
-  ChangeHouseAction(this.context, {this.intercept: true, this.override: true});
+  ChangeHouseAction(this.context,
+      {this.intercept: true, this.overrideHouse: true});
+}
+
+class ChangeRoleAction
+    implements AppAction, CheckLoginAction, NeedRoleInfoAction {
+  final BuildContext context;
+
+  final bool intercept;
+
+  final bool overrideRole;
+
+  final String roleCodeRequest;
+
+  ChangeRoleAction(
+    this.context, {
+    this.intercept: true,
+    this.overrideRole: true,
+    this.roleCodeRequest,
+  });
+}
+
+
+class RefreshAction{
+  final String refreshToken;
+
+  RefreshAction(this.refreshToken);
+}
+
+class HomeScrollAction implements AppAction{
+  final bool hide;
+
+  HomeScrollAction(this.hide);
+}
+
+class ImplicitTaskAction implements AppAction,VoidTaskAction{
+
+  final AsyncVoidTask task;
+  final BuildContext context;
+  bool showMask = false;
+
+  ImplicitTaskAction(this.task, this.context);
+
+
 }

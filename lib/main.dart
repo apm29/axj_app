@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:axj_app/configuration.dart';
 import 'package:axj_app/redux/middleware/middlewares.dart';
 import 'package:axj_app/model/cache.dart';
@@ -7,6 +6,7 @@ import 'package:axj_app/page/splash_page.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -34,14 +34,15 @@ Future<void> main() async {
 
 customerReport(
     {FlutterErrorDetails detail, Object error, StackTrace stackTrace}) {
-  if(detail!=null){
+  if (detail != null) {
     print(detail);
-  }else{
+  } else {
     print(error);
     print(stackTrace);
   }
 }
-report(line){
+
+report(line) {
   //debugPrint('FROM---------->$line');
 }
 
@@ -73,22 +74,8 @@ class FlutterReduxApp extends StatelessWidget {
               DefaultCupertinoLocalizations.delegate
             ],
             supportedLocales: S.delegate.supportedLocales,
-            theme: ThemeData(
-              // This is the theme of your application.
-              //
-              // Try running your application with "flutter run". You'll see the
-              // application has a blue toolbar. Then, without quitting the app, try
-              // changing the primarySwatch below to Theme.of(context).primaryColor and then invoke
-              // "hot reload" (press "r" in the console where you ran "flutter run",
-              // or simply save your changes to "hot reload" in a Flutter IDE).
-              // Notice that the counter didn't reset back to zero; the application
-              // is not restarted.
-              primarySwatch: Colors.teal,
-              platform: TargetPlatform.iOS,
-            ),
-            darkTheme: ThemeData.dark().copyWith(
-              hintColor: Colors.teal,
-            ),
+            theme: twitterLight,
+            darkTheme: twitterDark,
             onGenerateRoute: Application.router.generator,
             locale: locale,
             home: SplashPage(),
@@ -98,3 +85,4 @@ class FlutterReduxApp extends StatelessWidget {
     );
   }
 }
+

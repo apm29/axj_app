@@ -8,27 +8,22 @@ class Permissions {
     var handler = PermissionHandler();
     PermissionStatus permissionStatus =
         await handler.checkPermissionStatus(permissionGroup);
-
+    print(permissionStatus);
     if (permissionStatus == PermissionStatus.granted) {
       return true;
     }
     Map<PermissionGroup, PermissionStatus> result =
         await handler.requestPermissions([permissionGroup]);
     var status = result[permissionGroup];
-    print(status);
     if (status == PermissionStatus.granted) {
       return true;
     } else {
-      if (status == PermissionStatus.denied || await handler.shouldShowRequestPermissionRationale(permissionGroup)) {
-        bool opened =
-            await showDialog(context: context, child: PermissionDeniedDialog());
-        if (opened) {
-          await Future.delayed(Duration(seconds: 2));
-          var status2 = await handler.checkPermissionStatus(permissionGroup);
-          print(status2);
-          return (status2) ==
-              PermissionStatus.granted;
-        }
+      bool opened =
+          await showDialog(context: context, child: PermissionDeniedDialog());
+      if (opened) {
+        await Future.delayed(Duration(seconds: 2));
+        var status2 = await handler.checkPermissionStatus(permissionGroup);
+        return (status2) == PermissionStatus.granted;
       }
       return false;
     }

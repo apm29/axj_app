@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/car_info.dart';
 import 'package:axj_app/model/bean/district_info.dart';
@@ -8,9 +7,12 @@ import 'package:axj_app/model/bean/family_member.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/member_detail.dart';
-import 'package:axj_app/model/bean/roles.dart';
+import 'package:axj_app/model/bean/notice/notice.dart';
+import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/bean/user_verify_info.dart';
+import 'package:axj_app/model/bean/verify_status.dart';
+import 'package:axj_app/model/bean/notice/notice_type.dart';
 import 'package:dio/dio.dart';
 
 class Repository {
@@ -68,13 +70,13 @@ class Repository {
   }
 
   //通过token获取当前用户的角色列表
-  static Future<BaseResp<List<Roles>>> findUserRoles() {
+  static Future<BaseResp<List<RoleInfo>>> findUserRoles() {
     return Api().post(
       "/permission/UserRole/findUserRole",
       processor: (json) {
         if (json is List) {
           return json.map((j) {
-            return Roles.fromJsonMap(j);
+            return RoleInfo.fromJsonMap(j);
           }).toList();
         }
         return [];
@@ -110,6 +112,15 @@ class Repository {
         "photo": imageUrl,
         "idCard": idCard,
         "isAgain": isAgain ? 1 : 0,
+      },
+    );
+  }
+
+  static Future<BaseResp<VerifyStatus>> getVerifyStatus() async {
+    return Api().post(
+      "/permission/userCertification/getMyVerify",
+      processor: (j) {
+        return VerifyStatus.fromJsonMap(j);
       },
     );
   }
@@ -150,6 +161,7 @@ class Repository {
       },
     );
   }
+
   static Future<BaseResp<List<EBike>>> getMyEBike() {
     return Api().post(
       "/business/ebike/query",
@@ -253,6 +265,46 @@ class Repository {
       processor: (s) {
         return null;
       },
+    );
+  }
+
+  //获取信息Notice
+  static Future<BaseResp<List<Notice>>> getAllNotice() async {
+    List<NoticeType> noticeType = (await getAllNoticeType()).data;
+    return Api().post(
+      '/business/notice/getAllNewNotice',
+      formData: {'noticeType': noticeType.map((t) => t.typeId).join(',')},
+      processor: (s) {
+        if (s is List) {
+          return s
+              .map((j) => Notice.fromJsonMap(j)..types = noticeType)
+              .toList();
+        }
+        return [];
+      },
+    );
+  }
+
+  //获取信息Notice
+  static Future<BaseResp<List<NoticeType>>> getAllNoticeType() {
+    return Api().post(
+      '/business/noticeDict/getAllType',
+      processor: (s) {
+        if (s is List) {
+          return s.map((j) => NoticeType.fromJsonMap(j)).toList();
+        }
+        return [];
+      },
+    );
+  }
+
+  static Future<BaseResp<Notice>> getNoticeDetail(String noticeId) {
+    return Api().post(
+      '/business/notice/getOneNotice',
+      formData: {
+        'noticeId':noticeId
+      },
+      processor: (s)=>Notice.fromJsonMap(s),
     );
   }
 }

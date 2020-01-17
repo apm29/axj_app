@@ -1,21 +1,22 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/user_verify_info.dart';
+import 'package:axj_app/model/bean/verify_status.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/plugin/permission.dart';
+import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -74,7 +75,10 @@ class _AuthFormPageState extends State<AuthFormPage> {
                       context, _idCardController.text);
                   navigatorState.pop(result);
                 },
-                gradient: LinearGradient(colors: [Theme.of(context).accentColor, Theme.of(context).accentColor]),
+                gradient: LinearGradient(colors: [
+                  Theme.of(context).accentColor,
+                  Theme.of(context).accentColor
+                ]),
                 constrained: false,
               ),
             ),
@@ -114,7 +118,8 @@ class _AuthFacePageState extends State<AuthFacePage> {
               children: <Widget>[
                 Align(
                   alignment: Alignment.center,
-                  child: FaceCameraWidget(controller: controller),
+                  child: FaceCameraWidget(
+                      controller: controller, verify: inVerify),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -140,10 +145,12 @@ class _AuthFacePageState extends State<AuthFacePage> {
                                         .button
                                         .copyWith(color: Colors.white)),
                                 onPressed: () async {
-                                  await _doAuthorization(isAgain,context);
+                                  await _doAuthorization(isAgain, context);
                                 },
-                                gradient: LinearGradient(
-                                    colors: [Theme.of(context).accentColor, Theme.of(context).accentColor]),
+                                gradient: LinearGradient(colors: [
+                                  Theme.of(context).accentColor,
+                                  Theme.of(context).accentColor
+                                ]),
                                 constrained: false,
                               ),
                             );
@@ -166,40 +173,17 @@ class _AuthFacePageState extends State<AuthFacePage> {
     );
   }
 
-  Future<void> _doAuthorization(bool isAgain,BuildContext context) async {
-    var result = await Navigator.of(context).push(TaskModal(() async {
-      try {
-        if(await Permissions.has(PermissionGroup.storage,context)){
-          Directory tempDir = await getTemporaryDirectory();
-          File imageFile = File(
-              '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg');
-          imageFile.createSync();
-          controller.takePicture(imageFile.path);
-          BaseResp<FileDetail> imageDetailResp =
-          await Repository.uploadFile(imageFile);
-          imageFile.deleteSync();
-
-          BaseResp<UserVerifyInfo> verifyResp = await Repository.verify(
-              imageDetailResp.data.filePath, widget.idCardNum, isAgain);
-          showToast(verifyResp.text);
-        }
-      } catch (e) {
-        print(e);
-        showToast(getErrorMessage(e));
-      }
-    }));
-    if(result){
-      Navigator.of(context).pop(result);
-    }
-  }
-
   CameraController controller;
 
   bool get cameraReady => cameras != null && cameras.isNotEmpty;
 
   bool get controllerReady => controller?.value?.isInitialized ?? false;
 
-  int currentCameraIndex = 1;
+  int currentCameraIndex = (cameras == null || cameras.isEmpty)
+      ? 0
+      : cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.front);
+
+  bool inVerify = false;
 
   @override
   void initState() {
@@ -240,12 +224,86 @@ class _AuthFacePageState extends State<AuthFacePage> {
     }
     setState(() {});
   }
+
+  ///认证方法
+  ///
+  ///1.先获取房屋信息
+  ///2.再验证人脸
+  Future<void> _doAuthorization(bool isAgain, BuildContext context) async {
+    bool result =
+        await Navigator.of(context).push<bool>(TaskModal<bool>(() async {
+      try {
+        setState(() {
+          inVerify = true;
+        });
+        if (await Permissions.has(PermissionGroup.storage, context)) {
+          final Directory tempDir = await getTemporaryDirectory();
+          final String dirPath = '${tempDir.path}/Pictures/faces';
+          await Directory(dirPath).create(recursive: true);
+          final String filePath = imageTempPath(dirPath);
+          await controller.takePicture(filePath);
+          BaseResp<FileDetail> imageDetailResp =
+              await Repository.uploadFile(File(filePath));
+
+          BaseResp<UserVerifyInfo> verifyResp = await Repository.verify(
+              imageDetailResp.data.filePath, widget.idCardNum, isAgain);
+
+          BaseResp<VerifyStatus> verifyStatusResp;
+          //尝试6次验证
+          for (int i = 0; i <= 5; i++) {
+            verifyStatusResp = await Repository.getVerifyStatus();
+            if (verifyStatusResp.success && verifyStatusResp.data.isVerified) {
+              break;
+            }
+            await Future.delayed(Duration(seconds: 2));
+          }
+          //重新获取信息
+          showAppToast(verifyResp.text + '\r\n' + verifyStatusResp.text);
+          StoreProvider.of<AppState>(context).dispatch(AppInitAction(context));
+          await verifyResultHint(context, verifyResp, verifyStatusResp);
+          return verifyStatusResp.data.isVerified;
+        }
+      } catch (e) {
+        print(e);
+        showAppToast(getErrorMessage(e));
+        return false;
+      } finally {
+        setState(() {
+          inVerify = false;
+        });
+      }
+      return false;
+    }));
+    Navigator.of(context).pop(result);
+  }
+
+  String imageTempPath(String dirPath) =>
+      '$dirPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+  verifyResultHint(BuildContext context, BaseResp<UserVerifyInfo> verifyResp,
+      BaseResp<VerifyStatus> verifyStatusResp) {
+    return showDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        content: Text(verifyResp.text),
+        title: Text(verifyStatusResp.text),
+        actions: <Widget>[
+          CupertinoButton(
+              child: Text(S.of(context).confirmLabel),
+              onPressed: () => Navigator.of(context).pop())
+        ],
+      ),
+    );
+  }
 }
 
 class FaceCameraWidget extends StatelessWidget {
+  final verify;
+
   const FaceCameraWidget({
     Key key,
     @required this.controller,
+    this.verify,
   }) : super(key: key);
 
   final CameraController controller;
@@ -257,7 +315,12 @@ class FaceCameraWidget extends StatelessWidget {
       clipper: FaceClipper(),
       child: AspectRatio(
         aspectRatio: controller.value.aspectRatio,
-        child: CameraPreview(controller),
+        child: verify
+            ? Container(
+                color: Colors.black54,
+                child: Center(child: Text('验证中..')),
+              )
+            : CameraPreview(controller),
       ),
     );
   }

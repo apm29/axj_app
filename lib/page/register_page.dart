@@ -4,10 +4,13 @@ import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
 
+
+const keyUserName = "userName";
+const keyPassword = "password";
 ///
 /// author : ciih
 /// date : 2019-12-30 14:33
@@ -16,33 +19,38 @@ import 'package:oktoast/oktoast.dart';
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          SizedBox.expand(
-            child: Image.asset(
-              'assets/images/city.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-          RegisterColumn(),
-          Positioned(
-            right: 16,
-            top: 0,
-            child: SafeArea(
-              child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  size: 36,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+    return Theme(
+      data: Theme.of(context).copyWith(
+        hintColor: Colors.teal.withAlpha(0x88)
+      ),
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            SizedBox.expand(
+              child: Image.asset(
+                'assets/images/city.jpg',
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-        ],
+            RegisterColumn(),
+            Positioned(
+              right: 16,
+              top: 0,
+              child: SafeArea(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    size: 36,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -316,11 +324,13 @@ class _RegisterColumnState extends State<RegisterColumn> {
     if (Form.of(context).validate()) {
       BaseResp resp = await Repository.register(_phoneController.text,
           _smsController.text, _wordController.text, _nameController.text);
-      showToast(resp.text);
-      Navigator.of(context).pop({
-        "userName": _nameController.text,
-        "password": _wordController.text,
-      });
+      showAppToast(resp.text);
+      if(resp.success) {
+        Navigator.of(context).pop({
+          keyUserName: _nameController.text,
+          keyPassword: _wordController.text,
+        });
+      }
     }
   }
 
@@ -329,9 +339,9 @@ class _RegisterColumnState extends State<RegisterColumn> {
       try {
         BaseResp resp = await Repository.sendVerifyCode(_phoneController.text,
                   isRegister: true);
-        showToast(resp.text);
+        showAppToast(resp.text);
       } catch (e) {
-        showToast(getErrorMessage(e));
+        showAppToast(getErrorMessage(e));
       }
 
     }

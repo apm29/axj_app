@@ -1,5 +1,5 @@
 import 'package:axj_app/model/bean/house.dart';
-import 'package:axj_app/model/bean/roles.dart';
+import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/bean/menus.dart';
 
 class UserInfoDetail {
@@ -13,7 +13,7 @@ class UserInfoDetail {
   String avatar;
   String idCard;
   List<House> house;
-  List<Roles> roles;
+  List<RoleInfo> roles;
   List<Menus> menus;
 
   UserInfoDetail.fromJsonMap(Map<String, dynamic> map)
@@ -29,7 +29,7 @@ class UserInfoDetail {
         house =
             List<House>.from(map["house"].map((it) => House.fromJsonMap(it))),
         roles =
-            List<Roles>.from(map["roles"].map((it) => Roles.fromJsonMap(it))),
+            List<RoleInfo>.from(map["roles"].map((it) => RoleInfo.fromJsonMap(it))),
         menus =
             List<Menus>.from(map["menus"].map((it) => Menus.fromJsonMap(it)));
 

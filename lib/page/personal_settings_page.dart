@@ -1,3 +1,6 @@
+import 'package:axj_app/model/bean/role_info.dart';
+import 'package:axj_app/page/component/gradient_background_widget.dart';
+import 'package:axj_app/page/theme_test_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/main.dart';
@@ -32,79 +35,107 @@ class PersonalSettingsPage extends StatelessWidget {
               ];
             },
             onSelected: (locale) {
-              store.dispatch(ChangeLocaleAction(locale));
+              StoreProvider.of<AppState>(context).dispatch(ChangeLocaleAction
+                (locale));
             },
           ),
         ],
       ),
-      body: Center(
-        child: ListView(
-          children: <Widget>[
-            RaisedButton(
-              onPressed: () {
-                AppRouter.toHome(context, ActiveTab.Mine);
-              },
-              child: Text(S.of(context).mineTab),
-            ),
-            RaisedButton(
-              onPressed: () {
-                AppRouter.toRegister(context);
-              },
-              child: Text(S.of(context).registerTitle),
-            ),
-            RaisedButton(
-              onPressed: () {
-                AppRouter.toHome(context, ActiveTab.Home);
-              },
-              child: Text(S.of(context).homeTab),
-            ),
-            RaisedButton(
-              onPressed: () {
-                store.dispatch(LogoutAction(context));
-              },
-              child: Text(S.of(context).logoutLabel),
-            ),
-            RaisedButton(
-              onPressed: () {
-                store.dispatch(VoidTaskSimulationAction(
-                    store.state.dictionary.init, context));
-              },
-              child: Text(S.of(context).myHouseTitle),
-            ),
-            RaisedButton(
-              onPressed: () {
-                store.dispatch(ChangeHouseAction(context));
-              },
-              child: Text(S.of(context).changeHouseLabel),
-            ),
-            RaisedButton(
-              onPressed: () {
-                store.dispatch(VoidTaskSimulationAction(
-                  () async {
-                    await Future.delayed(Duration(seconds: 3));
+      body: Stack(
+        children: <Widget>[
+          GradientBackgroundWidget(),
+          Center(
+            child: ListView(
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    AppRouter.toHome(context, ActiveTab.Mine);
                   },
-                  context,
-                ));
-              },
-              child: Text('void task simulate'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                store.dispatch(ResultTaskSimulationAction(
-                  () async {
-                    await Future.delayed(Duration(seconds: 3));
-                    return 1;
+                  child: Text(S.of(context).mineTab),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    AppRouter.toRegister(context);
                   },
-                  context,
-                ));
-              },
-              child: StoreBuilder<AppState>(builder: (context, store) {
-                return Text('result task simulate:' +
-                    '${store.state.simulationResult ?? ''}');
-              }),
+                  child: Text(S.of(context).registerTitle),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    AppRouter.toHome(context, ActiveTab.Home);
+                  },
+                  child: Text(S.of(context).homeTab),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(LogoutAction(context));
+                  },
+                  child: Text(S.of(context).logoutLabel),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(ExplicitTaskAction(
+                        StoreProvider.of<AppState>(context).state.settings.init, context));
+                  },
+                  child: Text(S.of(context).myHouseTitle),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(ChangeHouseAction(context));
+                  },
+                  child: Text(S.of(context).changeHouseLabel),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(ChangeRoleAction(context));
+                  },
+                  child: Text(S.of(context).changeRoleLabel),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(ChangeRoleAction(
+                      context,
+                      roleCodeRequest: PoliceManCode,
+                    ));
+                  },
+                  child: Text(S.of(context).changeRoleLabel),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(ExplicitTaskAction(
+                      () async {
+                        await Future.delayed(Duration(seconds: 3));
+                      },
+                      context,
+                    ));
+                  },
+                  child: Text('void task simulate'),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    StoreProvider.of<AppState>(context).dispatch(ResultTaskSimulationAction(
+                      () async {
+                        await Future.delayed(Duration(seconds: 3));
+                        return 1;
+                      },
+                      context,
+                    ));
+                  },
+                  child: StoreBuilder<AppState>(builder: (context, store) {
+                    return Text('result task simulate:' +
+                        '${store.state.simulationResult ?? ''}');
+                  }),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => ThemeTestPage()));
+                  },
+                  child: Text('Test'),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

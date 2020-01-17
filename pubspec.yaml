@@ -86,6 +86,12 @@ flutter:
        fonts:
          - asset: assets/fonts/handwrite_font.ttf
            weight: 700
+     - family: SoukouMincho
+       fonts:
+         - asset: assets/fonts/SoukouMincho.ttf
+     - family: xmt
+       fonts:
+         - asset: assets/fonts/xmt.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

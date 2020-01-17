@@ -5,10 +5,10 @@ import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/page/component/image_picker_widget.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
+import 'package:axj_app/utils.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
 
 class MemberEditPage extends StatefulWidget {
   final String id;
@@ -45,7 +45,7 @@ class _MemberEditPageState extends State<MemberEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text(editMember ? "修改成员信息" : "新增成员信息"),
       ),
@@ -54,7 +54,7 @@ class _MemberEditPageState extends State<MemberEditPage> {
           future: future,
           modelBuilder: (context, memberInfo) {
             if (!initialCalled) {
-              _imageUrlController.url = memberInfo.memberpicurl;
+              _imageUrlController.url = memberInfo.memberpicurl??"";
               _nameController.text = memberInfo.membername;
               _phoneController.text = memberInfo.memberphone;
               _idController.text = memberInfo.idno;
@@ -168,7 +168,7 @@ class _MemberEditPageState extends State<MemberEditPage> {
   Future<void> _submit(BuildContext context) async {
     if (Form.of(context).validate()) {
       if (_imageUrlController.url == null) {
-        showToast("请选择人脸照片");
+        showAppToast("请选择人脸照片");
         return;
       }
       var resp = await Navigator.of(context)
@@ -177,9 +177,9 @@ class _MemberEditPageState extends State<MemberEditPage> {
       }));
       if (resp.success) {
         Navigator.of(context).pop(true);
-        showToast(editMember ? "修改成功" : "保存成功");
+        showAppToast(editMember ? "修改成功" : "保存成功");
       } else {
-        showToast(resp.text);
+        showAppToast(resp.text);
       }
     }
   }

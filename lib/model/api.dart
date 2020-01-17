@@ -90,7 +90,7 @@ class Api {
         // config the http client
         client.findProxy = (uri) {
           //proxy all request to localhost:8888
-          return "PROXY 192.168.99.181:8888";
+          return "PROXY 192.168.0.105:8888";
         };
         // you can also create a new HttpClient to dio
         // return new HttpClient();

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/page/member_edit_page.dart';
 import 'package:axj_app/page/member_manage_page.dart';
+import 'package:axj_app/page/notice/notice_detail.dart';
 import 'package:axj_app/page/vehicle_manage_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
@@ -44,8 +48,11 @@ class Routes {
   static String myMember = "/my_member";
   static String myVehicle = "/my_vehicle";
   static String editMember = "/edit_member";
+  static String noticeDetail = "/notice/id";
+  static String noticeDetail2 = "/notice/data";
 
   static String keyId = "id";
+  static String keyData = "id";
   static String keyType = "type";
 
   static void configureRoutes(Router router) {
@@ -70,6 +77,8 @@ class Routes {
     router.define(authForm, handler: authHandler);
     router.define('$authFace/:$keyId', handler: authFaceHandler);
     router.define('$myMember/:$keyId', handler: myMemberHandler);
+    router.define('$noticeDetail/:$keyId', handler: noticeDetailHandler);
+    router.define('$noticeDetail2/:$keyData', handler: noticeDetailHandler2);
     router.define('$editMember/:$keyId/:$keyType', handler: editMemberHandler);
   }
 }
@@ -148,6 +157,26 @@ final myMemberHandler = new Handler(
   },
 );
 
+final noticeDetailHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return NoticeDetailPage(noticeId: params[Routes.keyId].first);
+  },
+);
+final noticeDetailHandler2 = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    Notice notice;
+    try {
+      var key = params[Routes.keyData].first;
+      notice = dataCachedMap[key];
+      dataCachedMap.remove(key);
+    } catch (e) {
+      notice = null;
+    }
+    print(notice);
+    return NoticeDetailPage(notice: notice,);
+  },
+);
+
 final editMemberHandler = new Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var id = params[Routes.keyId].first;
@@ -159,6 +188,10 @@ final editMemberHandler = new Handler(
   },
 );
 
+final defaultTransitionType = TransitionType.material;
+final defaultTransitionDuration = Duration(milliseconds: 2800);
+final dataCachedMap = Map<String, dynamic>();
+
 class AppRouter {
   static Future toHomeAndReplaceSelf(BuildContext context) {
     if (ModalRoute.of(context).settings.name == Routes.home) {
@@ -168,7 +201,7 @@ class AppRouter {
       context,
       Routes.home,
       replace: true,
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
     );
   }
 
@@ -176,7 +209,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.personalSettings,
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
     );
   }
 
@@ -187,7 +220,7 @@ class AppRouter {
       Routes.home,
       replace: true,
       clearStack: true,
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
     );
   }
 
@@ -203,7 +236,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.register,
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
     );
   }
 
@@ -215,7 +248,7 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       Routes.authForm,
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
     );
   }
 
@@ -223,12 +256,13 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.authFace}/$idCardNum',
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
     );
   }
 
   static Future toVehicleManage(BuildContext context) {
-    return Application.router.navigateTo(context, Routes.myVehicle);
+    return Application.router.navigateTo(context, Routes.myVehicle,
+        transition: defaultTransitionType);
   }
 
   ///@param id: houseId(familyId)
@@ -236,7 +270,28 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.myMember}/$id',
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
+    );
+  }
+
+  ///@param id: houseId(familyId)
+  static Future toNoticeDetail(BuildContext context, dynamic noticeId) {
+    return Application.router.navigateTo(
+      context,
+      '${Routes.noticeDetail}/$noticeId',
+      transition: TransitionType.material,
+    );
+  }
+
+  static Future toNoticeDetailWithData(BuildContext context, Notice notice) {
+    var path = '${Routes.noticeDetail2}/${notice.noticeId}';
+    print(path);
+    dataCachedMap[notice.noticeId.toString()] = notice;
+    return Application.router.navigateTo(
+      context,
+      path,
+      transition: defaultTransitionType,
+      transitionDuration: defaultTransitionDuration,
     );
   }
 
@@ -246,7 +301,8 @@ class AppRouter {
     return Application.router.navigateTo(
       context,
       '${Routes.editMember}/$id/${edit ? 1 : 0}',
-      transition: TransitionType.cupertino,
+      transition: defaultTransitionType,
+      transitionDuration: defaultTransitionDuration,
     );
   }
 }

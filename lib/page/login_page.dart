@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:axj_app/page/register_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/model/api.dart';
@@ -6,10 +7,11 @@ import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/utils.dart';
 import 'package:axj_app/widget/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 ///
 /// author : ciih
@@ -111,13 +113,13 @@ class LoginPage extends StatelessWidget {
 
   bool _close(BuildContext context) => Navigator.of(context).pop();
 
-  void _register(BuildContext context) =>
-      AppRouter.toRegister(context).then((resMap) {
-        if (resMap != null) {
-          store.dispatch(
-              LoginAction(resMap['userName'], resMap['password'], context));
-        }
-      });
+  Future<void> _register(BuildContext context) async {
+    var resMap = await AppRouter.toRegister(context);
+    if (resMap != null && resMap is Map) {
+      StoreProvider.of<AppState>(context).dispatch(
+          LoginAction(resMap[keyUserName], resMap[keyPassword], context));
+    }
+  }
 }
 
 class LoginCard extends StatefulWidget {
@@ -415,20 +417,20 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
   Future _sendSmsCode() async {
     try {
       BaseResp resp = await Repository.sendVerifyCode(_phoneController.text);
-      showToast(resp.text);
+      showAppToast(resp.text);
       FocusScope.of(context).requestFocus(_smsFocusNode);
     } catch (e) {
       print(e);
-      showToast(getErrorMessage(e));
+      showAppToast(getErrorMessage(e));
     }
   }
 
   void _login(BuildContext context) {
     if (tabController.index == 0) {
-      store.dispatch(FastLoginAction(
+      StoreProvider.of<AppState>(context).dispatch(FastLoginAction(
           _phoneController.text, _smsController.text, context));
     } else {
-      store.dispatch(
+      StoreProvider.of<AppState>(context).dispatch(
           LoginAction(_nameController.text, _wordController.text, context));
     }
   }

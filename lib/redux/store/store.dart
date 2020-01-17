@@ -1,10 +1,17 @@
+import 'dart:collection';
+
+import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/house_info.dart';
+import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
+import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/cache.dart';
-import 'package:axj_app/model/dictionary.dart';
+import 'package:axj_app/model/repository.dart';
+import 'package:axj_app/model/settings.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
 import 'package:axj_app/redux/action/actions.dart';
@@ -15,21 +22,50 @@ class AppState {
       : this.userState = userState ?? UserState(),
         this.loading = loading ?? false,
         this.homePageState = HomePageState(),
-        this.dictionary = Dictionary(),
+        this.settings = Settings(),
         this.locale = Locale(Cache().locale ?? 'zh');
 
   UserState userState;
 
   HomePageState homePageState;
 
-  Dictionary dictionary;
+  Settings settings;
 
-  HouseInfo get currentHouse {
-    return dictionary.defaultHouseInfo(Cache().currentHouseId);
+  HashSet refreshPool = HashSet();
+
+  bool needRefresh(token) {
+    return refreshPool.any((t) => t == token);
   }
 
+  void cancelRefresh(token) {
+    refreshPool.remove(token);
+  }
+
+  ///是否已认证
+  ///需要在userState.login 并且 [Settings]已初始后调用
+  bool get authorized =>
+      (userState?.userInfo?.authorized ?? false) && settings.authorized;
+
+  ///获取缓存的当前房屋信息,或者在房屋唯一时取唯一一个房屋
+  ///该方法在[Settings]初始化之后才能使用
+  HouseInfo get currentHouse {
+    return settings.defaultHouseInfo;
+  }
+
+  ///设置当前房屋
   set currentHouse(HouseInfo val) {
     Cache().setCurrentHouseId(val.houseId);
+  }
+
+  ///获取缓存角色信息,或者在角色唯一时取唯一一个角色
+  ///该方法在[Settings]初始化之后才能使用
+  RoleInfo get currentRole {
+    return settings.defaultUserRole;
+  }
+
+  ///设置当前角色id
+  set currentRole(RoleInfo val) {
+    Cache().setCurrentRoleId(val.roleCode);
   }
 
   bool loading;
@@ -59,22 +95,61 @@ class AppState {
 
   @override
   String toString() {
-    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $dictionary, currentHouse: $currentHouse, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
+    return 'AppState{userState: $userState, homePageState: $homePageState, dictionary: $settings, loading: $loading, locale: $locale, simulationResult: $simulationResult}';
   }
 }
 
 enum ActiveTab { Home, Mine }
 
 class HomePageState {
-  final ActiveTab currentTab;
+  ActiveTab currentTab;
+
+  bool hideBottomNavigation = false;
+
+  List<Notice> noticeList = [];
+
+  List<Notice> get latestNoticeList =>
+      noticeList.length > 3 ? noticeList.sublist(0, 3) : noticeList;
 
   HomePageState({ActiveTab currentTab})
       : this.currentTab = currentTab ?? ActiveTab.Home;
+
+  void getNoticeList(
+    BuildContext context,
+    Store<AppState> store, {
+    bool refresh = false,
+  }) {
+    var getFromRemote = refresh || noticeList == null || noticeList.isEmpty;
+    if (getFromRemote) {
+      store.dispatch(
+        ImplicitTaskAction(
+          () async {
+            BaseResp<List<Notice>> notice = await Repository.getAllNotice();
+            noticeList = notice.data ?? [];
+          },
+          context,
+        ),
+      );
+    } else {}
+  }
 
   @override
   String toString() {
     return 'HomePageState{currentTab: $currentTab}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HomePageState &&
+          runtimeType == other.runtimeType &&
+          currentTab == other.currentTab &&
+          hideBottomNavigation == other.hideBottomNavigation &&
+          noticeList == other.noticeList;
+
+  @override
+  int get hashCode =>
+      currentTab.hashCode ^ hideBottomNavigation.hashCode ^ noticeList.hashCode;
 }
 
 class UserState {
@@ -103,6 +178,10 @@ AppState appReduce(AppState state, action) {
 
 final appStateReducer = combineReducers<AppState>(
   [
+    TypedReducer<AppState, RefreshAction>((state, action) {
+      state.refreshPool.add(action.refreshToken);
+      return state;
+    }),
     TypedReducer<AppState, AppInitAction>((state, action) {
       return state;
     }),
@@ -143,7 +222,17 @@ final homePageReducer = combineReducers<HomePageState>(
   [
     TypedReducer<HomePageState, TabSwitchAction>(
       (state, action) {
-        return HomePageState(currentTab: ActiveTab.values[action.index]);
+        return state..currentTab = ActiveTab.values[action.index];
+      },
+    ),
+    TypedReducer<HomePageState, HomeScrollAction>(
+      (state, action) {
+        return state; //..hideBottomNavigation = action.hide;
+      },
+    ),
+    TypedReducer<HomePageState, TabReselectedAction>(
+      (state, action) {
+        return state; //..hideBottomNavigation = action.hide;
       },
     ),
   ],
