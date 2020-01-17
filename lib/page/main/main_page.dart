@@ -17,6 +17,7 @@ class MainPage extends StatelessWidget {
     return GaussBlurBackground(
       child: CustomScrollView(
         slivers: <Widget>[
+
           SliverPersistentHeader(
             delegate: HomeAppbarDelegate(),
             pinned: true,

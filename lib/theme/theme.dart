@@ -57,10 +57,12 @@ ThemeData twitterLight = ThemeData(
   textTheme: TextTheme(
     overline: TextStyle(
       color: Color(0xffa0a9b2),
+        fontFamily: 'xmt',
+        fontWeight: FontWeight.w700
     ),
     title: TextStyle(
       fontFamily: 'xmt',
-      fontWeight: FontWeight.w600
+      fontWeight: FontWeight.w900
     )
   ),
   colorScheme: ColorScheme(

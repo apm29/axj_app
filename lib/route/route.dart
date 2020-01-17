@@ -87,8 +87,11 @@ class NotFoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('抱歉'),
+      ),
       body: Center(
-        child: Text('404 路由未找到'),
+        child: Text('404 Not Found 路由未找到'),
       ),
     );
   }
@@ -172,8 +175,9 @@ final noticeDetailHandler2 = new Handler(
     } catch (e) {
       notice = null;
     }
-    print(notice);
-    return NoticeDetailPage(notice: notice,);
+    return NoticeDetailPage(
+      notice: notice,
+    );
   },
 );
 
@@ -285,7 +289,6 @@ class AppRouter {
 
   static Future toNoticeDetailWithData(BuildContext context, Notice notice) {
     var path = '${Routes.noticeDetail2}/${notice.noticeId}';
-    print(path);
     dataCachedMap[notice.noticeId.toString()] = notice;
     return Application.router.navigateTo(
       context,

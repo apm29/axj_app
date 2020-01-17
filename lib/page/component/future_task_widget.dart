@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/redux/store/store.dart';
@@ -227,6 +229,136 @@ class ErrorHintWidget extends StatelessWidget {
                 )
                 .toList(),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SkeletonTasksBuilder extends StatefulWidget {
+  final AsyncResultTask<List<Future<BaseResp>>> tasks;
+  final ModelBuilder<List<BaseResp>> builder;
+  final List<BaseResp> initialData;
+  final WidgetBuilder skeletonBuilder;
+
+  const SkeletonTasksBuilder({
+    Key key,
+    @required this.tasks,
+    @required this.builder,
+    this.skeletonBuilder,
+    this.initialData,
+  }) : super(key: key);
+
+  static SkeletonTasksBuilderState of(BuildContext context) {
+    return context.findAncestorStateOfType<SkeletonTasksBuilderState>();
+  }
+
+  @override
+  SkeletonTasksBuilderState createState() => SkeletonTasksBuilderState();
+}
+
+class SkeletonTasksBuilderState extends State<SkeletonTasksBuilder> {
+  StreamController<List<BaseResp>> _controller = StreamController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      refresh(context);
+    }
+  }
+
+  Future refresh(BuildContext context) async {
+    try {
+      List<BaseResp> list = await Future.wait(await widget.tasks());
+      _controller.add(list);
+    } catch (e) {
+      _controller.addError(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.close();
+  }
+
+  bool _waiting(AsyncSnapshot snapshot) =>
+      snapshot.connectionState == ConnectionState.waiting && !snapshot.hasError;
+
+  bool _success(AsyncSnapshot<List<BaseResp>> snapshot) {
+    return snapshot.hasData && snapshot.data.every((resp) => resp.success);
+  }
+
+  String _error(AsyncSnapshot<List<BaseResp>> snapshot) {
+    if (snapshot.hasError) {
+      return snapshot.error.toString();
+    } else {
+      return snapshot.data.firstWhere((resp) => !resp.success).text;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<BaseResp>>(
+      stream: _controller.stream,
+      initialData: widget.initialData,
+      builder: (context, snapshot) {
+        if (_waiting(snapshot)) {
+          return widget.skeletonBuilder(context);
+        } else if (_success(snapshot)) {
+          return widget.builder(context, snapshot.data);
+        } else {
+          return ErrorWidget(
+            error: _error(snapshot),
+            refresh: () async => await refresh(context),
+          );
+        }
+      },
+    );
+  }
+}
+
+class ErrorWidget extends StatelessWidget {
+  final String error;
+  final AsyncResultTask refresh;
+
+  const ErrorWidget({Key key, this.error, this.refresh}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: () async => {refresh()},
+        child: Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "轻点重试",
+                    style: Theme.of(context).textTheme.title.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground),
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Icon(Icons.refresh),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  error,
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -27,7 +27,7 @@ class Settings {
   Future<void> init() async {
     var token = Cache().token;
     if (token == null || token.isEmpty) {
-      throw NotInitializedException("字典初始化需要Token信息");
+      throw NotLoginException("字典初始化需要Token信息");
     }
     //获取小区字典
     BaseResp<List<DistrictInfo>> resp = await Repository.getDistrictInfo();
@@ -128,6 +128,15 @@ class Settings {
 
 class NotInitializedException implements Exception {
   NotInitializedException([this.message]);
+
+  final String message;
+
+  @override
+  String toString() => 'NotInitializedException($message)';
+}
+
+class NotLoginException implements Exception {
+  NotLoginException([this.message]);
 
   final String message;
 

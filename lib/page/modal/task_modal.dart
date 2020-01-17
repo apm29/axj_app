@@ -1,12 +1,13 @@
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class TaskModal<T> extends ModalRoute<T> {
-
   /// use [AsyncVoidTask] or [AsyncResultTask]
   final Function task;
-  final minimumLoadingTime = 500;
+  final minimumLoadingTime = 800;
+
   TaskModal(this.task);
 
   @override
@@ -38,6 +39,7 @@ class TaskModal<T> extends ModalRoute<T> {
 
   @override
   void install(OverlayEntry insertionPoint) {
+    print('called');
     ()async{
       int start = DateTime.now().millisecondsSinceEpoch;
       T result = await task?.call();
@@ -50,5 +52,4 @@ class TaskModal<T> extends ModalRoute<T> {
     }();
     super.install(insertionPoint);
   }
-
 }

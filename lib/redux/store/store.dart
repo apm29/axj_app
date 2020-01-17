@@ -11,7 +11,6 @@ import 'package:axj_app/model/settings.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:dio/dio.dart';
 import 'package:axj_app/redux/action/actions.dart';

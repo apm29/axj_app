@@ -1,8 +1,8 @@
 import 'dart:ui';
-
 import 'package:axj_app/generated/i18n.dart';
 import 'package:axj_app/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 ///
 /// author : ciih
@@ -17,11 +17,25 @@ class HomeAppbarWidget extends StatelessWidget {
 }
 
 class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
+  final double buttonSize = 18.0;
+  final double buttonMargin = 12.0;
+  final double systemPadding = 20.0;
+  final buttonTextList = ["访客管理", "找警察", "找物业", "找客服"];
+  final buttonIconList = [
+    Icons.person_outline,
+    Icons.lock_outline,
+    Icons.lightbulb_outline,
+    Icons.help_outline
+  ];
+
+  double currentOffset;
+
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     double percent = shrinkOffset / (maxExtent - minExtent);
     percent = percent.clamp(0.0, 1.0);
+    currentOffset = shrinkOffset;
     final Color endColor = Theme.of(context).colorScheme.surface;
     final ColorTween tween1 =
         ColorTween(begin: Colors.transparent, end: endColor);
@@ -63,17 +77,8 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
       ),
     );
 
-    final buttonTextList = ["访客管理", "找警察", "找物业", "找客服"];
-    final buttonIconList = [
-      Icons.person_outline,
-      Icons.lock_outline,
-      Icons.lightbulb_outline,
-      Icons.help_outline
-    ];
     Color onSurface = Theme.of(context).colorScheme.onSurface;
-    final double buttonSize = 18.0;
-    final double buttonMargin = 12.0;
-    double systemPadding = 20.0;
+
     final marginBottomOfButtons = Tween(
       begin: 0.0, //(bottomHeight - buttonSize) / 2.0,
       end: 0.0, //(minExtent - buttonSize - systemPadding) / 2.0
@@ -123,7 +128,6 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
       end: onSurface,
       //end: Theme.of(context).accentColor,
     );
-
 
     Color blurForeground = Theme.of(context).colorScheme.surface.withAlpha(77);
     return Stack(
@@ -311,7 +315,17 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 68;
 
   @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
+  bool shouldRebuild(HomeAppbarDelegate oldDelegate) {
+    return false;
+  }
+
+  @override
+  OverScrollHeaderStretchConfiguration get stretchConfiguration {
+    return OverScrollHeaderStretchConfiguration(
+      stretchTriggerOffset: 100,
+      onStretchTrigger: () async {
+        print('trigger');
+      },
+    );
   }
 }

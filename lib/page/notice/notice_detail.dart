@@ -1,42 +1,53 @@
-import 'package:axj_app/generated/i18n.dart';
-import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NoticeDetailPage extends StatelessWidget {
   final String noticeId;
   final Notice notice;
 
-  const NoticeDetailPage({Key key, this.noticeId, this.notice})
-      : super(key: key);
+  const NoticeDetailPage({
+    Key key,
+    this.noticeId,
+    this.notice,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return (notice != null)
-        ? buildScaffold(notice, context)
-        : TaskBuilder(
-            task: () async => [
-              await Repository.getNoticeDetail(noticeId),
-            ],
-            modelBuilder: (context, model) {
-              Notice data = model[0].data;
-              return buildScaffold(data, context);
-            },
-          );
+    return SkeletonTasksBuilder(
+      tasks: () async {
+        return [
+          Repository.getNoticeDetail(notice.noticeId.toString()),
+          Repository.getNoticeLikes(notice.noticeId.toString()),
+        ];
+      },
+      builder: (context, data) {
+        var noticeDetail = data[0].data;
+        var likeUserList = data[1].data;
+        return buildScaffold(context, noticeDetail, likeUserList: likeUserList);
+      },
+      skeletonBuilder: (context) {
+        return buildScaffold(
+          context,
+          notice,
+        );
+      },
+    );
   }
 
-  Scaffold buildScaffold(Notice data, BuildContext context) {
+  Scaffold buildScaffold(
+    BuildContext context,
+    Notice data, {
+    List likeUserList,
+  }) {
+    print(likeUserList);
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            stretch: true,
-            onStretchTrigger: () {
-              // Function callback for stretch
-              return;
-            },
+            stretch: false,
             expandedHeight: 200.0,
             flexibleSpace: FlexibleSpaceBar(
               stretchModes: <StretchMode>[
@@ -91,6 +102,12 @@ class NoticeDetailPage extends StatelessWidget {
               ),
             ),
           ),
+          CupertinoSliverRefreshControl(
+            refreshTriggerPullDistance: 60,
+            onRefresh: () async {
+              await refresh(context);
+            },
+          ),
           SliverToBoxAdapter(
             child: Hero(
               transitionOnUserGestures: true,
@@ -102,4 +119,7 @@ class NoticeDetailPage extends StatelessWidget {
       ),
     );
   }
+
+  Future refresh(BuildContext context) =>
+      SkeletonTasksBuilder.of(context).refresh(context);
 }

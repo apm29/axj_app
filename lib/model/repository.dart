@@ -307,4 +307,15 @@ class Repository {
       processor: (s)=>Notice.fromJsonMap(s),
     );
   }
+  static Future<BaseResp<List>> getNoticeLikes(String noticeId) {
+    return Api().post(
+      '/business/notice/getNoticeLikes',
+      formData: {
+        'noticeId':noticeId,
+        'page':1,
+        'rows':9999
+      },
+      processor: (s)=>throw Exception(),
+    );
+  }
 }
