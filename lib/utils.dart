@@ -207,4 +207,4 @@ Size calcTrueTextSize(
 final intl.DateFormat dateFormat = intl.DateFormat("yyyy年MM月dd日 HH:mm:ss");
 
 String formattedTime(String time) =>
-    dateFormat.format(DateTime.tryParse(time).toLocal());
+    dateFormat.format(DateTime.tryParse(time)?.toLocal()??DateTime.now());

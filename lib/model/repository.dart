@@ -7,6 +7,8 @@ import 'package:axj_app/model/bean/family_member.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/member_detail.dart';
+import 'package:axj_app/model/bean/notice/comment.dart';
+import 'package:axj_app/model/bean/notice/comment_detail.dart';
 import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
@@ -315,7 +317,44 @@ class Repository {
         'page':1,
         'rows':9999
       },
-      processor: (s)=>throw Exception(),
+      processor: (s)=>s,
+    );
+  }
+
+  static Future<BaseResp<CommentDataSummary>> getNoticeComments(String noticeId) {
+    return Api().post(
+      '/business/notice/getNoticeComment',
+      formData: {
+        'noticeId':noticeId,
+        'page':1,
+        'rows':9999
+      },
+      processor: (s){
+        return CommentDataSummary.fromJsonMap(s);
+      },
+    );
+  }
+
+  static Future<BaseResp> addNoticeComments(String
+  noticeId,String content) {
+    return Api().post(
+      '/business/notice/NoticeComment',
+      formData: {
+        'noticeId':noticeId,
+        'content':content,
+      },
+      processor: (s)=>null,
+    );
+  }
+
+  static Future<BaseResp> addNoticeLike(String
+  noticeId) {
+    return Api().post(
+      '/business/notice/NoticeLikes',
+      formData: {
+        'noticeId':noticeId,
+      },
+      processor: (s)=>null,
     );
   }
 }

@@ -34,10 +34,10 @@ ThemeData twitterLight = ThemeData(
     brightness: Brightness.dark,
     color: Color(0xffffffff),
     iconTheme: IconThemeData(
-      color: Color(0xff1a7fd5),
+      color: Color(0xff1c162e),
     ),
     actionsIconTheme: IconThemeData(
-      color: Color(0xff1a7fd5),
+      color:Color(0xff1c162e),
     ),
     textTheme: TextTheme(),
   ),

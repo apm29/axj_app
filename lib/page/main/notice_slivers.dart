@@ -1,5 +1,6 @@
 import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/page/component/image_picker_widget.dart';
+import 'package:axj_app/page/transition/auto_transition.dart';
 import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,11 +38,13 @@ class NoticeSlivers extends StatelessWidget {
         store.state.homePageState.getNoticeList(context, store);
       },
       distinct: true,
-      builder: (context, state) => SliverList(
-        delegate: SliverChildBuilderDelegate(
-            (context, index) => NoticeItemWidget(state.noticeList[index]),
-            childCount: state.noticeList?.length ?? 0),
-      ),
+      builder: (context, state) =>
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+                    (context, index) =>
+                    NoticeItemWidget(state.noticeList[index]),
+                childCount: state.noticeList?.length ?? 0),
+          ),
       converter: (store) => store.state.homePageState,
     );
   }
@@ -50,8 +53,7 @@ class NoticeSlivers extends StatelessWidget {
 class NoticeItemWidget extends StatefulWidget {
   final Notice notice;
 
-  const NoticeItemWidget(
-    this.notice, {
+  const NoticeItemWidget(this.notice, {
     Key key,
   }) : super(key: key);
 
@@ -81,12 +83,19 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
 
   @override
   Widget build(BuildContext context) {
-    var styleBody = Theme.of(context).textTheme.overline.copyWith(
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+    var styleBody = Theme
+        .of(context)
+        .textTheme
+        .overline
+        .copyWith(
+      color: Theme
+          .of(context)
+          .colorScheme
+          .onSurface,
+    );
     return Container(
       margin:
-          EdgeInsets.symmetric(vertical: 4, horizontal: 12).copyWith(bottom: 0),
+      EdgeInsets.symmetric(vertical: 4, horizontal: 12).copyWith(bottom: 0),
       child: SlideTransition(
         position: Tween<Offset>(
           end: Offset.zero,
@@ -114,14 +123,22 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                         Hero(
                           transitionOnUserGestures: true,
                           tag: widget.notice.noticeTitle,
-                          child: Text(
-                            widget.notice.noticeTitle,
-                            style:
-                                Theme.of(context).textTheme.subtitle.copyWith(
-                                      color: Theme.of(context)
-                                          .cardColor
-                                          .withAlpha(0xaa),
-                                    ),
+                          child: Material(
+                            type: MaterialType.transparency,
+                            child: Text(
+                              widget.notice.noticeTitle,
+                              style:
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .subtitle
+                                  .copyWith(
+                                color: Theme
+                                    .of(context)
+                                    .cardColor
+                                    .withAlpha(0xaa),
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -129,7 +146,10 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                         ),
                         Text(
                           widget.notice.formattedCreatedTime,
-                          style: Theme.of(context).textTheme.overline,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .overline,
                         ),
                         Text.rich(
                           TextSpan(
@@ -137,21 +157,26 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                             children: [
                               TextSpan(
                                 text: widget.notice.hashTags,
-                                style: Theme.of(context)
+                                style: Theme
+                                    .of(context)
                                     .textTheme
                                     .overline
                                     .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
+                                  color: Theme
+                                      .of(context)
+                                      .colorScheme
+                                      .onSurface,
+                                ),
                               )
                             ],
                           ),
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
                               .overline
-                              .copyWith(color: Theme.of(context).accentColor),
+                              .copyWith(color: Theme
+                              .of(context)
+                              .accentColor),
                         ),
                         Divider(),
                         SizedBox(
@@ -161,14 +186,16 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                             transitionOnUserGestures: true,
                             flightShuttleBuilder:
                                 (context, animation, d, from, to) {
-                              return Text(
-                                widget.notice.contentSummary,
-                                style: TextStyleTween(
-                                        begin: styleBody,
-                                        end: Theme.of(context).textTheme.body1)
-                                    .transform(animation.value),
-                                maxLines: 3,
-                                overflow: TextOverflow.fade,
+                              return AutoFadeOutTransition(
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: Text(
+                                    widget.notice.contentSummary,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                                animation: animation,
                               );
                             },
                             child: Text(
@@ -192,39 +219,39 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                       children: <Widget>[
                         Expanded(
                           child: widget.notice.hasImage
-                              ? Material(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(6)),
-                                  clipBehavior: Clip.antiAlias,
-                                  type: MaterialType.card,
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: <Widget>[
-                                      Hero(
-                                        transitionOnUserGestures: true,
-                                        tag: widget.notice.firstImage,
-                                        child: Image.network(
-                                          widget.notice.firstImage,
-                                          fit: BoxFit.fitHeight,
-                                          loadingBuilder: defaultLoadingBuilder,
-                                        ),
-                                      ),
-                                      DecoratedBox(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment(1.0, 1.0),
-                                            end: Alignment(0.0, 0.5),
-                                            colors: <Color>[
-                                              Color(0xF0000000),
-                                              Color(0x00000000),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                 ? Material(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(6)),
+                            clipBehavior: Clip.antiAlias,
+                            type: MaterialType.card,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: <Widget>[
+                                Hero(
+                                  transitionOnUserGestures: true,
+                                  tag: widget.notice.firstImage,
+                                  child: Image.network(
+                                    widget.notice.firstImage,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: defaultLoadingBuilder,
                                   ),
-                                )
-                              : Container(),
+                                ),
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment(1.0, 1.0),
+                                      end: Alignment(0.0, 0.5),
+                                      colors: <Color>[
+                                        Color(0xF0000000),
+                                        Color(0x00000000),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                                 : Container(),
                         ),
                       ],
                     ),

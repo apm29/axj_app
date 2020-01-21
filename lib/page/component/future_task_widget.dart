@@ -292,6 +292,7 @@ class SkeletonTasksBuilderState extends State<SkeletonTasksBuilder> {
 
   String _error(AsyncSnapshot<List<BaseResp>> snapshot) {
     if (snapshot.hasError) {
+      print(snapshot.error);
       return snapshot.error.toString();
     } else {
       return snapshot.data.firstWhere((resp) => !resp.success).text;
@@ -330,7 +331,10 @@ class ErrorWidget extends StatelessWidget {
     return Material(
       type: MaterialType.transparency,
       child: InkWell(
-        onTap: () async => {refresh()},
+        onTap: () async => {await refresh()},
+        onLongPress: (){
+          Navigator.of(context).pop();
+        },
         child: Container(
           alignment: Alignment.center,
           child: Column(
@@ -340,7 +344,7 @@ class ErrorWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "轻点重试",
+                    "轻点重试,长按关闭",
                     style: Theme.of(context).textTheme.title.copyWith(
                         color: Theme.of(context).colorScheme.onBackground),
                   ),
@@ -354,7 +358,8 @@ class ErrorWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   error,
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground),
                 ),
               ),
             ],

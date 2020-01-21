@@ -39,7 +39,6 @@ class TaskModal<T> extends ModalRoute<T> {
 
   @override
   void install(OverlayEntry insertionPoint) {
-    print('called');
     ()async{
       int start = DateTime.now().millisecondsSinceEpoch;
       T result = await task?.call();

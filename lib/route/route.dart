@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/page/member_edit_page.dart';
 import 'package:axj_app/page/member_manage_page.dart';
