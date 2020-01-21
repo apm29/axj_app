@@ -176,10 +176,10 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
     _smsController.addListener(listener);
     _nameController.addListener(listener);
     _wordController.addListener(listener);
-    tabController.addListener((){
-      if(currentIndex == 0){
+    tabController.addListener(() {
+      if (currentIndex == 0) {
         FocusScope.of(context).requestFocus(_phoneFocusNode);
-      }else{
+      } else {
         FocusScope.of(context).requestFocus(_nameFocusNode);
       }
     });
@@ -311,7 +311,11 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             controller: _phoneController,
             focusNode: _phoneFocusNode,
             decoration: InputDecoration(
-              icon: Text(S.of(context).phoneLabel),
+              icon: Text(
+                S.of(context).phoneLabel,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
               hintText: S.of(context).phoneHint,
               hintStyle: Theme.of(context).textTheme.caption,
               isDense: true,
@@ -347,8 +351,8 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               fontSize: textSize,
               letterSpacing: letterSpace,
             ),
-            onChanged: (v){
-              if(v.length == smsCount){
+            onChanged: (v) {
+              if (v.length == smsCount) {
                 FocusScope.of(context).requestFocus(FocusNode());
               }
             },
@@ -357,7 +361,11 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
-              icon: Text(S.of(context).smsCodeLabel),
+              icon: Text(
+                S.of(context).smsCodeLabel,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
               hintText: S.of(context).smsCodeHint,
               hintStyle: Theme.of(context).textTheme.caption,
               focusedBorder: UnderlineInputBorder(
@@ -384,12 +392,15 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             controller: _nameController,
             focusNode: _nameFocusNode,
             decoration: InputDecoration(
-              icon: Icon(Icons.person),
+              icon: Icon(
+                Icons.person,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
               hintText: S.of(context).userNameHint,
               hintStyle: Theme.of(context).textTheme.caption,
             ),
             textInputAction: TextInputAction.next,
-            onSubmitted: (v){
+            onSubmitted: (v) {
               FocusScope.of(context).requestFocus(_wordFocusNode);
             },
           ),
@@ -400,7 +411,10 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             controller: _wordController,
             focusNode: _wordFocusNode,
             decoration: InputDecoration(
-              icon: Icon(Icons.verified_user),
+              icon: Icon(
+                Icons.verified_user,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
               hintText: S.of(context).passwordHint,
               hintStyle: Theme.of(context).textTheme.caption,
             ),
@@ -427,8 +441,8 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
 
   void _login(BuildContext context) {
     if (tabController.index == 0) {
-      StoreProvider.of<AppState>(context).dispatch(FastLoginAction(
-          _phoneController.text, _smsController.text, context));
+      StoreProvider.of<AppState>(context).dispatch(
+          FastLoginAction(_phoneController.text, _smsController.text, context));
     } else {
       StoreProvider.of<AppState>(context).dispatch(
           LoginAction(_nameController.text, _wordController.text, context));

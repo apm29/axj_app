@@ -243,11 +243,12 @@ class SkeletonTasksBuilder extends StatefulWidget {
 
   const SkeletonTasksBuilder({
     Key key,
-    @required this.tasks,
+    @required AsyncResultTask<List<Future<BaseResp>>> tasks,
     @required this.builder,
     this.skeletonBuilder,
     this.initialData,
-  }) : super(key: key);
+  })  : this.tasks = tasks,
+        super(key: key);
 
   static SkeletonTasksBuilderState of(BuildContext context) {
     return context.findAncestorStateOfType<SkeletonTasksBuilderState>();
@@ -320,6 +321,97 @@ class SkeletonTasksBuilderState extends State<SkeletonTasksBuilder> {
   }
 }
 
+class SkeletonTaskBuilder<T> extends StatefulWidget {
+  final AsyncResultTask<BaseResp<T>> task;
+  final ModelBuilder<T> builder;
+  final BaseResp<T> initialData;
+  final WidgetBuilder skeletonBuilder;
+
+  const SkeletonTaskBuilder({
+    Key key,
+    @required this.task,
+    @required this.builder,
+    this.skeletonBuilder,
+    this.initialData,
+  })  :super(key: key);
+
+  static SkeletonTaskBuilderState of(BuildContext context) {
+    return context.findAncestorStateOfType<SkeletonTaskBuilderState>();
+  }
+
+  @override
+  SkeletonTaskBuilderState<T> createState() => SkeletonTaskBuilderState<T>();
+}
+
+class SkeletonTaskBuilderState<T> extends State<SkeletonTaskBuilder<T>> {
+  StreamController<BaseResp<T>> _controller = StreamController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      refresh(context);
+    }
+  }
+
+  Future refresh(BuildContext context) async {
+    try {
+      BaseResp<T> data = await widget.task();
+      if(_controller.isClosed){
+        return;
+      }
+      _controller.add(data);
+    } catch (e) {
+      if(_controller.isClosed){
+        return;
+      }
+      _controller.addError(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.close();
+  }
+
+  bool _waiting(AsyncSnapshot snapshot) =>
+      snapshot.connectionState == ConnectionState.waiting && !snapshot.hasError;
+
+  bool _success(AsyncSnapshot<BaseResp<T>> snapshot) {
+    return snapshot.hasData && snapshot.data.success;
+  }
+
+  String _error(AsyncSnapshot<BaseResp> snapshot) {
+    if (snapshot.hasError) {
+      print(snapshot.error);
+      return snapshot.error.toString();
+    } else {
+      return snapshot.data.text;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<BaseResp<T>>(
+      stream: _controller.stream,
+      initialData: widget.initialData,
+      builder: (BuildContext context, AsyncSnapshot<BaseResp<T>> snapshot) {
+        if (_waiting(snapshot)) {
+          return widget.skeletonBuilder(context);
+        } else if (_success(snapshot)) {
+          return widget.builder(context, snapshot.data.data);
+        } else {
+          return ErrorWidget(
+            error: _error(snapshot),
+            refresh: () async => await refresh(context),
+          );
+        }
+      },
+    );
+  }
+}
+
 class ErrorWidget extends StatelessWidget {
   final String error;
   final AsyncResultTask refresh;
@@ -332,7 +424,7 @@ class ErrorWidget extends StatelessWidget {
       type: MaterialType.transparency,
       child: InkWell(
         onTap: () async => {await refresh()},
-        onLongPress: (){
+        onLongPress: () {
           Navigator.of(context).pop();
         },
         child: Container(

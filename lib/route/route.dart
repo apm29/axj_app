@@ -3,6 +3,7 @@ import 'package:axj_app/page/member_edit_page.dart';
 import 'package:axj_app/page/member_manage_page.dart';
 import 'package:axj_app/page/notice/notice_detail.dart';
 import 'package:axj_app/page/vehicle_manage_page.dart';
+import 'package:axj_app/page/visitor/visitor_manage_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/page/dialog/auth_dialog_page.dart';
@@ -48,6 +49,7 @@ class Routes {
   static String editMember = "/edit_member";
   static String noticeDetail = "/notice/id";
   static String noticeDetail2 = "/notice/data";
+  static String visitorManage = "/visitor/manage";
 
   static String keyId = "id";
   static String keyData = "id";
@@ -78,6 +80,7 @@ class Routes {
     router.define('$noticeDetail/:$keyId', handler: noticeDetailHandler);
     router.define('$noticeDetail2/:$keyData', handler: noticeDetailHandler2);
     router.define('$editMember/:$keyId/:$keyType', handler: editMemberHandler);
+    router.define(visitorManage, handler: visitorManageHandler);
   }
 }
 
@@ -187,6 +190,12 @@ final editMemberHandler = new Handler(
       id: id,
       edit: type == '1',
     );
+  },
+);
+
+final visitorManageHandler = new Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return VisitorManagePage();
   },
 );
 

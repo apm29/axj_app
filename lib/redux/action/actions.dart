@@ -100,6 +100,7 @@ Future<bool> loginAndInit(BuildContext context, Future<BaseResp> api) async {
         showAppToast("登录成功");
         var store = StoreProvider.of<AppState>(context, listen: false);
         store.state.userState.userInfo = userInfoResp.data;
+        store.state.userState.login = true;
         await store.state.settings.init();
         return true;
       } else {
@@ -174,8 +175,6 @@ class TabReselectedAction implements AppAction {
   }
 }
 
-
-
 class ExplicitTaskAction implements VoidTaskAction {
   AsyncVoidTask task;
   final BuildContext context;
@@ -247,6 +246,26 @@ class ChangeHouseAction
       {this.intercept: true, this.overrideHouse: true});
 }
 
+class CheckHouseAndRouteAction
+    implements AppAction, CheckLoginAction,CheckAuthAction,
+        NeedHouseInfoAction {
+  final BuildContext context;
+
+  final bool intercept;
+
+  final bool overrideHouse;
+
+  final String routeName;
+  final RouteNameGenerator routeGenerator;
+
+  CheckHouseAndRouteAction(this.context,
+      {this.routeGenerator,
+      this.routeName,
+      this.intercept: true,
+      this.overrideHouse: false})
+      : assert(routeName != null || routeGenerator != null);
+}
+
 class ChangeRoleAction
     implements AppAction, CheckLoginAction, NeedRoleInfoAction {
   final BuildContext context;
@@ -265,26 +284,22 @@ class ChangeRoleAction
   });
 }
 
-
-class RefreshAction{
+class RefreshAction {
   final String refreshToken;
 
   RefreshAction(this.refreshToken);
 }
 
-class HomeScrollAction implements AppAction{
+class HomeScrollAction implements AppAction {
   final bool hide;
 
   HomeScrollAction(this.hide);
 }
 
-class ImplicitTaskAction implements AppAction,VoidTaskAction{
-
+class ImplicitTaskAction implements AppAction, VoidTaskAction {
   final AsyncVoidTask task;
   final BuildContext context;
   bool showMask = false;
 
   ImplicitTaskAction(this.task, this.context);
-
-
 }

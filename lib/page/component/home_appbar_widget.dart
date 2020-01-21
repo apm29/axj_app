@@ -1,8 +1,12 @@
 import 'dart:ui';
 import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/redux/action/actions.dart';
+import 'package:axj_app/redux/store/store.dart';
+import 'package:axj_app/route/route.dart';
 import 'package:axj_app/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 ///
 /// author : ciih
@@ -265,7 +269,10 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                         ).transform(easeInExpoPercent),
                         child: InkWell(
                           onTap: () {
-                            showAppToast(s * 5);
+                            var buttonIndex = buttonTextList.indexOf(s);
+                            if(buttonIndex==0){
+                              _toVisitorManage(context);
+                            }
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -326,6 +333,12 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
       onStretchTrigger: () async {
         print('trigger');
       },
+    );
+  }
+
+  _toVisitorManage(BuildContext context) {
+    StoreProvider.of<AppState>(context).dispatch(
+      CheckHouseAndRouteAction(context,routeName: Routes.visitorManage),
     );
   }
 }

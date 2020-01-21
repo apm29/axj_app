@@ -8,9 +8,11 @@ import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/page/modal/task_modal.dart';
 import 'package:axj_app/page/transition/auto_transition.dart';
+import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 class NoticeDetailPage extends StatelessWidget {
   final String noticeId;
@@ -319,45 +321,54 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      type: MaterialType.card,
-      color: Theme.of(context).colorScheme.surface,
-      child: Container(
-        height: 64,
-        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), hintText: '说点什么吧'),
-              ),
-            ),
-            FlatButton(
-              child: Text(
-                '发送',
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.onSurface),
-              ),
-              onPressed: () {
-                addComment(
-                  context,
-                  widget.notice.noticeId.toString(),
-                  controller.text,
-                );
-              },
-            )
-          ],
-        ),
-      ),
-    );
+    return StoreConnector<AppState, bool>(
+        converter: (store) => store.state.userState.login,
+        builder: (context, login) {
+          return login
+              ? Material(
+                  type: MaterialType.card,
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Container(
+                    height: 64,
+                    padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: controller,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: '说点什么吧'),
+                          ),
+                        ),
+                        FlatButton(
+                          child: Text(
+                            '发送',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface),
+                          ),
+                          onPressed: () {
+                            addComment(
+                              context,
+                              widget.notice.noticeId.toString(),
+                              controller.text,
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              : Container(
+            height: 0,
+          );
+        });
   }
 
   Future addComment(BuildContext context, String noticeId, String content) =>
       Navigator.of(context).push(
         TaskModal(() async {
-          if(content==null || content.isEmpty){
+          if (content == null || content.isEmpty) {
             showAppToast('请输入内容');
             return;
           }

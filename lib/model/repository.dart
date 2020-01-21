@@ -15,6 +15,7 @@ import 'package:axj_app/model/bean/user_info_detail.dart';
 import 'package:axj_app/model/bean/user_verify_info.dart';
 import 'package:axj_app/model/bean/verify_status.dart';
 import 'package:axj_app/model/bean/notice/notice_type.dart';
+import 'package:axj_app/model/bean/visitor/family_code.dart';
 import 'package:dio/dio.dart';
 
 class Repository {
@@ -303,58 +304,71 @@ class Repository {
   static Future<BaseResp<Notice>> getNoticeDetail(String noticeId) {
     return Api().post(
       '/business/notice/getOneNotice',
-      formData: {
-        'noticeId':noticeId
-      },
-      processor: (s)=>Notice.fromJsonMap(s),
-    );
-  }
-  static Future<BaseResp<List>> getNoticeLikes(String noticeId) {
-    return Api().post(
-      '/business/notice/getNoticeLikes',
-      formData: {
-        'noticeId':noticeId,
-        'page':1,
-        'rows':9999
-      },
-      processor: (s)=>s,
+      formData: {'noticeId': noticeId},
+      processor: (s) => Notice.fromJsonMap(s),
     );
   }
 
-  static Future<BaseResp<CommentDataSummary>> getNoticeComments(String noticeId) {
+  static Future<BaseResp<List>> getNoticeLikes(String noticeId) {
+    return Api().post(
+      '/business/notice/getNoticeLikes',
+      formData: {'noticeId': noticeId, 'page': 1, 'rows': 9999},
+      processor: (s) => s,
+    );
+  }
+
+  static Future<BaseResp<CommentDataSummary>> getNoticeComments(
+      String noticeId) {
     return Api().post(
       '/business/notice/getNoticeComment',
-      formData: {
-        'noticeId':noticeId,
-        'page':1,
-        'rows':9999
-      },
-      processor: (s){
+      formData: {'noticeId': noticeId, 'page': 1, 'rows': 9999},
+      processor: (s) {
         return CommentDataSummary.fromJsonMap(s);
       },
     );
   }
 
-  static Future<BaseResp> addNoticeComments(String
-  noticeId,String content) {
+  static Future<BaseResp> addNoticeComments(String noticeId, String content) {
     return Api().post(
       '/business/notice/NoticeComment',
       formData: {
-        'noticeId':noticeId,
-        'content':content,
+        'noticeId': noticeId,
+        'content': content,
       },
-      processor: (s)=>null,
+      processor: (s) => null,
     );
   }
 
-  static Future<BaseResp> addNoticeLike(String
-  noticeId) {
+  static Future<BaseResp> addNoticeLike(String noticeId) {
     return Api().post(
       '/business/notice/NoticeLikes',
       formData: {
-        'noticeId':noticeId,
+        'noticeId': noticeId,
       },
-      processor: (s)=>null,
+      processor: (s) => null,
+    );
+  }
+
+  static Future<BaseResp<List<FamilyCode>>> getFamilyPassCode(
+    String districtId,
+    String houseId,
+    bool lazy,
+  ) {
+    print(districtId);
+    print(houseId);
+    return Api().post(
+      '/business/visitor/getMyPassCode',
+      formData: {
+        'districtId': districtId,
+        'houseId': houseId,
+        'lazy': lazy,
+      },
+      processor: (s) {
+        if (s is List) {
+          return s.map((json) => FamilyCode.fromJsonMap(json)).toList();
+        }
+        return [];
+      },
     );
   }
 }

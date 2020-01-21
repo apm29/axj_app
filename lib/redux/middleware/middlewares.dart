@@ -52,6 +52,7 @@ initApp(Store<AppState> store, action, NextDispatcher next) {
         store.state.userState.login = false;
       }
     } catch (e) {
+      print(e);
       store.state.userState.login = false;
     }
     next(action);

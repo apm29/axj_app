@@ -190,13 +190,19 @@ final appStateReducer = combineReducers<AppState>(
     TypedReducer<AppState, CheckAuthAndRouteAction>((state, action) {
       Application.router.navigateTo(
           action.context, action.routeName ?? action.routeGenerator(),
-          transition: TransitionType.cupertino);
+          transition: TransitionType.material);
       return state;
     }),
     TypedReducer<AppState, CheckLoginAndRouteAction>((state, action) {
       Application.router.navigateTo(
           action.context, action.routeName ?? action.routeGenerator(),
-          transition: TransitionType.cupertino);
+          transition: TransitionType.material);
+      return state;
+    }),
+    TypedReducer<AppState, CheckHouseAndRouteAction>((state, action) {
+      Application.router.navigateTo(
+          action.context, action.routeName ?? action.routeGenerator(),
+          transition: TransitionType.material);
       return state;
     }),
     TypedReducer<AppState, LoginAction>((state, action) {
