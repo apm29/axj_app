@@ -92,3 +92,42 @@ class _AutoSizeInTransitionState extends State<AutoSizeInTransition>
     );
   }
 }
+
+class AutoSlideInTransition extends StatefulWidget {
+  final Widget child;
+
+  const AutoSlideInTransition({Key key, this.child}) : super(key: key);
+
+  @override
+  _AutoSlideInTransitionState createState() => _AutoSlideInTransitionState();
+}
+
+class _AutoSlideInTransitionState extends State<AutoSlideInTransition>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+
+  @override
+  void initState() {
+    controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: Tween<Offset>(
+        end: Offset.zero,
+        begin: const Offset(1.0, 0.0),
+      ).animate(controller),
+      child: widget.child,
+    );
+  }
+}

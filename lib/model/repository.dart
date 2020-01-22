@@ -16,6 +16,8 @@ import 'package:axj_app/model/bean/user_verify_info.dart';
 import 'package:axj_app/model/bean/verify_status.dart';
 import 'package:axj_app/model/bean/notice/notice_type.dart';
 import 'package:axj_app/model/bean/visitor/family_code.dart';
+import 'package:axj_app/model/bean/visitor/paged_visitor_record.dart';
+import 'package:axj_app/model/bean/visitor/visit_record.dart';
 import 'package:dio/dio.dart';
 
 class Repository {
@@ -161,6 +163,38 @@ class Repository {
           return s.map((json) => HouseInfo.fromJsonMap(json)).toList();
         }
         return [];
+      },
+    );
+  }
+
+  static Future<BaseResp<List<VisitRecord>>> getVisitorRecord(
+      dynamic houseId, int searchType) {
+    return Api().post(
+      "/business/visitor/getVisitorRecord",
+      formData: {
+        'houseId': houseId.toString(),
+        'searchType': '',
+      },
+      processor: (s) {
+        if (s is List) {
+          return s.map((json) => VisitRecord.fromJsonMap(json)).toList();
+        }
+        return [];
+      },
+    );
+  }
+
+  static Future<BaseResp<PagedVisitorRecord>> getVisitorLog(
+      dynamic houseId, {int page, int rows,}) {
+    return Api().post(
+      "/business/inOutLog/getVisitorLogs",
+      formData: {
+        'familyId': houseId.toString(),
+        'page': page ?? 1,
+        'rows': rows ?? 20
+      },
+      processor: (s) {
+        return PagedVisitorRecord.fromJsonMap(s);
       },
     );
   }

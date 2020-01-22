@@ -150,8 +150,8 @@ class _MemberEditPageState extends State<MemberEditPage> {
                       onPressed: () => _submit(context),
                       gradient: LinearGradient(
                         colors: [
-                          Theme.of(context).primaryColor,
-                          Theme.of(context).primaryColor
+                          Theme.of(context).colorScheme.secondary,
+                          Theme.of(context).colorScheme.secondary
                         ],
                       ),
                     ),

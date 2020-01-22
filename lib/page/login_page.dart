@@ -205,7 +205,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
     return Material(
       type: MaterialType.card,
       elevation: 3,
-      color: Theme.of(context).cardColor,
+      color: Theme.of(context).colorScheme.surface,
       child: ListView(
         shrinkWrap: true,
         children: <Widget>[
@@ -314,7 +314,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               icon: Text(
                 S.of(context).phoneLabel,
                 style:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                    TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
               hintText: S.of(context).phoneHint,
               hintStyle: Theme.of(context).textTheme.caption,
@@ -364,7 +364,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
               icon: Text(
                 S.of(context).smsCodeLabel,
                 style:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                    TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
               hintText: S.of(context).smsCodeHint,
               hintStyle: Theme.of(context).textTheme.caption,
@@ -394,10 +394,13 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             decoration: InputDecoration(
               icon: Icon(
                 Icons.person,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               hintText: S.of(context).userNameHint,
               hintStyle: Theme.of(context).textTheme.caption,
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).accentColor),
+              ),
             ),
             textInputAction: TextInputAction.next,
             onSubmitted: (v) {
@@ -413,10 +416,13 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             decoration: InputDecoration(
               icon: Icon(
                 Icons.verified_user,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               hintText: S.of(context).passwordHint,
               hintStyle: Theme.of(context).textTheme.caption,
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).accentColor),
+              ),
             ),
             obscureText: true,
           ),

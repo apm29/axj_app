@@ -135,7 +135,7 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                                   .copyWith(
                                 color: Theme
                                     .of(context)
-                                    .cardColor
+                                    .colorScheme.onSurface
                                     .withAlpha(0xaa),
                               ),
                             ),

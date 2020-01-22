@@ -335,8 +335,8 @@ class SkeletonTaskBuilder<T> extends StatefulWidget {
     this.initialData,
   })  :super(key: key);
 
-  static SkeletonTaskBuilderState of(BuildContext context) {
-    return context.findAncestorStateOfType<SkeletonTaskBuilderState>();
+  static SkeletonTaskBuilderState<T> of<T>(BuildContext context) {
+    return context.findAncestorStateOfType<SkeletonTaskBuilderState<T>>();
   }
 
   @override
@@ -368,6 +368,21 @@ class SkeletonTaskBuilderState<T> extends State<SkeletonTaskBuilder<T>> {
       _controller.addError(e);
     }
   }
+
+  Future add(BuildContext context,BaseResp<T> data) async {
+    try {
+      if(_controller.isClosed){
+        return;
+      }
+      _controller.add(data);
+    } catch (e) {
+      if(_controller.isClosed){
+        return;
+      }
+      _controller.addError(e);
+    }
+  }
+
 
   @override
   void dispose() {

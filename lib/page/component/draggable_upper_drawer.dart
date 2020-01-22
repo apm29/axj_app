@@ -158,6 +158,9 @@ class _DraggableUpperDrawerWidgetState extends State<DraggableUpperDrawerWidget>
 
 typedef AnimatedWidgetBuilder = Widget Function(
     BuildContext, Animation, Widget);
+typedef PositionedAnimatedWidgetBuilder = Widget Function(
+    BuildContext, Animation, Widget,
+    {double top, double dragHandlerHeight, double minUpperExtend});
 
 class UpDraggableDrawerWidget extends StatefulWidget {
   final Widget background;
@@ -165,24 +168,26 @@ class UpDraggableDrawerWidget extends StatefulWidget {
   final Widget upper;
   final AnimatedWidgetBuilder upperBuilder;
   final Widget bottom;
-  final AnimatedWidgetBuilder bottomBuilder;
+  final PositionedAnimatedWidgetBuilder bottomBuilder;
   final Widget dragHandler;
   final AnimatedWidgetBuilder dragHandlerBuilder;
 
   final double minUpperExtend;
+  final bool draggableAtBottom;
 
-  const UpDraggableDrawerWidget(
-      {Key key,
-      this.background,
-      this.upper,
-      this.bottom,
-      this.backgroundBuilder,
-      this.upperBuilder,
-      this.bottomBuilder,
-      this.dragHandler,
-      this.dragHandlerBuilder,
-      this.minUpperExtend})
-      : assert(background != null || backgroundBuilder != null),
+  const UpDraggableDrawerWidget({
+    Key key,
+    this.background,
+    this.upper,
+    this.bottom,
+    this.backgroundBuilder,
+    this.upperBuilder,
+    this.bottomBuilder,
+    this.dragHandler,
+    this.dragHandlerBuilder,
+    this.minUpperExtend,
+    this.draggableAtBottom = false,
+  })  : assert(background != null || backgroundBuilder != null),
         assert(bottom != null || bottomBuilder != null),
         assert(upper != null || upperBuilder != null),
         assert(dragHandler != null || dragHandlerBuilder != null),
@@ -207,7 +212,7 @@ class UpDraggableDrawerWidgetState extends State<UpDraggableDrawerWidget>
     controller = AnimationController(
       vsync: this,
       duration: Duration(
-        milliseconds: 600,
+        milliseconds: 300,
       ),
     );
     controller.addListener(() {
@@ -224,6 +229,7 @@ class UpDraggableDrawerWidgetState extends State<UpDraggableDrawerWidget>
 
   final GlobalKey _drawerBottomKey = GlobalKey();
   final GlobalKey _drawerTopKey = GlobalKey();
+  final GlobalKey _drawerCenterKey = GlobalKey();
 
   double get _bottomHeight {
     final RenderBox box =
@@ -239,6 +245,13 @@ class UpDraggableDrawerWidgetState extends State<UpDraggableDrawerWidget>
     return 100; // drawer not being shown currently
   }
 
+  double get _dragHandlerHeight {
+    final RenderBox box =
+        _drawerCenterKey.currentContext?.findRenderObject() as RenderBox;
+    if (box != null) return box.size.height;
+    return 100; // drawer not being shown currently
+  }
+
   double get _topMinHeight => widget.minUpperExtend ?? 48;
 
   @override
@@ -248,14 +261,24 @@ class UpDraggableDrawerWidgetState extends State<UpDraggableDrawerWidget>
         Widget background =
             widget.backgroundBuilder?.call(context, anim, widget.bottom) ??
                 widget.background;
-        Widget bottom =
-            widget.bottomBuilder?.call(context, anim, widget.bottom) ??
-                widget.bottom;
+
         Widget upper = widget.upperBuilder?.call(context, anim, widget.upper) ??
             widget.upper;
         Widget dragHandler = widget.dragHandlerBuilder
                 ?.call(context, anim, widget.dragHandler) ??
             widget.dragHandler;
+        var bottomTop =
+            (_topHeight - _topMinHeight) * controller.value + _topMinHeight;
+
+        Widget bottom = widget.bottomBuilder?.call(
+              context,
+              anim,
+              widget.bottom,
+              top: bottomTop,
+              dragHandlerHeight: _dragHandlerHeight,
+              minUpperExtend: _topMinHeight,
+            ) ??
+            widget.bottom;
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
@@ -270,8 +293,7 @@ class UpDraggableDrawerWidgetState extends State<UpDraggableDrawerWidget>
             Positioned(
               left: 0.0,
               right: 0.0,
-              top: (_topHeight - _topMinHeight) * controller.value +
-                  _topMinHeight,
+              top: bottomTop,
               child: GestureDetector(
                 onVerticalDragUpdate: (DragUpdateDetails dragDetail) {
                   var delta =
@@ -288,10 +310,17 @@ class UpDraggableDrawerWidgetState extends State<UpDraggableDrawerWidget>
                 child: Column(
                   key: _drawerBottomKey,
                   children: <Widget>[
-                    dragHandler,
+                    Container(
+                      child: dragHandler,
+                      key: _drawerCenterKey,
+                    ),
                     AbsorbPointer(
-                      absorbing: controller.value == 1.0,
-                      child: bottom,
+                      absorbing:
+                          !widget.draggableAtBottom && controller.value == 1.0,
+                      child: Container(
+                        color: Theme.of(context).backgroundColor,
+                        child: bottom,
+                      ),
                     )
                   ],
                 ),

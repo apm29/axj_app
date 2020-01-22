@@ -33,7 +33,7 @@ class BaseResp<T> {
     this.text = message;
   }
 
-  BaseResp.success({String message = "成功",data}) {
+  BaseResp.success({String message = "成功",T data}) {
     this.status = "1";
     this.data = data;
     this.token = null;

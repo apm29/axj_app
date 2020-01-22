@@ -51,4 +51,8 @@ class TaskModal<T> extends ModalRoute<T> {
     }();
     super.install(insertionPoint);
   }
+
+  static Future runTask(BuildContext context,Function task){
+    return Navigator.of(context).push(TaskModal(task));
+  }
 }
