@@ -2,8 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:axj_app/model/bean/house_info.dart';
-import 'package:axj_app/model/bean/visitor/paged_visitor_record.dart';
-import 'package:axj_app/model/bean/visitor/visit_record.dart';
 import 'package:axj_app/model/bean/visitor/visitor_record.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/back_drop_background.dart';
@@ -49,7 +47,7 @@ class VisitorManagePage extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '访客管理',
-                        style: Theme.of(context).textTheme.title,
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                     ),
                     InkWell(
@@ -289,7 +287,7 @@ class PassCodePagedWidget extends StatelessWidget {
                                   data[index].passCode,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .title
+                                      .headline6
                                       .copyWith(
                                           color: Theme.of(context)
                                               .colorScheme

@@ -131,7 +131,7 @@ class _NoticeItemWidgetState extends State<NoticeItemWidget>
                               Theme
                                   .of(context)
                                   .textTheme
-                                  .subtitle
+                                  .subtitle2
                                   .copyWith(
                                 color: Theme
                                     .of(context)

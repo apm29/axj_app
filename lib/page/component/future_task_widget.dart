@@ -40,7 +40,7 @@ class FutureTaskWidget<T> extends StatelessWidget {
   }
 }
 
-@deprecated
+//@deprecated
 class BaseRespTaskBuilder<T> extends StatelessWidget {
   final Future<BaseResp<T>> future;
   final ModelBuilder<T> modelBuilder;
@@ -452,7 +452,7 @@ class ErrorWidget extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     "轻点重试,长按关闭",
-                    style: Theme.of(context).textTheme.title.copyWith(
+                    style: Theme.of(context).textTheme.headline6.copyWith(
                         color: Theme.of(context).colorScheme.onBackground),
                   ),
                   SizedBox(

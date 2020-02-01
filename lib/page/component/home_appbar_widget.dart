@@ -51,16 +51,12 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
     final double elevation = easeInExpoPercent * 8.0;
     final double realElevation = elevation > 6.0 ? elevation : 0.0;
     final double bottomHeight = 80.0;
-    final Tween<double> buttonSizeTween = Tween(
-      begin: bottomHeight,
-      end: 0.0,
-    );
     final Tween<double> sizeTween = Tween(
       begin: maxExtent - bottomHeight,
       end: 0.0,
     );
 
-    final TextStyle textStyle = Theme.of(context).textTheme.title;
+    final TextStyle textStyle = Theme.of(context).textTheme.headline6;
 
     final TextStyleTween styleTween = TextStyleTween(
       begin: textStyle.copyWith(color: Colors.white),

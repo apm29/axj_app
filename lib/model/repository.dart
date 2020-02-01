@@ -8,7 +8,6 @@ import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/house_info.dart';
 import 'package:axj_app/model/bean/member_detail.dart';
 import 'package:axj_app/model/bean/notice/comment.dart';
-import 'package:axj_app/model/bean/notice/comment_detail.dart';
 import 'package:axj_app/model/bean/notice/notice.dart';
 import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/bean/user_info_detail.dart';
@@ -185,7 +184,10 @@ class Repository {
   }
 
   static Future<BaseResp<PagedVisitorRecord>> getVisitorLog(
-      dynamic houseId, {int page, int rows,}) {
+    dynamic houseId, {
+    int page,
+    int rows,
+  }) {
     return Api().post(
       "/business/inOutLog/getVisitorLogs",
       formData: {
