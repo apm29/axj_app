@@ -23,7 +23,7 @@ class HomeAppbarWidget extends StatelessWidget {
 class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
   final double buttonSize = 18.0;
   final double buttonMargin = 12.0;
-  final double systemPadding = 20.0;
+
   final buttonTextList = ["访客管理", "找警察", "找物业", "找客服"];
   final buttonIconList = [
     Icons.person_outline,
@@ -37,6 +37,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final double systemPadding = MediaQuery.of(context).padding.top;
     double percent = shrinkOffset / (maxExtent - minExtent);
     percent = percent.clamp(0.0, 1.0);
     currentOffset = shrinkOffset;
@@ -270,7 +271,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
                         child: InkWell(
                           onTap: () {
                             var buttonIndex = buttonTextList.indexOf(s);
-                            if(buttonIndex==0){
+                            if (buttonIndex == 0) {
                               _toVisitorManage(context);
                             }
                           },
@@ -319,7 +320,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => 200;
 
   @override
-  double get minExtent => 68;
+  double get minExtent => 72;
 
   @override
   bool shouldRebuild(HomeAppbarDelegate oldDelegate) {
@@ -338,7 +339,7 @@ class HomeAppbarDelegate extends SliverPersistentHeaderDelegate {
 
   _toVisitorManage(BuildContext context) {
     StoreProvider.of<AppState>(context).dispatch(
-      CheckHouseAndRouteAction(context,routeName: Routes.visitorManage),
+      CheckHouseAndRouteAction(context, routeName: Routes.visitorManage),
     );
   }
 }
