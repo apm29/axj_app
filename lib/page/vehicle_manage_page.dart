@@ -1,4 +1,4 @@
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:axj_app/model/bean/car.dart';
 import 'package:axj_app/model/bean/car_info.dart';

@@ -1,4 +1,4 @@
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

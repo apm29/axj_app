@@ -4,7 +4,7 @@ import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/utils.dart';
@@ -111,7 +111,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  bool _close(BuildContext context) => Navigator.of(context).pop();
+  void _close(BuildContext context) => Navigator.of(context).pop();
 
   Future<void> _register(BuildContext context) async {
     var resMap = await AppRouter.toRegister(context);
@@ -285,8 +285,7 @@ class _LoginCardState extends State<LoginCard> with TickerProviderStateMixin {
             width: 12,
           ),
           Text(
-            S.of(context).serviceProtocolText(
-                S.of(context).serviceProtocolName(S.of(context).appName)),
+            S.of(context).serviceProtocolText,
             style: Theme.of(context).textTheme.caption,
           )
         ],

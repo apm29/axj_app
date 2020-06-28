@@ -1,0 +1,88 @@
+{
+  "appName": "Monster",
+  "motto": "Understated,Forbearance,massacre",
+  "homeTab": "Home",
+  "mineTab": "Mine",
+  "smsLoginLabel":"SMS",
+
+  "phoneLabel": "Mobile",
+  "phoneHint": "phone number",
+  "smsCodeLabel": "Code",
+  "smsCodeHint": "SMS Code",
+  "sendSmsCodeHint": "Send Code",
+
+  "passwordLoginLabel": "Account",
+  "userNameHint": "username",
+  "passwordHint": "password",
+  "passwordRepeatHint": "repeat password",
+  "passwordRepeatError": "Inconsistent passwords",
+
+  "loginLabel":"Login",
+  "logoutLabel":"Logout",
+  "confirmLogoutHint":"Confirm Logout?",
+  "localeMenuLabel":"Localization",
+
+  "serviceProtocolName": "$appName Service Protocol",
+  "serviceProtocolText": "I agree with <<$serviceProtocolName>>",
+  "registerHint": "No account,Click to Sign in",
+  "registerTitle": "Sign in",
+  "registerLabel": "Sign in now!",
+  "skipLabel": "Skip",
+
+  "settingsPageTitle": "Personal Settings",
+  "editUserProfile": "edit your profile",
+
+  "messageLabel": "Message",
+  "settingLabel": "Settings",
+  "a": "a",
+
+  "closeNotificationHint": "Close Notification Service",
+  "openNotificationHint": "Open Notification Service",
+
+  "notAuthTitle": "You are not authenticated",
+  "toAuthHint": "Authenticate",
+  "notNowAuthLabel": "Not now",
+
+  "loadingCameraHint": "Loading Camera Settings",
+  "authTitle": "Authenticate",
+  "authFaceHint": "Align your face within the frame,then tap the confirm button",
+
+  "idFormTitle": "Confirm Identity Info",
+  "idFormHint": "Identity Card Number (11 digit)",
+  "nextStepLabel": "Next Step",
+  "confirmLabel": "Confirm",
+  "warningLabel": "Warning",
+  "cancelLabel": "Cancel",
+  "editLabel": "Edit",
+  "deleteLabel": "Delete",
+  "deleteHint": "Confirm to Delete $some ?",
+  "addLabel": "Add",
+  "deleteSuccessHint": "Delete Success",
+
+  "myHouseTitle": "Houses",
+  "changeHouseLabel": "Change House",
+  "changeRoleLabel": "Change Role",
+
+  "myHouseActionTileTitle": "My Houses",
+  "myHouseActionTileHint": "View Houses info",
+  "myVehicleActionTileTitle": "My Vehicles",
+  "myVehicleActionTileHint": "View Vehicles info",
+  "familyMemberActionTileTitle": "Family Members",
+  "familyMemberManageTitle": "Member Manage",
+  "familyMemberActionTileHint": "Family Members/Tenants info",
+  "addFamilyMemberLabel": "Add Member",
+  "applyListLabel": "Application List",
+
+  "vehicleManageTitle": "Vehicle Manage",
+  "vehicleInLabel": "In the Garage",
+  "vehicleTypeCarLabel": "Car",
+  "vehicleTypeTruckLabel": "Truck",
+
+  "eBikeTagLabel": "E-Bike Tag:",
+  "clickToSeeAccessRecord": "Tap to see access record",
+  "recordViewNoAuthorizationHint": "You are Not authorized to view $member 's Access Record",
+  "imageNoAvailable": "Image not available",
+  "addEBikeLabel": "Add E-Bike",
+  "addVehicleLabel": "Add Car"
+
+}

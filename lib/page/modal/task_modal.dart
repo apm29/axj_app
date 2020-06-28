@@ -38,7 +38,7 @@ class TaskModal<T> extends ModalRoute<T> {
   Duration get transitionDuration => const Duration(milliseconds: 250);
 
   @override
-  void install(OverlayEntry insertionPoint) {
+  void install() {
     ()async{
       int start = DateTime.now().millisecondsSinceEpoch;
       T result = await task?.call();
@@ -49,7 +49,7 @@ class TaskModal<T> extends ModalRoute<T> {
       }
       navigator.pop(result);
     }();
-    super.install(insertionPoint);
+    super.install();
   }
 
   static Future runTask(BuildContext context,Function task){

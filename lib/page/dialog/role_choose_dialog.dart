@@ -1,4 +1,4 @@
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';

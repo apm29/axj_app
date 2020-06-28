@@ -1,4 +1,4 @@
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/enum_config.dart';
 import 'package:axj_app/model/bean/family_member.dart';
@@ -126,7 +126,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
       builder: (context) {
         return CupertinoAlertDialog(
           title: Text(S.of(context).warningLabel),
-          content: Text(S.of(context).deleteHint(familyMember.membername)),
+          content: Text(S.of(context).deleteHint),
           actions: <Widget>[
             CupertinoDialogAction(
               onPressed: () {
@@ -164,7 +164,7 @@ class _MemberManagePageState extends State<MemberManagePage> {
     if (familyMember.examinable) {
     } else {
       showAppToast(
-          S.of(context).recordViewNoAuthorizationHint(familyMember.membername));
+          S.of(context).recordViewNoAuthorizationHint);
     }
   }
 

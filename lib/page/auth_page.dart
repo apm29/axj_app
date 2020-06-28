@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/file_detail.dart';
 import 'package:axj_app/model/bean/user_verify_info.dart';

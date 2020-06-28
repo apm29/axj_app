@@ -1,4 +1,4 @@
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/family_member.dart';
 import 'package:axj_app/model/repository.dart';

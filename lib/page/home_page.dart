@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:axj_app/page/component/auto_slide_down_widget.dart';
 import 'package:axj_app/redux/action/actions.dart';
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/page/main/main_page.dart';
 import 'package:axj_app/page/mine/mine_page.dart';

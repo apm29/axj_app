@@ -5,7 +5,7 @@ import 'package:axj_app/model/cache.dart';
 import 'package:axj_app/page/splash_page.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

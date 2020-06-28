@@ -1,4 +1,4 @@
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/district_info.dart';
 import 'package:axj_app/model/bean/house_info.dart';

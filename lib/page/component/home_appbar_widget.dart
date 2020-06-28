@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/redux/action/actions.dart';
 import 'package:axj_app/redux/store/store.dart';
 import 'package:axj_app/route/route.dart';

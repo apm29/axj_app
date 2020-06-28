@@ -2,7 +2,7 @@ import 'package:axj_app/model/bean/role_info.dart';
 import 'package:axj_app/page/component/gradient_background_widget.dart';
 import 'package:axj_app/page/theme_test_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
-import 'package:axj_app/generated/i18n.dart';
+import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/main.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';
