@@ -60,7 +60,7 @@ ThemeData twitterLight = ThemeData(
         fontFamily: 'xmt',
         fontWeight: FontWeight.w700
     ),
-    title: TextStyle(
+    headline6: TextStyle(
       fontFamily: 'xmt',
       fontWeight: FontWeight.w900
     ),

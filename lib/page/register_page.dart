@@ -183,7 +183,7 @@ class _RegisterColumnState extends State<RegisterColumn> {
                   children: <Widget>[
                     Text(
                       S.of(context).registerTitle,
-                      style: Theme.of(context).textTheme.title.copyWith(
+                      style: Theme.of(context).textTheme.headline6.copyWith(
                             color: Theme.of(context).secondaryHeaderColor,
                             fontSize: 36,
                             fontFamily: 'handwrite_font',

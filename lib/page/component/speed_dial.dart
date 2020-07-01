@@ -56,7 +56,7 @@ class _SpeedDialState extends State<SpeedDial> with TickerProviderStateMixin {
               label: Row(
                 children: <Widget>[
                   Icon(icons[index], color: foregroundColor),
-                  Text(widget.labels[index],style: Theme.of(context).textTheme.subtitle,),
+                  Text(widget.labels[index],style: Theme.of(context).textTheme.subtitle2,),
                 ],
               ),
             ),

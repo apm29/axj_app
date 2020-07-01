@@ -1,6 +1,5 @@
 import 'package:axj_app/generated/l10n.dart';
 import 'package:axj_app/redux/action/actions.dart';
-import 'package:axj_app/main.dart';
 import 'package:axj_app/plugin/permission.dart';
 import 'package:axj_app/route/route.dart';
 import 'package:axj_app/redux/store/store.dart';

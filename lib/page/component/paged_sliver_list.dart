@@ -1,7 +1,5 @@
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/bean/basic/paged_data.dart';
-import 'package:axj_app/model/bean/visitor/visitor_record.dart';
-import 'package:axj_app/page/component/auto_slide_down_widget.dart';
 import 'package:axj_app/page/component/future_task_widget.dart';
 import 'package:axj_app/page/transition/auto_transition.dart';
 import 'package:flutter/cupertino.dart';

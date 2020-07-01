@@ -127,13 +127,13 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                         S.of(context).eBikeTagLabel,
                         style: Theme.of(context)
                             .textTheme
-                            .title
+                            .headline6
                             .copyWith(color: Colors.black54),
                       ),
                       Container(
                         child: Text(
                           bike.eBilePlate,
-                          style: Theme.of(context).textTheme.title.copyWith(
+                          style: Theme.of(context).textTheme.headline6.copyWith(
                                 color: Colors.white,
                               ),
                         ),
@@ -246,7 +246,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                           car.licencePlate,
                           style: Theme.of(context)
                               .textTheme
-                              .title
+                              .headline6
                               .copyWith(color: Colors.white),
                         ),
                       ),
@@ -261,7 +261,7 @@ class _VehicleManagePageState extends State<VehicleManagePage> {
                         car.visitorLabel,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle
+                            .subtitle2
                             .copyWith(color: Colors.black54),
                       ),
                     ],

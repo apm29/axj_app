@@ -2,8 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:axj_app/model/bean/house_info.dart';
-import 'package:axj_app/model/bean/visitor/paged_visitor_record.dart';
-import 'package:axj_app/model/bean/visitor/visit_record.dart';
 import 'package:axj_app/model/bean/visitor/visitor_record.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/page/component/back_drop_background.dart';
@@ -28,127 +26,130 @@ class VisitorManagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: UpDraggableDrawerWidget(
-        upperBuilder: (context, anim, child) => Container(
-          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: BackButtonIcon(),
+      body: SafeArea(
+        child: UpDraggableDrawerWidget(
+          upperBuilder: (context, anim, child) => Container(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: BackButtonIcon(),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Expanded(
-                    child: Text(
-                      '访客管理',
-                      style: Theme.of(context).textTheme.title,
+                    Expanded(
+                      child: Text(
+                        '访客管理',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
                     ),
-                  ),
-                  InkWell(
-                    child: AnimatedIcon(
-                        icon: AnimatedIcons.close_menu, progress: anim),
-                    onTap: () =>
-                        UpDraggableDrawerWidget.of(context).closeOrOpen(),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 32,
-              ),
-              child,
-            ],
+                    InkWell(
+                      child: AnimatedIcon(
+                          icon: AnimatedIcons.close_menu, progress: anim),
+                      onTap: () =>
+                          UpDraggableDrawerWidget.of(context).closeOrOpen(),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                child,
+              ],
+            ),
           ),
-        ),
-        upper: StoreConnector<AppState, HouseInfo>(
-          builder: (context, house) {
-            return SkeletonTaskBuilder<List<HouseInfo>>(
-              task: () async {
-                return Repository.getMyHouseList(
-                  house.districtId,
-                );
-              },
-              builder: (BuildContext context, List<HouseInfo> data) {
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight:
-                        max(MediaQuery.of(context).size.height * 0.3, 240),
-                  ),
-                  child: PassCodePagedWidget(
-                    data: data,
-                    onRefresh: (HouseInfo house) {
-                      TaskModal.runTask(context, () async {
-                        await Repository.getFamilyPassCode(
-                            house.districtId, house.houseId.toString(), true);
-                        SkeletonTaskBuilder.of(context).refresh(context);
-                      });
-                    },
-                  ),
-                );
-              },
-              skeletonBuilder: (context) => Container(
-                height: 120,
-                child: CupertinoActivityIndicator(),
+          upper: StoreConnector<AppState, HouseInfo>(
+            builder: (context, house) {
+              return SkeletonTaskBuilder<List<HouseInfo>>(
+                task: () async {
+                  return Repository.getMyHouseList(
+                    house.districtId,
+                  );
+                },
+                builder: (BuildContext context, List<HouseInfo> data) {
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight:
+                          max(MediaQuery.of(context).size.height * 0.3, 240),
+                    ),
+                    child: PassCodePagedWidget(
+                      data: data,
+                      onRefresh: (HouseInfo house) {
+                        TaskModal.runTask(context, () async {
+                          await Repository.getFamilyPassCode(
+                              house.districtId, house.houseId.toString(), true);
+                          SkeletonTaskBuilder.of(context).refresh(context);
+                        });
+                      },
+                    ),
+                  );
+                },
+                skeletonBuilder: (context) => Container(
+                  height: 120,
+                  child: CupertinoActivityIndicator(),
+                ),
+              );
+            },
+            converter: (store) => store.state.currentHouse,
+          ),
+          background: GaussBlurBackground(
+            assetPath: 'assets/images/home.png',
+          ),
+          dragHandlerBuilder: (context, anim, child) => GestureDetector(
+            child: Container(
+              height: 48,
+              constraints: BoxConstraints.expand(height: 48),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               ),
+              child: Align(
+                child: Text(
+                  '轻点两下${anim.status == AnimationStatus.completed ? '收起' : '展开'}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                ),
+                alignment: Alignment.center,
+              ),
+              clipBehavior: Clip.antiAlias,
+            ),
+            onDoubleTap: () =>
+                UpDraggableDrawerWidget.of(context).closeOrOpen(),
+          ),
+          bottomBuilder: (
+            context,
+            anim,
+            child, {
+            double top,
+            double dragHandlerHeight,
+            double minUpperExtend,
+          }) {
+            print(MediaQuery.of(context).size.height);
+            print(top);
+            print(dragHandlerHeight);
+            print(minUpperExtend);
+            print(MediaQuery.of(context).padding.top);
+            return SizedBox(
+              height: MediaQuery.of(context).size.height -
+                  top -
+                  dragHandlerHeight -
+                  MediaQuery.of(context).padding.top,
+              child: child,
             );
           },
-          converter: (store) => store.state.currentHouse,
+          bottom: VisitorRecordWidget(),
+          draggableAtBottom: true,
+          minUpperExtend: 64,
         ),
-        background: GaussBlurBackground(
-          assetPath: 'assets/images/home.png',
-        ),
-        dragHandlerBuilder: (context, anim, child) => GestureDetector(
-          child: Container(
-            height: 48,
-            constraints: BoxConstraints.expand(height: 48),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
-            child: Align(
-              child: Text(
-                '轻点两下${anim.status == AnimationStatus.completed ? '收起' : '展开'}',
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-              alignment: Alignment.center,
-            ),
-            clipBehavior: Clip.antiAlias,
-          ),
-          onDoubleTap: () => UpDraggableDrawerWidget.of(context).closeOrOpen(),
-        ),
-        bottomBuilder: (
-          context,
-          anim,
-          child, {
-          double top,
-          double dragHandlerHeight,
-          double minUpperExtend,
-        }) {
-          print(MediaQuery.of(context).size.height);
-          print(top);
-          print(dragHandlerHeight);
-          print(minUpperExtend);
-          print(MediaQuery.of(context).padding.top);
-          return SizedBox(
-            height: MediaQuery.of(context).size.height -
-                top -
-                dragHandlerHeight -
-                MediaQuery.of(context).padding.top,
-            child: child,
-          );
-        },
-        bottom: VisitorRecordWidget(),
-        draggableAtBottom: true,
-        minUpperExtend: 64,
       ),
     );
   }
@@ -286,7 +287,7 @@ class PassCodePagedWidget extends StatelessWidget {
                                   data[index].passCode,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .title
+                                      .headline6
                                       .copyWith(
                                           color: Theme.of(context)
                                               .colorScheme

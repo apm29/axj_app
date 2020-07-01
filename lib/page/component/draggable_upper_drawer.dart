@@ -37,6 +37,7 @@ class _DraggableUpperDrawerWidgetState extends State<DraggableUpperDrawerWidget>
   @override
   void dispose() {
     super.dispose();
+    print(_bottomHeight);
     controller?.dispose();
   }
 
@@ -224,6 +225,7 @@ class UpDraggableDrawerWidgetState extends State<UpDraggableDrawerWidget>
   @override
   void dispose() {
     super.dispose();
+    print(_bottomHeight);
     controller?.dispose();
   }
 

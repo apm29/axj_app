@@ -80,7 +80,7 @@ class NoticeDetailPage extends StatelessWidget {
                   ),
                   Text(
                     notice?.noticeTitle ?? '--',
-                    style: Theme.of(context).textTheme.subtitle.copyWith(
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
                         fontFeatures: [FontFeature.oldstyleFigures()]),
                   ),
                   Divider(),
@@ -186,7 +186,7 @@ class NoticeDetailPage extends StatelessWidget {
                   ),
                   Text(
                     c.nickName,
-                    style: Theme.of(context).textTheme.subhead,
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -248,7 +248,7 @@ class NoticeDetailPage extends StatelessWidget {
               data.noticeTitle,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle
+                  .subtitle2
                   .copyWith(color: Colors.white, wordSpacing: 20),
             ),
           ),

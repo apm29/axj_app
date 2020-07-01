@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:axj_app/page/register_page.dart';
 import 'package:axj_app/redux/action/actions.dart';
-import 'package:axj_app/main.dart';
 import 'package:axj_app/model/api.dart';
 import 'package:axj_app/model/repository.dart';
 import 'package:axj_app/generated/l10n.dart';
