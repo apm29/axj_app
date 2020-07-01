@@ -1,4 +1,6 @@
 {
+
+  "@@locale": "zh_CN",
   "appName": "卡牌助手",
   "motto": "智慧生活,安心陪伴",
   "homeTab": "主页",
@@ -22,8 +24,8 @@
   "confirmLogoutHint":"确定退出App吗?",
   "localeMenuLabel":"国际化",
 
-  "serviceProtocolName": "${appName}用户服务协议",
-  "serviceProtocolText": "登录即视为同意<<$serviceProtocolName>>",
+  "serviceProtocolName": "卡牌助手用户服务协议",
+  "serviceProtocolText": "登录即视为同意<<用户服务协议>>",
   "registerHint": "没有账户? 点击注册",
   "registerTitle": "注册",
   "registerLabel": "立即注册",
@@ -54,7 +56,7 @@
   "cancelLabel": "取消",
   "editLabel": "编辑",
   "deleteLabel": "删除",
-  "deleteHint": "确认要删除$some ?",
+  "deleteHint": "确认要删除 ?",
   "addLabel": "添加",
   "deleteSuccessHint": "删除成功",
 
@@ -80,7 +82,7 @@
 
   "eBikeTagLabel": "电瓶车标签:",
   "clickToSeeAccessRecord": "轻点查看出入记录",
-  "recordViewNoAuthorizationHint": "你没有权限查看$member 的出入记录",
+  "recordViewNoAuthorizationHint": "你没有权限查看出入记录",
   "imageNoAvailable": "暂无图片",
   "addEBikeLabel": "添加电动车",
   "addVehicleLabel": "添加汽车"

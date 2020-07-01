@@ -38,7 +38,7 @@ dependencies:
   # toast
   oktoast: ^2.3.0
   # 路由
-  fluro: ^1.5.1
+  fluro: ^1.6.3
   # camera
   camera: ^0.5.7+2
   # path
